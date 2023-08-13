@@ -10,4 +10,8 @@ public class Land {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String latitude;
+    private String longitude;
+    private double area;
+    private double meterSquarePrice;
 }
