@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 
-<head th:insert="base.html :: head(${'Détails de la recharge'})"></head>
+<head th:insert="base.html :: head(${'Détails du logement'})"></head>
 
 <body>
 <div id="wrapper">
     <div th:replace="header.html"></div>
-    <!--/*@thymesVar id="recharge" type="com.estate.domain.entity.Payment"*/-->
-    <div id="page-wrapper" th:object="${recharge}">
+    <!--/*@thymesVar id="housing" type="com.estate.domain.entity.Housing"*/-->
+    <div id="page-wrapper" th:object="${housing}">
         <div class="row mt-6">
             <ol class="breadcrumb">
                 <li><i class="fa fa-home"></i> <a class="lazy-link" th:href="@{/home}">Accueil</a></li>
-                <li><a class="lazy-link" th:href="@{/recharge/list}">Liste des recharges</a></li>
-                <li th:utext="*{'Détails de la recharge <b>[ ' + id + ' ]</b>'}"></li>
+                <li><a class="lazy-link" th:href="@{/housing/list}">Liste des logements</a></li>
+                <li th:utext="*{'Détails du logement <b>[ ' + name + ' ]</b>'}"></li>
             </ol>
         </div>
         <div class="row">
@@ -20,56 +20,25 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <i class="fa fa-info-circle fa-fw"></i>
-                        <b>Informations sur la recharge</b>
+                        <b>Informations sur le logement</b>
                     </div>
                     <div class="list-group">
                         <a href="#" class="list-group-item">
-                            <b>Joueur</b>
-                            <span class="pull-right"><em th:text="*{player?.name}"></em></span>
+                            <b>Nom</b>
+                            <span class="pull-right"><em th:text="*{name}"></em></span>
                         </a>
                         <a href="#" class="list-group-item">
-                            <b>Montant</b>
-                            <span class="pull-right"><em th:text="*{amount}"></em></span>
-                        </a>
-                        <a href="#" class="list-group-item">
-                            <b>Date</b>
-                            <span class="pull-right"><em th:text="*{#temporals.format(date, 'dd-MM-yyyy  HH:mm')}"></em></span>
-                        </a>
-                        <a href="#" class="list-group-item">
-                            <b>Opérateur</b>
-                            <span class="pull-right"><em th:text="*{operator?.name}"></em></span>
-                        </a>
-                        <a href="#" class="list-group-item">
-                            <b>Numéro</b>
-                            <span class="pull-right"><em th:text="*{clientNumber}"></em></span>
-                        </a>
-                        <a href="#" class="list-group-item">
-                            <b>Code marchand</b>
-                            <span class="pull-right"><em th:text="*{merchantCode}"></em></span>
-                        </a>
-                        <a href="#" class="list-group-item">
-                            <b>Reférence marchand</b>
-                            <span class="pull-right"><em th:text="*{merchantReference}"></em></span>
+                            <b>Standing</b>
+                            <span class="pull-right"><em th:text="*{standing?.name}"></em></span>
                         </a>
                         <a href="#" class="list-group-item">
                             <b>Statut</b>
                             <span class="pull-right"><em th:text="*{status?.name}"></em></span>
                         </a>
-                    </div>
-                </div>
-                <div th:if="${!#strings.isEmpty(recharge?.message)}" class="panel-group" id="accordion">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h4 class="panel-title">
-                                <button data-toggle="collapse" data-parent="#accordion" href="#collapseBox" class="collapsed btn btn-primary">
-                                    <i class="fa fa-list"></i>
-                                    &nbsp; Plus de détails
-                                </button>
-                            </h4>
-                        </div>
-                        <div id="collapseBox" class="panel-collapse collapse">
-                            <div class="panel-body" th:utext="*{message}"></div>
-                        </div>
+                        <a href="#" class="list-group-item">
+                            <b>Date de création</b>
+                            <span class="pull-right"><em th:text="*{#temporals.format(date, 'dd-MM-yyyy  HH:mm')}"></em></span>
+                        </a>
                     </div>
                 </div>
             </div>

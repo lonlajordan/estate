@@ -51,11 +51,11 @@ public class StandingServiceImpl implements StandingService {
         Notification notification;
         try {
             standingRepository.save(standing$);
-            notification = Notification.info("<b>" + standing$.getName() +"</b> a été " + (creation ? "ajoutée." : "modifiée."));
+            notification = Notification.info("Le <b>" + standing$.getName() +"</b> standing a été " + (creation ? "ajouté." : "modifié."));
             creation = true;
             standing$ = new Standing();
         } catch (Exception e){
-            notification = Notification.error("Erreur lors de la " + (creation ? "création" : "modification") + " du standingage <b>" + standing$.getName() + "</b>.");
+            notification = Notification.error("Erreur lors de la " + (creation ? "création" : "modification") + " du <b>" + standing$.getName() + "</b> standing.");
             logRepository.save(Log.error(notification.getMessage(), ExceptionUtils.getStackTrace(e)));
         }
 

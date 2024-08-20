@@ -5,8 +5,8 @@ import lombok.Getter;
 @Getter
 public enum Role {
     ROLE_ADMIN("Administrateur"),
-    ROLE_MONITOR("Moniteur"),
-    ROLE_USER("Utilisateur");
+    ROLE_MANAGER("Gestionnaire"),
+    ROLE_JANITOR("Concierge");
 
     private final String name;
 

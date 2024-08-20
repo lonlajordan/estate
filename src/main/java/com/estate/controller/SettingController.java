@@ -21,7 +21,7 @@ public class SettingController {
     private final SettingService settingService;
 
     @GetMapping(value="list")
-    public String getAll(Model model){
+    public String findAll(Model model){
         model.addAttribute("settings", settingService.findAll());
         return "admin/setting/list";
     }

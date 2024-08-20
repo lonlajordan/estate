@@ -38,7 +38,7 @@ public class SettingServiceImpl implements SettingService {
         if(setting$ != null){
             setting$.setValue(setting.getValue());
             try {
-                setting$ = settingRepository.save(setting$);
+                settingRepository.save(setting$);
             } catch (Exception e){
                 notification = Notification.error("Erreur lors de la modification du paramètre");
                 logRepository.save(Log.error(notification.getMessage(), ExceptionUtils.getStackTrace(e)));

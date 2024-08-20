@@ -16,9 +16,9 @@ public interface HousingService {
 
     Optional<Housing> findById(long id);
 
-    ModelAndView createOrUpdate(Housing housing, MultipartFile formulation, MultipartFile justification, Boolean multiple, RedirectAttributes attributes);
+    ModelAndView save(Housing housing, Boolean multiple, RedirectAttributes attributes);
 
     RedirectView deleteAllByIds(ArrayList<Long> ids, RedirectAttributes attributes);
 
-    long countHousings();
+    long count();
 }

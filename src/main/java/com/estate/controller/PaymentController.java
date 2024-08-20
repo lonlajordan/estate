@@ -19,34 +19,34 @@ import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/recharge")
-public class RechargeController {
-    private final RechargeService rechargeService;
+@RequestMapping("/payment")
+public class PaymentController {
+    private final RechargeService paymentService;
 
     @GetMapping(value="list")
     public String getAll(@RequestParam(required = false, defaultValue = "1") int p, Model model){
-        Page<Payment> recharges = rechargeService.findAll(p);
-        model.addAttribute("recharges", recharges.toList());
-        model.addAttribute("totalPages", recharges.getTotalPages());
+        Page<Payment> payments = paymentService.findAll(p);
+        model.addAttribute("payments", payments.toList());
+        model.addAttribute("totalPages", payments.getTotalPages());
         model.addAttribute("currentPage", p);
-        return "admin/recharge/list";
+        return "admin/payment/list";
     }
 
     @GetMapping(value="view/{id}")
     public ModelAndView getDetails(@PathVariable long id){
         ModelAndView view = new ModelAndView("redirect:/error/404");
-        Optional<Payment> recharge = rechargeService.findById(id);
-        recharge.ifPresent(value -> {
-            view.getModel().put("recharge", value);
-            view.setViewName("admin/recharge/view");
+        Optional<Payment> payment = paymentService.findById(id);
+        payment.ifPresent(value -> {
+            view.getModel().put("payment", value);
+            view.setViewName("admin/payment/view");
         });
         return view;
     }
 
     @GetMapping(value="status/{id}")
     public String getAll(@PathVariable long id, RedirectAttributes attributes){
-        attributes.addFlashAttribute("notification", rechargeService.status(id));
-        return "redirect:/recharge/list";
+        attributes.addFlashAttribute("notification", paymentService.status(id));
+        return "redirect:/payment/list";
     }
 
     @PostMapping(value="search")
@@ -56,16 +56,16 @@ public class RechargeController {
                          @RequestParam(required = false) Status status,
                          @RequestParam(required = false, defaultValue = "1970-01-01") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date start,
                          @RequestParam(required = false, defaultValue = "1970-01-01") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date end){
-        return rechargeService.search(name, phone, status, start, end, page);
+        return paymentService.search(name, phone, status, start, end, page);
     }
 
     @GetMapping(value="statistic")
     public ModelAndView statistics(){
-        return rechargeService.statistics();
+        return paymentService.statistics();
     }
 
     @RequestMapping(value="delete")
     public RedirectView deleteAll(@RequestParam List<Long> ids, RedirectAttributes attributes){
-        return rechargeService.deleteAllByIds(ids, attributes);
+        return paymentService.deleteAllByIds(ids, attributes);
     }
 }
