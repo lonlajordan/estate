@@ -67,8 +67,8 @@ public class UserController {
     }
 
     @PostMapping(value="save")
-    public ModelAndView save(User user, @RequestParam long cityId, @RequestParam List<String> authorities, @RequestParam(required = false, defaultValue = "false") Boolean multiple, RedirectAttributes attributes, HttpSession session){
-        return userService.createOrUpdate(user, cityId, authorities, multiple, session, attributes);
+    public ModelAndView save(User user, @RequestParam List<String> authorities, @RequestParam(required = false) List<String> responsibilities, @RequestParam(required = false, defaultValue = "false") Boolean multiple, RedirectAttributes attributes, HttpSession session){
+        return userService.createOrUpdate(user, authorities, responsibilities, multiple, session, attributes);
     }
 
     @RequestMapping(value="delete")

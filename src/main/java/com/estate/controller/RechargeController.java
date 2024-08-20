@@ -1,8 +1,7 @@
 package com.estate.controller;
 
-import com.estate.domain.enumaration.Operator;
 import com.estate.domain.enumaration.Status;
-import com.estate.domain.entity.Recharge;
+import com.estate.domain.entity.Payment;
 import com.estate.domain.service.face.RechargeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -26,7 +25,7 @@ public class RechargeController {
 
     @GetMapping(value="list")
     public String getAll(@RequestParam(required = false, defaultValue = "1") int p, Model model){
-        Page<Recharge> recharges = rechargeService.findAll(p);
+        Page<Payment> recharges = rechargeService.findAll(p);
         model.addAttribute("recharges", recharges.toList());
         model.addAttribute("totalPages", recharges.getTotalPages());
         model.addAttribute("currentPage", p);
@@ -36,7 +35,7 @@ public class RechargeController {
     @GetMapping(value="view/{id}")
     public ModelAndView getDetails(@PathVariable long id){
         ModelAndView view = new ModelAndView("redirect:/error/404");
-        Optional<Recharge> recharge = rechargeService.findById(id);
+        Optional<Payment> recharge = rechargeService.findById(id);
         recharge.ifPresent(value -> {
             view.getModel().put("recharge", value);
             view.setViewName("admin/recharge/view");
@@ -54,11 +53,10 @@ public class RechargeController {
     public ModelAndView search(@RequestParam(required = false, defaultValue = "1") int page,
                          @RequestParam(required = false) String name,
                          @RequestParam(required = false) String phone,
-                         @RequestParam(required = false) Operator operator,
                          @RequestParam(required = false) Status status,
                          @RequestParam(required = false, defaultValue = "1970-01-01") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date start,
                          @RequestParam(required = false, defaultValue = "1970-01-01") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date end){
-        return rechargeService.search(name, phone, operator, status, start, end, page);
+        return rechargeService.search(name, phone, status, start, end, page);
     }
 
     @GetMapping(value="statistic")

@@ -114,7 +114,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                    <!--/*@thymesVar id="recharges" type="java.util.List<com.estate.domain.entity.Recharge>"*/-->
+                    <!--/*@thymesVar id="recharges" type="java.util.List<com.estate.domain.entity.Payment>"*/-->
                         <tr th:each="recharge,iter: ${recharges}" th:data-id="${recharge.id}">
                             <td>
                                 <input th:data-index="${iter.count}" type="checkbox">

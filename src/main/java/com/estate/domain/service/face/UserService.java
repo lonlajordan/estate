@@ -27,7 +27,7 @@ public interface UserService {
 
     long countUsers();
 
-    ModelAndView createOrUpdate(User user, long cityId, List<String> authorities, Boolean multiple, HttpSession session, RedirectAttributes attributes);
+    ModelAndView createOrUpdate(User user, List<String> authorities, List<String> responsibilities, Boolean multiple, HttpSession session, RedirectAttributes attributes);
 
     RedirectView deleteAllByIds(ArrayList<Long> ids, RedirectAttributes attributes);
 

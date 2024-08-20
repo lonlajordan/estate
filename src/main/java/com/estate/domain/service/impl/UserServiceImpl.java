@@ -4,12 +4,11 @@ import com.estate.domain.dto.Notification;
 import com.estate.domain.entity.Log;
 import com.estate.domain.entity.User;
 import com.estate.domain.enumaration.Level;
+import com.estate.domain.enumaration.Mode;
 import com.estate.domain.enumaration.Role;
 import com.estate.domain.mail.EmailHelper;
 import com.estate.domain.service.face.UserService;
-import com.estate.repository.CityRepository;
 import com.estate.repository.LogRepository;
-import com.estate.repository.ProvinceRepository;
 import com.estate.repository.UserRepository;
 import com.estate.utils.TextUtils;
 import lombok.RequiredArgsConstructor;
@@ -37,8 +36,6 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final LogRepository logRepository;
-    private final ProvinceRepository provinceRepository;
-    private final CityRepository cityRepository;
     private final PasswordEncoder passwordEncoder;
     private final EmailHelper emailHelper;
 
@@ -60,8 +57,6 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(id).orElse(new User());
         ModelAndView view = new ModelAndView("admin/user/save");
         view.getModel().put("user", user);
-        view.getModel().put("provinces", provinceRepository.findAllByOrderByNameAsc());
-        view.getModel().put("cities", cityRepository.findAllByOrderByNameAsc());
         view.getModel().put("creation", user.getId() == null);
         return view;
     }
@@ -108,7 +103,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ModelAndView createOrUpdate(User user, long cityId, List<String> authorities, Boolean multiple, HttpSession session, RedirectAttributes attributes) {
+    public ModelAndView createOrUpdate(User user, List<String> authorities, List<String> responsibilities, Boolean multiple, HttpSession session, RedirectAttributes attributes) {
         User user$ = user;
         boolean creation = true;
         if(user.getId() != null){
@@ -125,6 +120,7 @@ public class UserServiceImpl implements UserService {
         }
         Notification notification = new Notification();
         user$.setRoles(authorities.stream().map(Role::valueOf).collect(Collectors.toList()));
+        user$.setModes(responsibilities.stream().map(Mode::valueOf).collect(Collectors.toList()));
         try {
             if(creation){
                 HashMap<String, Object> context = new HashMap<>();
@@ -209,7 +205,6 @@ public class UserServiceImpl implements UserService {
         user.ifPresent((value) -> {
             view.setViewName("admin/user/profile");
             view.getModel().put("user", value);
-            view.getModel().put("provinces", provinceRepository.findAllByOrderByNameAsc());
         });
         return view;
     }

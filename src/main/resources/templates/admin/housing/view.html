@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 
-<head th:insert="base.html :: head(${'Détails de la ville'})"></head>
+<head th:insert="base.html :: head(${'Détails de la recharge'})"></head>
 
 <body>
 <div id="wrapper">
     <div th:replace="header.html"></div>
-    <!--/*@thymesVar id="city" type="com.estate.domain.entity.Housing"*/-->
-    <div id="page-wrapper" th:object="${city}">
+    <!--/*@thymesVar id="recharge" type="com.estate.domain.entity.Payment"*/-->
+    <div id="page-wrapper" th:object="${recharge}">
         <div class="row mt-6">
             <ol class="breadcrumb">
                 <li><i class="fa fa-home"></i> <a class="lazy-link" th:href="@{/home}">Accueil</a></li>
-                <li><a class="lazy-link" th:href="@{/city/list}">Liste des villes</a></li>
-                <li th:utext="*{'Détails de la ville <b>[ ' + name + ' ]</b>'}"></li>
+                <li><a class="lazy-link" th:href="@{/recharge/list}">Liste des recharges</a></li>
+                <li th:utext="*{'Détails de la recharge <b>[ ' + id + ' ]</b>'}"></li>
             </ol>
         </div>
         <div class="row">
@@ -20,27 +20,56 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <i class="fa fa-info-circle fa-fw"></i>
-                        <b>Informations sur la ville</b>
+                        <b>Informations sur la recharge</b>
                     </div>
                     <div class="list-group">
-                        <div class="list-group-item">
-                            <b>Nom</b>
-                            <span class="pull-right"><em th:text="*{name}"></em></span>
-                        </div>
-                        <div class="list-group-item">
-                            <b>Province</b>
-                            <span class="pull-right"><em th:text="*{province?.name}"></em></span>
-                        </div>
+                        <a href="#" class="list-group-item">
+                            <b>Joueur</b>
+                            <span class="pull-right"><em th:text="*{player?.name}"></em></span>
+                        </a>
+                        <a href="#" class="list-group-item">
+                            <b>Montant</b>
+                            <span class="pull-right"><em th:text="*{amount}"></em></span>
+                        </a>
+                        <a href="#" class="list-group-item">
+                            <b>Date</b>
+                            <span class="pull-right"><em th:text="*{#temporals.format(date, 'dd-MM-yyyy  HH:mm')}"></em></span>
+                        </a>
+                        <a href="#" class="list-group-item">
+                            <b>Opérateur</b>
+                            <span class="pull-right"><em th:text="*{operator?.name}"></em></span>
+                        </a>
+                        <a href="#" class="list-group-item">
+                            <b>Numéro</b>
+                            <span class="pull-right"><em th:text="*{clientNumber}"></em></span>
+                        </a>
+                        <a href="#" class="list-group-item">
+                            <b>Code marchand</b>
+                            <span class="pull-right"><em th:text="*{merchantCode}"></em></span>
+                        </a>
+                        <a href="#" class="list-group-item">
+                            <b>Reférence marchand</b>
+                            <span class="pull-right"><em th:text="*{merchantReference}"></em></span>
+                        </a>
+                        <a href="#" class="list-group-item">
+                            <b>Statut</b>
+                            <span class="pull-right"><em th:text="*{status?.name}"></em></span>
+                        </a>
                     </div>
-                    <div class="panel-footer">
-                        <a role="button" th:href="@{/city/save}" class="btn btn-success lazy-link mr-3">
-                            <i class="fa fa-plus-circle"></i>
-                            &nbsp; Ajouter
-                        </a>
-                        <a role="button" th:href="@{/city/save(id=*{id})}" class="btn btn-primary lazy-link">
-                            <i class="fa fa-pencil"></i>
-                            &nbsp; Editer
-                        </a>
+                </div>
+                <div th:if="${!#strings.isEmpty(recharge?.message)}" class="panel-group" id="accordion">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <button data-toggle="collapse" data-parent="#accordion" href="#collapseBox" class="collapsed btn btn-primary">
+                                    <i class="fa fa-list"></i>
+                                    &nbsp; Plus de détails
+                                </button>
+                            </h4>
+                        </div>
+                        <div id="collapseBox" class="panel-collapse collapse">
+                            <div class="panel-body" th:utext="*{message}"></div>
+                        </div>
                     </div>
                 </div>
             </div>

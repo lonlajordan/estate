@@ -1,6 +1,8 @@
 package com.estate.domain.entity;
 
+import com.estate.configuration.ModeListConverter;
 import com.estate.configuration.RoleListConverter;
+import com.estate.domain.enumaration.Mode;
 import com.estate.domain.enumaration.Role;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -53,6 +55,8 @@ public class User extends Auditable {
     @Column(nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
     private LocalDateTime lastLogin;
+    @Convert(converter = ModeListConverter.class)
+    private List<Mode> modes = new ArrayList<>();
     @Convert(converter = RoleListConverter.class)
     @Column(columnDefinition = "TEXT")
     private List<Role> roles = new ArrayList<>();

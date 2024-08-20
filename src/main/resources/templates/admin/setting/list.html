@@ -31,7 +31,7 @@
                     </thead>
                     <tbody>
                         <tr th:each="setting,iter: ${settings}" th:data-id="${setting.id}">
-                            <td th:text="${setting.name}"></td>
+                            <td th:text="${setting.code?.name}"></td>
                             <td th:text="${setting.value}"></td>
                             <td class="text-center fit-cell-content">
                                 <a class="lazy-link text-decoration-none" th:href="@{'/setting/save?id=' + ${setting.id}}"> Modifier </a>

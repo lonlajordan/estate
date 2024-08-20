@@ -36,7 +36,6 @@ public class SettingServiceImpl implements SettingService {
         Notification notification = Notification.info();
         Setting setting$ = settingRepository.findById(setting.getId()).orElse(null);
         if(setting$ != null){
-            setting$.setName(setting.getName());
             setting$.setValue(setting.getValue());
             try {
                 setting$ = settingRepository.save(setting$);

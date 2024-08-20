@@ -35,8 +35,6 @@
                             <th class="fit-cell-content">Sexe</th>
                             <th>Téléphone</th>
                             <th>Adresse e-mail</th>
-                            <th>Province</th>
-                            <th>Ville</th>
                             <th class="fit-cell-content">Statut</th>
                             <th class="fit-cell-content">Rôles</th>
                             <th class="fit-cell-content">Dernière connexion (GMT)</th>
@@ -56,8 +54,6 @@
                             <td th:text="${user.sex}"></td>
                             <td th:text="${user.phoneNumber}"></td>
                             <td th:text="${user.email}"></td>
-                            <td th:text="${user.city?.province?.name}"></td>
-                            <td th:text="${user.city?.name}"></td>
                             <td th:text="${user.enabled ? 'ACTIF' : 'DÉSACTIVÉ'}"></td>
                             <td>
                                 <span th:each="role: ${user.roles}">
