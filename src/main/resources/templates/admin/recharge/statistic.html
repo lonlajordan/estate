@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head th:replace="base.html :: head('Statistiques sur les recharges')"></head>
+
+<body>
+<div id="wrapper">
+    <div th:replace="header.html"></div>
+    <div id="page-wrapper">
+        <div class="row mt-6">
+            <ol class="breadcrumb">
+                <li><i class="fa fa-home"></i> <a class="lazy-link" th:href="@{/home}">Accueil</a></li>
+                <li><a class="lazy-link" th:href="@{/recharge/list}">Liste des recharges</a></li>
+                <li>Statistiques</li>
+            </ol>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <i class="fa fa-info-circle fa-fw"></i>
+                        <b>Chiffre d'affaire par provinces, villes et tranches d'âge</b>
+                    </div>
+                    <div class="panel-body p-0">
+                        <table class="table table-striped table-bordered border-none table-hover text-center vertical-align-middle dataTable">
+                            <thead>
+                            <tr>
+                                <th rowspan="2" class="fit-cell-content">Provinces</th>
+                                <th rowspan="2" class="fit-cell-content">Villes</th>
+                                <th colspan="2">Tranches d'âge</th>
+                                <th rowspan="2" class="fit-cell-content">TOTAL</th>
+                            </tr>
+                            <tr>
+                                <th>Jeunes</th>
+                                <th>Vieux</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <th:block th:each="province, x: ${provinces}">
+                                <tr th:each="city, y: ${province.cities}">
+                                    <td th:if="${y.first}" th:rowspan="${#lists.size(province.cities)}" th:text="${province.name}"></td>
+                                    <td th:text="${city.name}"></td>
+                                    <td th:text="${city.youthRecharges}">0</td>
+                                    <td th:text="${city.elderRecharges}">0</td>
+                                    <th th:text="${city.recharges}">0</th>
+                                </tr>
+                                <tr>
+                                    <th colspan="2" th:text="${'SOUS-TOTAL ' + x.count}"></th>
+                                    <th th:text="${province.youthRecharges}">0</th>
+                                    <th th:text="${province.elderRecharges}">0</th>
+                                    <th th:text="${province.recharges}">0</th>
+                                </tr>
+                            </th:block>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th colspan="2">TOTAL</th>
+                                    <th th:text="${total[0]}">0</th>
+                                    <th th:text="${total[1]}">0</th>
+                                    <th th:text="${total[2]}">0</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<th:block th:insert="base.html :: scripts"></th:block>
+</body>
+
+</html>

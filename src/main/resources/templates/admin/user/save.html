@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<!--/*@thymesVar id="creation" type="java.lang.Boolean"*/-->
+<!--/*@thymesVar id="notification" type="com.estate.domain.dto.Notification"*/-->
+<!--/*@thymesVar id="user" type="com.estate.domain.entity.User"*/-->
+<!--/*@thymesVar id="provinces" type="java.util.List<com.estate.domain.entity.Province>"*/-->
+<!--/*@thymesVar id="cities" type="java.util.List<com.estate.domain.entity.Housing>"*/-->
+<!--/*@thymesVar id="provinceId" type="java.lang.Long"*/-->
+<!--/*@thymesVar id="cityId" type="java.lang.Long"*/-->
+<head th:insert="base.html :: head(${creation ? 'Nouvel utilisateur' : 'Modification de l''utilisateur'})"></head>
+
+<body>
+<div id="wrapper">
+    <div th:replace="header.html"></div>
+    <div id="page-wrapper">
+        <div class="row mt-6">
+            <ol class="breadcrumb">
+                <li><i class="fa fa-home"></i> <a class="lazy-link" th:href="@{/home}">Accueil</a></li>
+                <li><a class="lazy-link" th:href="@{/user/list}">Liste des utilisateurs</a></li>
+                <li th:text="${creation ? 'Nouvel utilisateur' : 'Modification de l''utilisateur'}"></li>
+            </ol>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div th:replace="base.html :: alert(${notification})"></div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <b>Formulaire</b>
+                    </div>
+                    <form onsubmit="submitForm(event)" th:action="@{/user/save}" autocomplete="off" method="post">
+                        <div class="panel-body">
+                            <div class="row">
+                                <input name="id" th:value="${user?.id}" type="hidden">
+                                <div class="form-group col-lg-6">
+                                    <label for="firstName" class="control-label">Nom <span class="required-field">*</span></label>
+                                    <input id="firstName" name="firstName" th:value="${user?.firstName}" class="form-control" autocomplete="off" required>
+                                </div>
+                                <div class="form-group col-lg-6">
+                                    <label for="lastName" class="control-label">Prénom <span class="required-field">*</span></label>
+                                    <input id="lastName" name="lastName" th:value="${user?.lastName}" class="form-control" autocomplete="off" required>
+                                </div>
+                                <div class="form-group col-lg-6">
+                                    <label for="provinceId">Province <span class="required-field">*</span></label>
+                                    <select id="provinceId" name="provinceId" class="form-control searchable-select-box" data-next=".city" required>
+                                        <option value="" th:selected="${provinceId == null}">-</option>
+                                        <option th:each="p: ${provinces}" th:value="${p.id}" th:text="${p.name}" th:data-id="${p.id}" data-option="-1" th:selected="${provinceId == p.id}"></option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-lg-6">
+                                    <label for="cityId">Ville <span class="required-field">*</span></label>
+                                    <select id="cityId" name="cityId" class="form-control searchable-select-box city" th:disabled="${cityId == null}" required>
+                                        <option value="" th:selected="${cityId == null}">-</option>
+                                        <option th:each="c: ${cities}" th:value="${c.id}" th:data-id="${c.id}" th:data-option="${c.province?.id}" th:text="${c.name}" th:selected="${cityId == c.id}"></option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-lg-6">
+                                    <label for="phoneNumber" class="control-label">Numéro de téléphone <span class="required-field">*</span></label>
+                                    <input id="phoneNumber" name="phoneNumber" th:value="${user?.phoneNumber}" autocomplete="off" class="form-control" required>
+                                </div>
+                                <div class="form-group col-lg-6">
+                                    <label for="email" class="control-label">Adresse email <span class="required-field">*</span></label>
+                                    <input id="email" name="email" th:value="${user?.email}" type="email" autocomplete="off" class="form-control" required>
+                                </div>
+                                <div class="form-group col-lg-6">
+                                    <label for="sex">Sexe <span class="required-field">*</span></label>
+                                    <select id="sex" name="sex" class="form-control">
+                                        <option value="" th:selected="${user?.sex == null}">-</option>
+                                        <option value="M" th:selected="${#strings.equals(user?.sex, 'M')}">Masculin</option>
+                                        <option value="F" th:selected="${#strings.equals(user?.sex, 'F')}">Féminin</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-lg-6">
+                                    <label for="user-roles">Roles <span class="required-field">*</span></label>
+                                    <select multiple name="authorities" id="user-roles" class="form-control searchable-select-box" required>
+                                        <option th:each="role: ${T(com.estate.domain.enumaration.Role).values()}" th:value="${role}" th:text="${role.name}" th:selected="${user?.roles?.contains(role)}"></option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-footer">
+                            <button type="submit" class="btn btn-primary save-multiple">
+                                <i class="fa fa-save"></i>
+                                &nbsp; Enregistrer et ajouter un autre
+                            </button>
+                            <button type="submit" class="btn btn-success mx-2">
+                                <i class="fa fa-save"></i>
+                                &nbsp; Enregistrer
+                            </button>
+                            <button type="reset" class="btn btn-default">
+                                <i class="fa fa-refresh"></i>
+                                &nbsp; Réinitialiser
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<th:block th:insert="base.html :: scripts"></th:block>
+
+</body>
+
+</html>

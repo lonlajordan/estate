@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:insert="base.html :: head(${merchant.id == null ? 'Nouveau marchand' : 'Modification du marchand'})"></head>
+
+<body>
+<div id="wrapper">
+    <div th:replace="header.html"></div>
+    <div id="page-wrapper">
+        <div class="row mt-6">
+            <ol class="breadcrumb">
+                <li><i class="fa fa-home"></i> <a class="lazy-link" th:href="@{/home}">Accueil</a></li>
+                <li><a class="lazy-link" th:href="@{/merchant/list}">Liste des marchands</a></li>
+                <li th:text="${merchant.id == null ? 'Nouveau marchand' : 'Modification du marchand'}"></li>
+            </ol>
+        </div>
+        <div class="row">
+            <div class="col">
+                <!--/*@thymesVar id="notification" type="com.estate.domain.dto.Notification"*/-->
+                <div th:replace="base.html :: alert(${notification})"></div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <b>Formulaire</b>
+                    </div>
+                    <form onsubmit="submitForm(event)" th:action="@{/merchant/save}" th:object="${merchant}" autocomplete="off" method="post">
+                        <div class="panel-body">
+                            <input name="id" th:value="*{id}" type="hidden">
+                            <div class="row">
+                                <div class="form-group col-lg-12" th:classappend="${#fields.hasErrors('code') ? 'has-error' : ''}">
+                                    <label for="code" class="control-label">Code <span class="required-field">*</span></label>
+                                    <input id="code" name="code" th:value="${merchant?.code}" class="form-control" required>
+                                    <p class="help-block" th:if="${#fields.hasErrors('code')}" th:errors="*{code}"></p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-lg-12" th:classappend="${#fields.hasErrors('phone') ? 'has-error' : ''}">
+                                    <label for="phone" class="control-label">Numéro <span class="required-field">*</span></label>
+                                    <input id="phone" name="phone" th:value="*{phone}" class="form-control" required>
+                                    <p class="help-block" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-lg-12">
+                                    <label for="operator">Opérateur <span class="required-field">*</span></label>
+                                    <select id="operator" name="operator" class="form-control" required>
+                                        <option th:each="operator: ${T(com.estate.domain.enumaration.Operator).values()}" th:value="${operator}" th:text="${operator.name}" th:selected="${operator.equals(merchant?.operator)}"></option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-footer">
+                            <button type="submit" class="btn btn-primary save-multiple">
+                                <i class="fa fa-save"></i>
+                                &nbsp; Enregistrer et ajouter un autre
+                            </button>
+                            <button type="submit" class="btn btn-success mx-2">
+                                <i class="fa fa-save"></i>
+                                &nbsp; Enregistrer
+                            </button>
+                            <button type="reset" class="btn btn-default">
+                                <i class="fa fa-refresh"></i>
+                                &nbsp; Réinitialiser
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<th:block th:insert="base.html :: scripts"></th:block>
+
+</body>
+
+</html>

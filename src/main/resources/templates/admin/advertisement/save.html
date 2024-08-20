@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<!--/*@thymesVar id="creation" type="java.lang.Boolean"*/-->
+<!--/*@thymesVar id="advertisement" type="com.estate.domain.entity.Advertisement"*/-->
+<!--/*@thymesVar id="notification" type="com.estate.domain.dto.Notification"*/-->
+<head th:insert="base.html :: head(${#bools.isTrue(creation) ? 'Nouvelle publicité' : 'Modification d''une publicité'})"></head>
+
+<body>
+<div id="wrapper">
+    <div th:replace="header.html"></div>
+    <div id="page-wrapper">
+        <div class="row mt-6">
+            <ol class="breadcrumb">
+                <li><i class="fa fa-home"></i> <a class="lazy-link" th:href="@{/home}">Accueil</a></li>
+                <li><a class="lazy-link" th:href="@{/advertisement/list}">Liste des publicités</a></li>
+                <li th:text="${#bools.isTrue(creation) ? 'Nouvelle publicité' : 'Modification d''une publicité'}"></li>
+            </ol>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div th:replace="base.html :: alert(${notification})"></div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <b>Formulaire</b>
+                    </div>
+                    <form onsubmit="submitMultipartForm(event)" th:action="@{/advertisement/save}" autocomplete="off" method="post" enctype="multipart/form-data">
+                        <div class="panel-body">
+                            <div class="row">
+                                <input name="id" th:value="${advertisement?.id}" type="hidden">
+                                <div class="form-group col-lg-12">
+                                    <label for="title" class="control-label">Titre <span class="required-field">*</span></label>
+                                    <input id="title" name="title" th:value="${advertisement?.title}" class="form-control" required>
+                                </div>
+                                <div th:if="${creation || T(com.estate.domain.enumaration.MediaType).IMAGE.equals(advertisement?.type)}" class="form-group col-lg-12">
+                                    <label for="externLink" class="control-label">Site web</label>
+                                    <input id="externLink" name="externLink" type="url" th:value="${advertisement?.externLink}" class="form-control">
+                                </div>
+                                <div th:if="${creation}" class="form-group col-lg-12">
+                                    <label for="file">Fichier <span class="required-field">*</span></label>
+                                    <input id="file" name="file" type="file" class="form-control" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-footer">
+                            <button type="submit" class="btn btn-primary save-multiple">
+                                <i class="fa fa-save"></i>
+                                &nbsp; Enregistrer et ajouter une autre
+                            </button>
+                            <button type="submit" class="btn btn-success mx-2">
+                                <i class="fa fa-save"></i>
+                                &nbsp; Enregistrer
+                            </button>
+                            <button type="reset" class="btn btn-default">
+                                <i class="fa fa-refresh"></i>
+                                &nbsp; Réinitialiser
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<th:block th:insert="base.html :: scripts"></th:block>
+
+</body>
+
+</html>

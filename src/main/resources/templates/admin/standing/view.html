@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head th:insert="base.html :: head(${'Détails du package'})"></head>
+
+<body>
+<div id="wrapper">
+    <div th:replace="header.html"></div>
+    <!--/*@thymesVar id="pack" type="com.estate.domain.entity.Standing"*/-->
+    <div id="page-wrapper" th:object="${pack}">
+        <div class="row mt-6">
+            <ol class="breadcrumb">
+                <li><i class="fa fa-home"></i> <a class="lazy-link" th:href="@{/home}">Accueil</a></li>
+                <li><a class="lazy-link" th:href="@{/pack/list}">Liste des packages</a></li>
+                <li th:utext="*{'Détails du pack <b>[ ' + name + ' ]</b>'}"></li>
+            </ol>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <i class="fa fa-info-circle fa-fw"></i>
+                        <b>Informations sur le package</b>
+                    </div>
+                    <div class="list-group">
+                        <div class="list-group-item">
+                            <b>Nom</b>
+                            <span class="pull-right"><em th:text="*{name}"></em></span>
+                        </div>
+                        <div class="list-group-item">
+                            <b>Quantité de lingots d'or</b>
+                            <span class="pull-right"><em th:text="*{quantity}"></em></span>
+                        </div>
+                        <div class="list-group-item">
+                            <b>Prix (XAF)</b>
+                            <span class="pull-right"><em th:text="*{price}"></em></span>
+                        </div>
+                    </div>
+                    <div class="panel-footer">
+                        <a role="button" th:href="@{/pack/save}" class="btn btn-success lazy-link mr-3">
+                            <i class="fa fa-plus-circle"></i>
+                            &nbsp; Ajouter
+                        </a>
+                        <a role="button" th:href="@{'/pack/save?id=' + ${pack?.id}}" class="btn btn-primary lazy-link">
+                            <i class="fa fa-pencil"></i>
+                            &nbsp; Editer
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<th:block th:insert="base.html :: scripts"></th:block>
+
+</body>
+
+</html>

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+    <head th:replace="base.html :: head('Tableau de bord')"></head>
+    <body>
+        <div id="wrapper">
+            <div th:replace="header.html"></div>
+            <div id="page-wrapper">
+                <div class="row">
+                    <div class="mt-6">
+                        <h4>TABLEAU DE BORD</h4>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-lg-2 col-md-3">
+                            <div class="panel panel-default">
+                                <div class="panel-body bg-danger">
+                                    <div class="row">
+                                        <div class="col-xs-3">
+                                            <i class="fa fa-user fa-5x"></i>
+                                        </div>
+                                        <div class="col-xs-9 text-right">
+                                            <div class="h3" th:text="${players}"></div>
+                                            <div>Joueurs</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel-footer">
+                                    <a href="#">
+                                        <span class="pull-left"></span>
+                                    </a>
+                                    <a class="lazy-link" th:href="@{/player/list}">Détails ...</a>
+                                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-2 col-md-3">
+                            <div class="panel panel-default">
+                                <div class="panel-body bg-warning">
+                                    <div class="row">
+                                        <div class="col-xs-3">
+                                            <i class="fa fa-users fa-5x"></i>
+                                        </div>
+                                        <div class="col-xs-9 text-right">
+                                            <div class="h3" th:text="${users}"></div>
+                                            <div>Utilisateurs</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel-footer">
+                                    <a href="#">
+                                        <span class="pull-left"></span>
+                                    </a>
+                                    <a class="lazy-link" th:href="@{/user/list}">Détails ...</a>
+                                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-2 col-md-3">
+                            <div class="panel panel-default">
+                                <div class="panel-body bg-success">
+                                    <div class="row">
+                                        <div class="col-xs-3">
+                                            <i class="fa fa-question-circle-o fa-5x"></i>
+                                        </div>
+                                        <div class="col-xs-9 text-right">
+                                            <div class="h3" th:text="${questions}"></div>
+                                            <div>Questions</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel-footer">
+                                    <a href="#">
+                                        <span class="pull-left"></span>
+                                    </a>
+                                    <a class="lazy-link" th:href="@{/question/list}">Détails ...</a>
+                                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-2 col-md-3">
+                            <div class="panel panel-default">
+                                <div class="panel-body bg-primary" style="color: black">
+                                    <div class="row">
+                                        <div class="col-xs-3">
+                                            <i class="fa fa-empire fa-5x"></i>
+                                        </div>
+                                        <div class="col-xs-9 text-right">
+                                            <div class="h3" th:text="${mysteries}"></div>
+                                            <div>Mystères</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel-footer">
+                                    <a href="#">
+                                        <span class="pull-left"></span>
+                                    </a>
+                                    <a class="lazy-link" th:href="@{/mystery/list}">Détails ...</a>
+                                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-2 col-md-3">
+                            <div class="panel panel-default">
+                                <div class="panel-body bg-info">
+                                    <div class="row">
+                                        <div class="col-xs-3">
+                                            <i class="fa fa-video-camera fa-5x"></i>
+                                        </div>
+                                        <div class="col-xs-9 text-right">
+                                            <div class="h3" th:text="${advertisements}"></div>
+                                            <div>Publicités</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel-footer">
+                                    <a href="#">
+                                        <span class="pull-left"></span>
+                                    </a>
+                                    <a class="lazy-link" th:href="@{/advertisement/list}">Détails ...</a>
+                                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-2 col-md-3">
+                            <div class="panel panel-default">
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-xs-3">
+                                            <i class="fa fa-gamepad fa-5x"></i>
+                                        </div>
+                                        <div class="col-xs-9 text-right">
+                                            <div class="h3" th:text="${quizzes}"></div>
+                                            <div>Quiz</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel-footer">
+                                    <a href="#">
+                                        <span class="pull-left"></span>
+                                    </a>
+                                    <a class="lazy-link" th:href="@{/quiz/list}">Détails ...</a>
+                                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <th:block th:insert="base.html :: scripts"></th:block>
+    </body>
+</html>

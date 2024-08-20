@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<!--/*@thymesVar id="settings" type="java.util.List<com.estate.domain.entity.Setting>"*/-->
+<!--/*@thymesVar id="notification" type="com.estate.domain.dto.Notification"*/-->
+<head th:replace="base.html :: head('Liste des paramètres')"></head>
+
+<body>
+<div id="wrapper">
+    <div th:replace="header.html"></div>
+    <div id="page-wrapper">
+        <div class="row mt-6">
+            <ol class="breadcrumb">
+                <li><i class="fa fa-home"></i> <a class="lazy-link" th:href="@{/home}">Accueil</a></li>
+                <li>Liste des paramètres</li>
+            </ol>
+        </div>
+        <div class="row">
+            <h4>Liste des paramètres</h4>
+            <hr>
+        </div>
+        <div class="row">
+            <div class="col mb-6">
+                <div th:replace="base.html :: alert(${notification})"></div>
+                <table id="data-list" data-pdf-title="LISTE DES PARAMÈTRES" data-pdf-name="Liste des paramètres" class="table table-striped table-bordered table-hover dataTable exclude-first-sort">
+                    <thead>
+                        <tr>
+                            <th>Paramètre</th>
+                            <th class="fit-cell-content">Valeur</th>
+                            <th class="action fit-cell-content">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="setting,iter: ${settings}" th:data-id="${setting.id}">
+                            <td th:text="${setting.name}"></td>
+                            <td th:text="${setting.value}"></td>
+                            <td class="text-center fit-cell-content">
+                                <a class="lazy-link text-decoration-none" th:href="@{'/setting/save?id=' + ${setting.id}}"> Modifier </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<th:block th:insert="base.html :: scripts"></th:block>
+</body>
+
+</html>

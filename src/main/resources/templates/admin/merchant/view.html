@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head th:replace="base.html :: head('Détails sur le marchand')"></head>
+
+<body>
+<div id="wrapper">
+    <div th:replace="header.html"></div>
+    <!--/*@thymesVar id="merchant" type="com.estate.domain.entity.Merchant"*/-->
+    <div id="page-wrapper" th:object="${merchant}">
+        <div class="row mt-6">
+            <ol class="breadcrumb">
+                <li><i class="fa fa-home"></i> <a class="lazy-link" th:href="@{/home}">Accueil</a></li>
+                <li><a class="lazy-link" th:href="@{/merchant/list}">Liste des marchands</a></li>
+                <li th:utext="*{'Détails du marchand <b>[ ' + code + ' ]</b>'}"></li>
+            </ol>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <i class="fa fa-info-circle fa-fw"></i>
+                        <b>Informations sur le marchand</b>
+                    </div>
+                    <div class="list-group">
+                        <div class="list-group-item">
+                            <b>Code</b>
+                            <span class="pull-right"><em th:text="*{code}"></em></span>
+                        </div>
+                        <div class="list-group-item">
+                            <b>Opérateur</b>
+                            <span class="pull-right"><em th:text="*{operator?.name}"></em></span>
+                        </div>
+                        <div class="list-group-item">
+                            <b>Numéro</b>
+                            <span class="pull-right"><em th:text="*{phone}"></em></span>
+                        </div>
+                        <a href="#" class="list-group-item">
+                            <b>Statut</b>
+                            <span class="pull-right"><em th:text="${merchant?.actif == 1 ? 'ACTIF' : 'DÉSACTIVÉ'}"></em></span>
+                        </a>
+                    </div>
+                    <div class="panel-footer">
+                        <a role="button" th:href="@{/merchant/save}" class="btn btn-success lazy-link mr-3">
+                            <i class="fa fa-plus-circle"></i>
+                            &nbsp; Ajouter
+                        </a>
+                        <a role="button" th:href="@{'/merchant/save?id=' + ${merchant?.id}}" class="btn btn-primary lazy-link">
+                            <i class="fa fa-pencil"></i>
+                            &nbsp; Editer
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<th:block th:insert="base.html :: scripts"></th:block>
+</body>
+
+</html>

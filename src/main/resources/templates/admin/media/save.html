@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<!--/*@thymesVar id="creation" type="java.lang.Boolean"*/-->
+<!--/*@thymesVar id="media" type="com.estate.domain.entity.Media"*/-->
+<!--/*@thymesVar id="notification" type="com.estate.domain.dto.Notification"*/-->
+<head th:insert="base.html :: head(${#bools.isTrue(creation) ? 'Nouveau média' : 'Modification d''un média'})"></head>
+
+<body>
+<div id="wrapper">
+    <div th:replace="header.html"></div>
+    <div id="page-wrapper">
+        <div class="row mt-6">
+            <ol class="breadcrumb">
+                <li><i class="fa fa-home"></i> <a class="lazy-link" th:href="@{/home}">Accueil</a></li>
+                <li><a class="lazy-link" th:href="@{/media/list}">Liste des médias</a></li>
+                <li th:text="${#bools.isTrue(creation) ? 'Nouveau média' : 'Modification d''un média'}"></li>
+            </ol>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div th:replace="base.html :: alert(${notification})"></div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <b>Formulaire</b>
+                    </div>
+                    <form onsubmit="submitMultipartForm(event)" th:action="@{/media/save}" autocomplete="off" method="post" enctype="multipart/form-data">
+                        <div class="panel-body">
+                            <div class="row">
+                                <input name="id" th:value="${media?.id}" type="hidden">
+                                <div class="form-group col-lg-12">
+                                    <label for="title" class="control-label">Titre <span class="required-field">*</span></label>
+                                    <input id="title" name="title" th:value="${media?.title}" class="form-control" required>
+                                </div>
+                                <div th:if="${creation}" class="form-group col-lg-12">
+                                    <label for="file">Fichier <span class="required-field">*</span></label>
+                                    <input id="file" name="file" type="file" class="form-control" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-footer">
+                            <button type="submit" class="btn btn-primary save-multiple">
+                                <i class="fa fa-save"></i>
+                                &nbsp; Enregistrer et ajouter un autre
+                            </button>
+                            <button type="submit" class="btn btn-success mx-2">
+                                <i class="fa fa-save"></i>
+                                &nbsp; Enregistrer
+                            </button>
+                            <button type="reset" class="btn btn-default">
+                                <i class="fa fa-refresh"></i>
+                                &nbsp; Réinitialiser
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<th:block th:insert="base.html :: scripts"></th:block>
+
+</body>
+
+</html>
