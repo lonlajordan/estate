@@ -30,8 +30,7 @@
                                 <input type="checkbox">
                             </th>
                             <th class="fit-cell-content">ID</th>
-                            <th>Nom</th>
-                            <th>Prénom</th>
+                            <th>Nom et Prénom</th>
                             <th class="fit-cell-content">Sexe</th>
                             <th>Téléphone</th>
                             <th>Adresse e-mail</th>
@@ -48,9 +47,8 @@
                             </td>
                             <td th:text="${user.id}"></td>
                             <td>
-                                <a class="lazy-link" th:href="@{'/user/view/' + ${user.id}}" th:text="${user.firstName}"></a>
+                                <a class="lazy-link" th:href="@{'/user/view/' + ${user.id}}" th:text="${user.name}"></a>
                             </td>
-                            <td th:text="${user.lastName}"></td>
                             <td th:text="${user.sex}"></td>
                             <td th:text="${user.phoneNumber}"></td>
                             <td th:text="${user.email}"></td>

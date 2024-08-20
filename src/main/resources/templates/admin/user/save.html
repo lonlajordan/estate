@@ -52,15 +52,15 @@
                                     </select>
                                 </div>
                                 <div class="form-group col-lg-6">
-                                    <label for="user-responsibilities">Responsabilité</label>
-                                    <select multiple name="responsibilities" id="user-responsibilities" class="form-control searchable-select-box" required>
-                                        <option th:each="mode: ${T(com.estate.domain.enumaration.Mode).values()}" th:value="${mode}" th:text="${mode.name}" th:selected="${user?.roles?.contains(role)}"></option>
-                                    </select>
-                                </div>
-                                <div class="form-group col-lg-6">
                                     <label for="user-roles">Roles <span class="required-field">*</span></label>
                                     <select multiple name="authorities" id="user-roles" class="form-control searchable-select-box" required>
                                         <option th:each="role: ${T(com.estate.domain.enumaration.Role).values()}" th:value="${role}" th:text="${role.name}" th:selected="${user?.roles?.contains(role)}"></option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-lg-12">
+                                    <label for="user-responsibilities">En charge des modes de paiement</label>
+                                    <select multiple name="responsibilities" id="user-responsibilities" class="form-control searchable-select-box" required>
+                                        <option th:each="mode: ${T(com.estate.domain.enumaration.Mode).values()}" th:value="${mode}" th:text="${mode.name}" th:selected="${user?.modes?.contains(mode)}"></option>
                                     </select>
                                 </div>
                             </div>
