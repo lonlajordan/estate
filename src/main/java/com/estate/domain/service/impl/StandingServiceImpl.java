@@ -78,7 +78,7 @@ public class StandingServiceImpl implements StandingService {
         try {
             standingRepository.deleteAllById(ids);
         }catch (Exception e){
-            notification = Notification.error("Erreur lors de la suppression des standingages.");
+            notification = Notification.error("Erreur lors de la suppression des standings.");
             logRepository.save(Log.error(notification.getMessage(), ExceptionUtils.getStackTrace(e)));
         }
         attributes.addFlashAttribute("notification", notification);
