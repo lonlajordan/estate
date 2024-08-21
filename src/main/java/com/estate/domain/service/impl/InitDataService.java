@@ -56,12 +56,12 @@ public class InitDataService implements CommandLineRunner {
         MediaType mediaType = MediaType.parse("application/json");
         RequestBody body = RequestBody.create(mediaType, "{\"messages\":[{\"destinations\":[{\"to\":\"237695463868\"}],\"from\":\"CONCORDE\",\"text\":\"Bonjour monsieur LONLA.\\nVous devez renouveler le loyer de votre fils avant le 31-08-2024.\"}]}");
         Request request = new Request.Builder()
-                .url("https://n84xm5.api.infobip.com/sms/2/text/advanced")
-                .method("POST", body)
-                .addHeader("Authorization", "App 00ce9ac6fdf9271a3acf7c8e65b9bc8a-82c97d17-b5a6-49a9-98b6-db4f07bedf87")
-                .addHeader("Content-Type", "application/json")
-                .addHeader("Accept", "application/json")
-                .build();
-        Response response = client.newCall(request).execute();
+            .url("https://n84xm5.api.infobip.com/sms/2/text/advanced")
+            .method("POST", body)
+            .addHeader("Authorization", "App 00ce9ac6fdf9271a3acf7c8e65b9bc8a-82c97d17-b5a6-49a9-98b6-db4f07bedf87")
+            .addHeader("Content-Type", "application/json")
+            .addHeader("Accept", "application/json")
+            .build();
+        // Response response = client.newCall(request).execute();
     }
 }

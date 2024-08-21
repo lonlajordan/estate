@@ -37,7 +37,11 @@
                         </a>
                         <a href="#" class="list-group-item">
                             <b>Date de création</b>
-                            <span class="pull-right"><em th:text="*{#temporals.format(date, 'dd-MM-yyyy  HH:mm')}"></em></span>
+                            <span class="pull-right"><em th:text="*{#temporals.format(creationDate, 'dd-MM-yyyy  HH:mm')}"></em></span>
+                        </a>
+                        <a href="#" class="list-group-item">
+                            <b>Date de modification</b>
+                            <span class="pull-right"><em th:text="*{#temporals.format(lastModifiedDate, 'dd-MM-yyyy  HH:mm')}"></em></span>
                         </a>
                     </div>
                 </div>

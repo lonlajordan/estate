@@ -20,7 +20,7 @@ public class HousingServiceImpl implements HousingService {
 
     @Override
     public List<Housing> findAll() {
-        return housingRepository.findAll();
+        return housingRepository.findAllByOrderByNameAsc();
     }
 
     @Override
