@@ -89,17 +89,6 @@ public class PaymentServiceImpl implements PaymentService {
         return view;
     }
 
-    @Override
-    public ModelAndView statistics() {
-
-        long[] total = new long[]{0, 0, 0};
-        total[2] = rechargeRepository.sumAllAmount(Status.APPROVED);
-        total[1] = total[2] - total[0];
-        ModelAndView view = new ModelAndView("admin/recharge/statistic");
-        view.getModel().put("total", total);
-        return view;
-    }
-
 
 
     @Override

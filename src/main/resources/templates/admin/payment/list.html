@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 
-<head th:replace="base.html :: head('Recharges')"></head>
+<head th:replace="base.html :: head('Paiements')"></head>
 
 <body>
 <div id="wrapper">
@@ -10,11 +10,11 @@
         <div class="row mt-6">
             <ol class="breadcrumb">
                 <li><i class="fa fa-home"></i> <a class="lazy-link" th:href="@{/home}">Accueil</a></li>
-                <li>Recharges</li>
+                <li>Paiements</li>
             </ol>
         </div>
         <div class="row">
-            <h4>Liste des recharges</h4>
+            <h4>Liste des paiements</h4>
             <hr>
         </div>
         <div class="row">
@@ -31,7 +31,7 @@
                         </div>
                         <div id="collapseBox" class="panel-collapse collapse">
                             <div class="panel-body">
-                                <form onsubmit="submitForm(event)" th:action="@{/recharge/search}" autocomplete="off" method="post">
+                                <form onsubmit="submitForm(event)" th:action="@{/payment/search}" autocomplete="off" method="post">
                                     <input name="page" type="hidden" id="current-page" th:value="${currentPage}">
                                     <div class="row">
                                         <div class="col-lg-6">
@@ -48,10 +48,10 @@
                                         </div>
                                         <div class="col-lg-6">
                                             <div class="form-group">
-                                                <label for="operator">Opérateur</label>
+                                                <label for="operator">Modes de paiement</label>
                                                 <select id="operator" name="operator" class="form-control">
-                                                    <option value="">Tous les opérateurs...</option>
-                                                    <option th:each="operator: ${T(com.estate.domain.enumaration.Operator).values()}" th:value="${operator}" th:text="${operator.name}"></option>
+                                                    <option value="">Tous les modes...</option>
+                                                    <option th:each="mode: ${T(com.estate.domain.enumaration.Mode).values()}" th:value="${mode}" th:text="${mode.name}"></option>
                                                 </select>
                                             </div>
                                         </div>
@@ -81,7 +81,7 @@
                                         <i class="fa fa-search"></i>
                                         &nbsp; Lancer la recherche
                                     </button>
-                                    <button th:href="@{/recharge/list}" role="link" class="lazy-link btn btn-default">
+                                    <button th:href="@{/payment/list}" role="link" class="lazy-link btn btn-default">
                                         <i class="fa fa-refresh"></i>
                                         &nbsp; Réinitialiser
                                     </button>
@@ -89,53 +89,49 @@
                             </div>
                         </div>
                         <div class="panel-footer">
-                            <b><u>NB:</u></b> &nbsp; Utilisez des critères précis lorsque c'est possible. <a class="lazy-link" th:href="@{/recharge/statistic}">Voir les statistiques</a>
+                            <b><u>NB:</u></b> &nbsp; Utilisez des critères précis lorsque c'est possible.
                         </div>
                     </div>
                 </div>
-                <button id="delete-items" role="link" class="d-none" onclick="invokeActionOnItems('recharge/delete', 'supprimer')"></button>
+                <button id="delete-items" role="link" class="d-none" onclick="invokeActionOnItems('payment/delete', 'supprimer')"></button>
                 <!--/*@thymesVar id="notification" type="com.estate.domain.entity.Notification"*/-->
                 <div th:replace="base.html :: alert(${notification})"></div>
-                <table id="data-list" data-pdf-title="HISTORIQUE DES RECHARGES" data-pdf-name="Historique des recharges" data-columns-left="2" data-columns-right="2" class="table table-striped table-bordered table-hover paging searching landscape dataTable can-delete multiple-selection">
+                <table id="data-list" data-pdf-title="HISTORIQUE DES PAIEMENTS" data-pdf-name="Historique des paiements" data-columns-left="2" data-columns-right="2" class="table table-striped table-bordered table-hover paging searching landscape dataTable can-delete multiple-selection">
                     <thead>
                         <tr>
                             <th class="action fit-cell-content">
                                 <input type="checkbox">
                             </th>
                             <th>ID</th>
-                            <th>Joueur</th>
+                            <th>Etudiant</th>
                             <th>Montant</th>
                             <th>Date et heure (GMT)</th>
-                            <th>Opérateur</th>
-                            <th>Marchand</th>
-                            <th>Numéro</th>
+                            <th>Mode</th>
                             <th>Statut</th>
                             <th class="action fit-cell-content">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                    <!--/*@thymesVar id="recharges" type="java.util.List<com.estate.domain.entity.Payment>"*/-->
-                        <tr th:each="recharge,iter: ${recharges}" th:data-id="${recharge.id}">
+                    <!--/*@thymesVar id="payments" type="java.util.List<com.estate.domain.entity.Payment>"*/-->
+                        <tr th:each="payement,iter: ${payments}" th:data-id="${payement.id}">
                             <td>
                                 <input th:data-index="${iter.count}" type="checkbox">
                             </td>
-                            <td th:text="${recharge.id}"></td>
-                            <td th:text="${recharge.player?.name}"></td>
-                            <td th:utext="${recharge.amount}"></td>
-                            <td th:text="${#temporals.format(recharge.date, 'dd-MM-yyyy  HH:mm')}"></td>
-                            <td th:utext="${recharge.operator?.name}"></td>
-                            <td th:utext="${recharge.merchantCode}"></td>
-                            <td th:utext="${recharge.clientNumber}"></td>
-                            <td th:utext="${recharge.status?.name}"></td>
+                            <td th:text="${payement.id}"></td>
+                            <td th:text="${payement.student?.name}"></td>
+                            <td th:text="${payement.rent}"></td>
+                            <td th:text="${#temporals.format(payement.creationDate, 'dd-MM-yyyy  HH:mm')}"></td>
+                            <td th:text="${payement.mode?.name}"></td>
+                            <td th:text="${payement.status?.name}"></td>
                             <td class="text-center fit-cell-content">
                                 <a class="dropdown-toggle" tabindex="0" data-toggle="popover" data-placement="auto" data-trigger="focus" th:data-target="${'popover-content-' + recharge.id}" href="#">
                                     <i class="fa fa-ellipsis-h"></i>
                                 </a>
                                 <div th:id="${'popover-content-' + recharge.id}" class="list-group" style="display: none">
-                                    <a th:if="${#bools.isFalse(recharge.callback)}" class="list-group-item lazy-link text-decoration-none text-left" th:href="@{'/recharge/status/' + ${recharge.id}}">
-                                        <i class="fa fa-refresh fa-fw"></i> Actualiser
+                                    <a class="list-group-item lazy-link text-decoration-none text-left" th:href="@{'/payment/status/' + ${payement.id}}">
+                                        <i class="fa fa-refresh fa-fw"></i> Valider
                                     </a>
-                                    <a class="list-group-item lazy-link text-decoration-none text-left" th:href="@{'/recharge/view/' + ${recharge.id}}">
+                                    <a class="list-group-item lazy-link text-decoration-none text-left" th:href="@{'/payment/view/' + ${payement.id}}">
                                         <i class="fa fa-eye fa-fw"></i> Details
                                     </a>
                                     <a class="list-group-item text-decoration-none text-danger text-left" th:data-recharge-id="${recharge.id}" onclick="deleteItem(this.getAttribute('data-recharge-id'), 'recharge/delete')" href="#">
@@ -149,7 +145,7 @@
                 <!--/*@thymesVar id="totalPages" type="java.lang.Integer"*/-->
                 <!--/*@thymesVar id="currentPage" type="java.lang.Integer"*/-->
                 <!--/*@thymesVar id="search" type="java.lang.Boolean"*/-->
-                <div th:if="${totalPages > 1}" class="mt-6" id="pagination" th:title="${totalPages}" th:classappend="${search ? 'data-search' : ''}" th:aria-placeholder="${currentPage}" aria-label="recharge/list"></div>
+                <div th:if="${totalPages > 1}" class="mt-6" id="pagination" th:title="${totalPages}" th:classappend="${search ? 'data-search' : ''}" th:aria-placeholder="${currentPage}" aria-label="payment/list"></div>
             </div>
         </div>
     </div>

@@ -34,22 +34,22 @@
                                 <form th:object="${searchForm}" onsubmit="submitForm(event)" th:action="@{/student/search}" autocomplete="off" method="post">
                                     <input name="page" type="hidden" id="current-page" th:value="${currentPage}">
                                     <div class="row">
-                                        <div class="form-group col-lg-4">
+                                        <div class="form-group col-lg-6">
                                             <label for="firstName" class="control-label">Nom</label>
                                             <input id="firstName" th:field="*{firstName}" class="form-control">
                                         </div>
-                                        <div class="form-group col-lg-4">
+                                        <div class="form-group col-lg-6">
                                             <label for="lastName" class="control-label">Prénom</label>
                                             <input id="lastName" th:field="*{lastName}" class="form-control">
                                         </div>
-                                        <div class="form-group col-lg-4">
+                                        <div class="form-group col-lg-6">
                                             <label for="provinceId" class="control-label">Logement</label>
                                             <select id="provinceId" th:field="*{housingId}" class="form-control searchable-select-box">
                                                 <option value="">Toutes les logements ...</option>
                                                 <option th:each="housing: ${housings}" th:value="${housing.id}" th:data-id="${housing.id}" th:text="${housing.name}"></option>
                                             </select>
                                         </div>
-                                        <div class="form-group col-lg-4">
+                                        <div class="form-group col-lg-6">
                                             <label for="gender" class="control-label">Sexe</label>
                                             <select id="gender" th:field="*{gender}" class="form-control">
                                                 <option value="">Tous les sexes ...</option>

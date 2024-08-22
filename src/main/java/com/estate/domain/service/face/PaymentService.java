@@ -20,8 +20,6 @@ public interface PaymentService {
 
     ModelAndView search(String name, String phone, Status status, Date start, Date end, int page);
 
-    ModelAndView statistics();
-
     RedirectView deleteAllByIds(List<Long> ids, RedirectAttributes attributes);
 
     Notification status(long id);

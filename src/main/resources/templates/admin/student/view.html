@@ -73,6 +73,59 @@
                 </div>
             </div>
         </div>
+        <div class="row">
+            <table class="table table-hover table-striped">
+                <tr>
+                    <th>Contacts</th>
+                    <th th:text="*{firstParentRelation.name}"></th>
+                    <th th:text="*{secondParentRelation.name}"></th>
+                </tr>
+                <tr>
+                    <th>Nom</th>
+                    <td th:text="*{firstParentName}"></td>
+                    <td th:text="*{secondParentName}"></td>
+                </tr>
+                <tr>
+                    <th>Lieu de résidence</th>
+                    <td th:text="*{firstParentAddress}"></td>
+                    <td th:text="*{secondParentAddress}"></td>
+                </tr>
+                <tr>
+                    <th>Téléphone(s)</th>
+                    <td th:text="*{firstParentPhone}"></td>
+                    <td th:text="*{secondParentPhone}"></td>
+                </tr>
+                <tr>
+                    <th>Adresse e-mail</th>
+                    <td th:text="*{firstParentEmail}"></td>
+                    <td th:text="*{secondParentEmail}"></td>
+                </tr>
+            </table>
+        </div>
+        <div class="row">
+            <table class="table table-hover table-striped">
+                <tr>
+                    <th>Documents</th>
+                    <th>Action</th>
+                </tr>
+                <tr>
+                    <td>Pièce d'identité (Recto)</td>
+                    <td><a target="_blank" href="">Voir</a></td>
+                </tr>
+                <tr>
+                    <td>Pièce d'identité (Verso)</td>
+                    <td><a target="_blank" href="">Voir</a></td>
+                </tr>
+                <tr>
+                    <td>Acte de naissance</td>
+                    <td><a target="_blank" href="">Voir</a></td>
+                </tr>
+                <tr>
+                    <td>Carte d'étudiant</td>
+                    <td><a target="_blank" href="">Voir</a></td>
+                </tr>
+            </table>
+        </div>
     </div>
 </div>
 <th:block th:insert="base.html :: scripts"></th:block>

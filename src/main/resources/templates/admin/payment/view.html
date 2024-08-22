@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 
-<head th:insert="base.html :: head(${'Détails de la recharge'})"></head>
+<head th:insert="base.html :: head(${'Détails de le paiement'})"></head>
 
 <body>
 <div id="wrapper">
@@ -11,8 +11,8 @@
         <div class="row mt-6">
             <ol class="breadcrumb">
                 <li><i class="fa fa-home"></i> <a class="lazy-link" th:href="@{/home}">Accueil</a></li>
-                <li><a class="lazy-link" th:href="@{/recharge/list}">Liste des recharges</a></li>
-                <li th:utext="*{'Détails de la recharge <b>[ ' + id + ' ]</b>'}"></li>
+                <li><a class="lazy-link" th:href="@{/payment/list}">Liste des paiements</a></li>
+                <li th:utext="*{'Détails du paiement <b>[ ' + id + ' ]</b>'}"></li>
             </ol>
         </div>
         <div class="row">
@@ -20,36 +20,28 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <i class="fa fa-info-circle fa-fw"></i>
-                        <b>Informations sur la recharge</b>
+                        <b>Informations sur le paiement</b>
                     </div>
                     <div class="list-group">
                         <a href="#" class="list-group-item">
-                            <b>Joueur</b>
-                            <span class="pull-right"><em th:text="*{player?.name}"></em></span>
+                            <b>Etudiant</b>
+                            <span class="pull-right"><em th:text="*{student?.name}"></em></span>
+                        </a>
+                        <a href="#" class="list-group-item">
+                            <b>Mode de paiement</b>
+                            <span class="pull-right"><em th:text="*{mode.name}"></em></span>
                         </a>
                         <a href="#" class="list-group-item">
                             <b>Montant</b>
-                            <span class="pull-right"><em th:text="*{amount}"></em></span>
+                            <span class="pull-right"><em th:text="*{rent}"></em></span>
                         </a>
                         <a href="#" class="list-group-item">
-                            <b>Date</b>
-                            <span class="pull-right"><em th:text="*{#temporals.format(date, 'dd-MM-yyyy  HH:mm')}"></em></span>
+                            <b>Date de paiement</b>
+                            <span class="pull-right"><em th:text="*{#temporals.format(creationDate, 'dd-MM-yyyy  HH:mm')}"></em></span>
                         </a>
                         <a href="#" class="list-group-item">
-                            <b>Opérateur</b>
-                            <span class="pull-right"><em th:text="*{operator?.name}"></em></span>
-                        </a>
-                        <a href="#" class="list-group-item">
-                            <b>Numéro</b>
-                            <span class="pull-right"><em th:text="*{clientNumber}"></em></span>
-                        </a>
-                        <a href="#" class="list-group-item">
-                            <b>Code marchand</b>
-                            <span class="pull-right"><em th:text="*{merchantCode}"></em></span>
-                        </a>
-                        <a href="#" class="list-group-item">
-                            <b>Reférence marchand</b>
-                            <span class="pull-right"><em th:text="*{merchantReference}"></em></span>
+                            <b>Date de modification</b>
+                            <span class="pull-right"><em th:text="*{#temporals.format(creationDate, 'dd-MM-yyyy  HH:mm')}"></em></span>
                         </a>
                         <a href="#" class="list-group-item">
                             <b>Statut</b>
@@ -66,9 +58,6 @@
                                     &nbsp; Plus de détails
                                 </button>
                             </h4>
-                        </div>
-                        <div id="collapseBox" class="panel-collapse collapse">
-                            <div class="panel-body" th:utext="*{message}"></div>
                         </div>
                     </div>
                 </div>
