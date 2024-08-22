@@ -25,7 +25,7 @@ public interface UserService {
 
     Notification toggleById(long id, Principal principal);
 
-    long countUsers();
+    long count();
 
     ModelAndView createOrUpdate(User user, List<String> authorities, List<String> responsibilities, Boolean multiple, HttpSession session, RedirectAttributes attributes);
 

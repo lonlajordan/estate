@@ -33,12 +33,12 @@ import java.util.*;
 public class PaymentServiceImpl implements PaymentService {
     @PersistenceContext
     private EntityManager em;
-    private final PaymentRepository rechargeRepository;
+    private final PaymentRepository paymentRepository;
     private final LogRepository logRepository;
 
     @Override
     public Page<Payment> findAll(int p){
-        return rechargeRepository.findAllByOrderByDateDesc(PageRequest.of(p  - 1, 1000));
+        return paymentRepository.findAllByOrderByCreationDateDesc(PageRequest.of(p  - 1, 1000));
     }
 
     @Override
@@ -93,14 +93,14 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public Optional<Payment> findById(long id) {
-        return rechargeRepository.findById(id);
+        return paymentRepository.findById(id);
     }
 
     @Override
-    public RedirectView deleteAllByIds(List<Long> ids, RedirectAttributes attributes){
+    public RedirectView deleteById(long id, RedirectAttributes attributes){
         Notification notification = Notification.info();
         try {
-            rechargeRepository.deleteAllByIdInAndStatus(ids, Status.REJECTED);
+            paymentRepository.deleteAllByIdAndStatus(id, Status.REJECTED);
         }catch (Exception e){
             notification = Notification.error("Erreur lors de la suppression des recharges.");
             logRepository.save(Log.error(notification.getMessage(), ExceptionUtils.getStackTrace(e)));
@@ -112,5 +112,10 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     public Notification status(long id) {
         return null;
+    }
+
+    @Override
+    public long countByStatus(Status status) {
+        return paymentRepository.countAllByStatus(status);
     }
 }

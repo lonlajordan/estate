@@ -23,8 +23,6 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpSession;
 import java.security.Principal;
 import java.util.Locale;
@@ -39,11 +37,8 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final EmailHelper emailHelper;
 
-    @PersistenceContext
-    private EntityManager em;
-
     @Override
-    public long countUsers(){
+    public long count(){
         return userRepository.countAllByDeletedFalse();
     }
 

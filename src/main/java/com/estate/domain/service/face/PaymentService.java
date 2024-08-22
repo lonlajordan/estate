@@ -9,7 +9,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 
 public interface PaymentService {
@@ -20,7 +19,9 @@ public interface PaymentService {
 
     ModelAndView search(String name, String phone, Status status, Date start, Date end, int page);
 
-    RedirectView deleteAllByIds(List<Long> ids, RedirectAttributes attributes);
+    RedirectView deleteById(long id, RedirectAttributes attributes);
 
     Notification status(long id);
+
+    long countByStatus(Status status);
 }

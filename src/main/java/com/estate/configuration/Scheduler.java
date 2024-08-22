@@ -12,9 +12,9 @@ import javax.transaction.Transactional;
 @EnableScheduling
 @RequiredArgsConstructor
 public class Scheduler {
-    private final HousingRepository questionRepository;
+    private final StudentRepository studentRepository;
 
-    @Scheduled(cron = "0 0 1 ? * WED,SUN")
+    @Scheduled(cron = "0 0 1 ? * SUN")
     public void generateOrdinaryQuiz(){
 
     }

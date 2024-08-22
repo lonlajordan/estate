@@ -14,8 +14,9 @@ import java.util.List;
 public interface PaymentRepository extends JpaRepository<Payment, Long> {
     @Query("SELECT COALESCE(SUM(p.rent * p.months + p.caution + p.repair),0) FROM Payment p WHERE p.status = ?1")
     long sumAllAmount(Status status);
-    Page<Payment> findAllByOrderByDateDesc(Pageable pageable);
+    Page<Payment> findAllByOrderByCreationDateDesc(Pageable pageable);
     @Transactional
     @Modifying(clearAutomatically = true)
-    void deleteAllByIdInAndStatus(List<Long> ids, Status status);
+    void deleteAllByIdAndStatus(long id, Status status);
+    long countAllByStatus(Status status);
 }

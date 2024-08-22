@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import java.util.Optional;
 
 public interface StudentService {
+    long count();
     Page<Student> findAll(int page);
     Page<Student> findAll(StudentSearch form);
     Optional<Student> findById(Long id);

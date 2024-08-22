@@ -24,7 +24,12 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class StudentServiceImpl implements StudentService {
     private final StudentRepository studentRepository;
-    
+
+    @Override
+    public long count() {
+        return studentRepository.count();
+    }
+
     @Override
     public Page<Student> findAll(int page) {
         return studentRepository.findAllByOrderByCreationDateDesc(PageRequest.of(page - 1, 100));
