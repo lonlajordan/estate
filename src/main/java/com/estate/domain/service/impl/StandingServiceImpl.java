@@ -39,10 +39,10 @@ public class StandingServiceImpl implements StandingService {
     }
 
     @Override
-    public RedirectView deleteAllByIdIn(List<Long> ids, RedirectAttributes attributes){
+    public RedirectView deleteById(long id, RedirectAttributes attributes){
         Notification notification = Notification.info();
         try {
-            standingRepository.deleteAllById(ids);
+            standingRepository.deleteById(id);
         }catch (Exception e){
             notification = Notification.error("Erreur lors de la suppression des standings.");
             logRepository.save(Log.error(notification.getMessage(), ExceptionUtils.getStackTrace(e)));

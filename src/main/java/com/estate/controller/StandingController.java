@@ -65,7 +65,7 @@ public class StandingController {
     }
 
     @RequestMapping(value="delete")
-    public RedirectView deleteAll(@RequestParam List<Long> ids, RedirectAttributes attributes){
-        return standingService.deleteAllByIdIn(ids, attributes);
+    public RedirectView deleteById(@RequestParam long id, RedirectAttributes attributes){
+        return standingService.deleteById(id, attributes);
     }
 }

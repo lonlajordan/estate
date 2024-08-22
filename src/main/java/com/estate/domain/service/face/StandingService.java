@@ -14,7 +14,7 @@ public interface StandingService {
 
     List<Standing> findAll();
 
-    RedirectView deleteAllByIdIn(List<Long> ids, RedirectAttributes attributes);
+    RedirectView deleteById(long id, RedirectAttributes attributes);
 
     Notification save(StandingForm form);
 }

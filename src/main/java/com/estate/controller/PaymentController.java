@@ -14,7 +14,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -59,13 +58,8 @@ public class PaymentController {
         return paymentService.search(name, phone, status, start, end, page);
     }
 
-    @GetMapping(value="statistic")
-    public ModelAndView statistics(){
-        return paymentService.statistics();
-    }
-
     @RequestMapping(value="delete")
-    public RedirectView deleteAll(@RequestParam List<Long> ids, RedirectAttributes attributes){
-        return paymentService.deleteAllByIds(ids, attributes);
+    public RedirectView deleteById(@RequestParam long id, RedirectAttributes attributes){
+        return paymentService.deleteById(id, attributes);
     }
 }
