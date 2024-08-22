@@ -12,7 +12,7 @@
             <ol class="breadcrumb">
                 <li><i class="fa fa-home"></i> <a class="lazy-link" th:href="@{/home}">Accueil</a></li>
                 <li><a class="lazy-link" th:href="@{/standing/list}">Liste des standings</a></li>
-                <li th:utext="*{'Détails du <b>[ ' + name + ' ]</b> standing'}"></li>
+                <li th:utext="*{'Détails du <b>' + name + '</b> standing'}"></li>
             </ol>
         </div>
         <div class="row">
@@ -29,15 +29,23 @@
                         </div>
                         <div class="list-group-item">
                             <b>Loyer par mois (FCFA)</b>
-                            <span class="pull-right"><em th:text="*{rent}"></em></span>
+                            <span class="pull-right"><em th:text="${#numbers.formatInteger(standing.rent, 1, 'WHITESPACE')}"></em></span>
                         </div>
                         <div class="list-group-item">
                             <b>Caution (FCFA)</b>
-                            <span class="pull-right"><em th:text="*{caution}"></em></span>
+                            <span class="pull-right"><em th:text="${#numbers.formatInteger(standing.caution, 1, 'WHITESPACE')}"></em></span>
                         </div>
                         <div class="list-group-item">
-                            <b>Frais de réparation (FCFA)</b>
-                            <span class="pull-right"><em th:text="*{repair}"></em></span>
+                            <b>Frais de réhabilitation (FCFA)</b>
+                            <span class="pull-right"><em th:text="${#numbers.formatInteger(standing.repair, 1, 'WHITESPACE')}"></em></span>
+                        </div>
+                        <div class="list-group-item">
+                            <b>Date de création</b>
+                            <span class="pull-right"><em th:text="${#temporals.format(standing.creationDate, 'dd-MM-yyyy hh:mm')}"></em></span>
+                        </div>
+                        <div class="list-group-item">
+                            <b>Date de modification</b>
+                            <span class="pull-right"><em th:text="${#temporals.format(standing.lastModifiedDate, 'dd-MM-yyyy hh:mm')}"></em></span>
                         </div>
                     </div>
                     <div class="panel-footer">

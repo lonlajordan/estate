@@ -1,6 +1,6 @@
 package com.estate.domain.service.face;
 
-import com.estate.domain.dto.Notification;
+import com.estate.domain.entity.Notification;
 import com.estate.domain.entity.User;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;

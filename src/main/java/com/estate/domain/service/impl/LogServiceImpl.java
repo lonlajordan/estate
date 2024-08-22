@@ -2,7 +2,7 @@ package com.estate.domain.service.impl;
 
 import com.estate.domain.enumaration.Level;
 import com.estate.domain.entity.Log;
-import com.estate.domain.dto.Notification;
+import com.estate.domain.entity.Notification;
 import com.estate.domain.entity.User;
 import com.estate.domain.service.face.LogService;
 import com.estate.repository.LogRepository;

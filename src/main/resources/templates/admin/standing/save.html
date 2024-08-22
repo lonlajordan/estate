@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
-<!--/*@thymesVar id="creation" type="java.lang.Boolean"*/-->
-<!--/*@thymesVar id="pack" type="com.estate.domain.entity.Standing"*/-->
-<!--/*@thymesVar id="notification" type="com.estate.domain.dto.Notification"*/-->
-<head th:insert="base.html :: head(${#bools.isTrue(creation) ? 'Nouveau standing' : 'Modification du standing'})"></head>
+<!--/*@thymesVar id="standing" type="com.estate.domain.entity.Standing"*/-->
+<!--/*@thymesVar id="notification" type="com.estate.domain.entity.Notification"*/-->
+<head th:insert="base.html :: head(${standing.id == null ? 'Nouveau standing' : 'Modification du standing'})"></head>
 
 <body>
 <div id="wrapper">
@@ -13,7 +12,7 @@
             <ol class="breadcrumb">
                 <li><i class="fa fa-home"></i> <a class="lazy-link" th:href="@{/home}">Accueil</a></li>
                 <li><a class="lazy-link" th:href="@{/standing/list}">Liste des standings</a></li>
-                <li th:text="${#bools.isTrue(creation) ? 'Nouveau standing' : 'Modification du standing'}"></li>
+                <li th:text="${standing.id == null ? 'Nouveau standing' : 'Modification du standing'}"></li>
             </ol>
         </div>
         <div class="row">
@@ -23,32 +22,36 @@
                     <div class="panel-heading">
                         <b>Formulaire</b>
                     </div>
-                    <form onsubmit="return submitForm(event)" th:action="@{/standing/save}" autocomplete="off" method="post">
+                    <form th:object="${standing}" onsubmit="return submitForm(event)" th:action="@{/standing/save}" autocomplete="off" method="post">
                         <div class="panel-body">
                             <div class="row">
-                                <input name="id" th:value="${standing?.id}" type="hidden">
+                                <input th:field="*{id}" type="hidden">
                                 <div class="col-lg-12">
-                                    <div class="form-group">
-                                        <label for="name">Nom <span class="required-field">*</span></label>
-                                        <input id="name" name="name" th:value="${standing?.name}" class="form-control" autocomplete="off" required>
+                                    <div class="form-group" th:classappend="${#fields.hasErrors('name') ? 'has-error' : ''}">
+                                        <label class="control-label" for="name">Nom <span class="required-field">*</span></label>
+                                        <input id="name" th:field="*{name}" class="form-control" autocomplete="off" required>
+                                        <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="help-block"></p>
                                     </div>
                                 </div>
                                 <div class="col-lg-12">
-                                    <div class="form-group">
-                                        <label for="rent">Loyer par mois (FCFA) <span class="required-field">*</span></label>
-                                        <input id="rent" name="rent" type="number" th:value="${standing?.rent}" class="form-control" autocomplete="off" required>
+                                    <div class="form-group" th:classappend="${#fields.hasErrors('rent') ? 'has-error' : ''}">
+                                        <label class="control-label" for="rent">Loyer par mois (FCFA) <span class="required-field">*</span></label>
+                                        <input id="rent" type="number" min="1" step="1" th:field="*{rent}" class="form-control" autocomplete="off" required>
+                                        <p th:if="${#fields.hasErrors('rent')}" th:errors="*{rent}" class="help-block"></p>
                                     </div>
                                 </div>
                                 <div class="col-lg-12">
-                                    <div class="form-group">
-                                        <label for="caution">Caution (FCFA) <span class="required-field">*</span></label>
-                                        <input id="caution" name="caution" type="number" th:value="${standing?.caution}" class="form-control" autocomplete="off" required>
+                                    <div class="form-group" th:classappend="${#fields.hasErrors('caution') ? 'has-error' : ''}">
+                                        <label class="control-label" for="caution">Caution (FCFA) <span class="required-field">*</span></label>
+                                        <input id="caution" type="number" min="0" step="1" th:field="*{caution}" class="form-control" autocomplete="off" required>
+                                        <p th:if="${#fields.hasErrors('caution')}" th:errors="*{caution}" class="help-block"></p>
                                     </div>
                                 </div>
                                 <div class="col-lg-12">
-                                    <div class="form-group">
-                                        <label for="repair">Frais de réparation (FCFA) <span class="required-field">*</span></label>
-                                        <input id="repair" name="repair" type="number" th:value="${standing?.repair}" class="form-control" autocomplete="off" required>
+                                    <div class="form-group" th:classappend="${#fields.hasErrors('repair') ? 'has-error' : ''}">
+                                        <label class="control-label" for="repair">Frais de réhabilitation (FCFA) <span class="required-field">*</span></label>
+                                        <input id="repair" type="number" min="0" step="1" th:field="*{repair}" class="form-control" autocomplete="off" required>
+                                        <p th:if="${#fields.hasErrors('repair')}" th:errors="*{repair}" class="help-block"></p>
                                     </div>
                                 </div>
                             </div>

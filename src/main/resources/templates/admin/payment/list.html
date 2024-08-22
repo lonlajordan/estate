@@ -94,7 +94,7 @@
                     </div>
                 </div>
                 <button id="delete-items" role="link" class="d-none" onclick="invokeActionOnItems('recharge/delete', 'supprimer')"></button>
-                <!--/*@thymesVar id="notification" type="com.estate.domain.dto.Notification"*/-->
+                <!--/*@thymesVar id="notification" type="com.estate.domain.entity.Notification"*/-->
                 <div th:replace="base.html :: alert(${notification})"></div>
                 <table id="data-list" data-pdf-title="HISTORIQUE DES RECHARGES" data-pdf-name="Historique des recharges" data-columns-left="2" data-columns-right="2" class="table table-striped table-bordered table-hover paging searching landscape dataTable can-delete multiple-selection">
                     <thead>

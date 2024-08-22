@@ -1,6 +1,6 @@
 package com.estate.domain.service.face;
 
-import com.estate.domain.dto.Notification;
+import com.estate.domain.entity.Notification;
 import com.estate.domain.entity.Payment;
 import com.estate.domain.enumaration.Status;
 import org.springframework.data.domain.Page;

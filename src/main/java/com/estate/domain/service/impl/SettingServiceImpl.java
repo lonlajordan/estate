@@ -1,6 +1,6 @@
 package com.estate.domain.service.impl;
 
-import com.estate.domain.dto.Notification;
+import com.estate.domain.entity.Notification;
 import com.estate.domain.entity.Log;
 import com.estate.domain.entity.Setting;
 import com.estate.domain.service.face.SettingService;

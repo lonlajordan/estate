@@ -26,6 +26,12 @@ public class HousingController {
     public String findById(@RequestParam(required = false) Long id, Model model){
         Housing housing = id == null ? new Housing() : housingService.findById(id).orElse(new Housing());
         model.addAttribute("housing", housing);
+        model.addAttribute("standings", standingService.findAll());
         return "admin/housing/save";
+    }
+
+    @PostMapping("save")
+    public String save(){
+        return "redirect:/housing/list";
     }
 }

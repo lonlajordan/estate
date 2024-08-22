@@ -1,4 +1,4 @@
-package com.estate.domain.dto;
+package com.estate.domain.entity;
 
 import com.estate.domain.enumaration.Level;
 import lombok.Data;
@@ -36,5 +36,9 @@ public class Notification {
         notification.setType(Level.WARN);
         notification.setMessage(message);
         return notification;
+    }
+
+    public boolean hasError(){
+        return Level.ERROR.equals(this.type);
     }
 }

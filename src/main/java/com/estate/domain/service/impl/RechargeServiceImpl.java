@@ -1,6 +1,6 @@
 package com.estate.domain.service.impl;
 
-import com.estate.domain.dto.Notification;
+import com.estate.domain.entity.Notification;
 import com.estate.domain.entity.*;
 import com.estate.domain.enumaration.Status;
 import com.estate.domain.service.face.RechargeService;

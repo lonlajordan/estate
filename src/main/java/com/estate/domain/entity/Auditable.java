@@ -9,10 +9,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.Column;
 import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
-import javax.persistence.Temporal;
-import java.util.Date;
-
-import static javax.persistence.TemporalType.TIMESTAMP;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -20,12 +17,10 @@ import static javax.persistence.TemporalType.TIMESTAMP;
 @EntityListeners(AuditingEntityListener.class)
 public abstract class Auditable {
 
-    @Temporal(TIMESTAMP)
     @CreatedDate
     @Column(updatable = false)
-    protected Date creationDate;
+    protected LocalDateTime creationDate;
 
     @LastModifiedDate
-    @Temporal(TIMESTAMP)
-    protected Date lastModifiedDate;
+    protected LocalDateTime lastModifiedDate;
 }

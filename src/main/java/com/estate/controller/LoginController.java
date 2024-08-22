@@ -1,7 +1,7 @@
 package com.estate.controller;
 
 import com.estate.domain.mail.EmailHelper;
-import com.estate.domain.dto.Notification;
+import com.estate.domain.entity.Notification;
 import com.estate.domain.entity.User;
 import com.estate.repository.UserRepository;
 import com.estate.utils.TextUtils;
