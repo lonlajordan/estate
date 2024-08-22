@@ -2,6 +2,7 @@ package com.estate.domain.entity;
 
 import com.estate.domain.enumaration.Gender;
 import com.estate.domain.enumaration.Grade;
+import com.estate.domain.enumaration.Relationship;
 import com.estate.domain.form.StudentForm;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,6 +16,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -29,51 +31,57 @@ public class Student extends Auditable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(nullable = false)
-    private String firstName;
-    private String lastName;
+    private String firstName = "LONLA";
+    private String lastName = "Gatien Jordan";
     @Column(nullable = false)
-    private String placeOfBirth;
+    private String placeOfBirth = "BABADJOU";
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    private LocalDate dateOfBirth;
+    private LocalDate dateOfBirth = LocalDate.of(1998, Month.AUGUST, 1);
     @Column(nullable = false)
-    private String cniRecto; // CNI face recto
-    private String cniVerso; // CNI face verso
-    private String birthCertificat; // Acte de naissance
-    private String studentCard; // Carte d'étudiant
+    private String cniRecto = ""; // CNI face recto
+    private String cniVerso = ""; // CNI face verso
+    private String birthCertificat = ""; // Acte de naissance
+    private String studentCard = ""; // Carte d'étudiant
     @Column(nullable = false)
-    private String school = "";
+    private String school = "ENSP";
     @Enumerated(EnumType.STRING)
     private Grade grade = Grade.L1;
     @Column(nullable = false)
-    private String specialities = "";
+    private String specialities = "Informatique";
 
     @Column(nullable = false)
-    private String email;
+    private String email = "jordan@gmail.com";
     private String password;
     @Column(nullable = false)
-    private String phone;
+    private String phone = "695463868";
     @Enumerated(EnumType.STRING)
     private Gender gender = Gender.MALE;
     @ManyToOne
     private Housing housing;
 
     @Column(nullable = false)
-    private String firstParentName;
+    @Enumerated(EnumType.STRING)
+    private Relationship firstParentRelation = Relationship.FATHER;
     @Column(nullable = false)
-    private String firstParentAddress;
+    private String firstParentName = "LONLA EMMANUEL";
     @Column(nullable = false)
-    private String firstParentPhone;
+    private String firstParentAddress = "MESSASSI";
     @Column(nullable = false)
-    private String firstParentEmail;
+    private String firstParentPhone = "677432413";
+    @Column(nullable = false)
+    private String firstParentEmail = "admin@gmail.com";
 
     @Column(nullable = false)
-    private String secondParentName;
+    @Enumerated(EnumType.STRING)
+    private Relationship secondParentRelation = Relationship.MOTHER;
     @Column(nullable = false)
-    private String secondParentAddress;
+    private String secondParentName = "LONLA ANGELINE";
     @Column(nullable = false)
-    private String secondParentPhone;
+    private String secondParentAddress = "MESSASSI";
     @Column(nullable = false)
-    private String secondParentEmail;
+    private String secondParentPhone = "677078633";
+    @Column(nullable = false)
+    private String secondParentEmail = "admin@gmail.com";
 
 
     @Column(nullable = false)
@@ -88,6 +96,9 @@ public class Student extends Auditable {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Payment> payments = new ArrayList<>();
 
+    @OneToOne
+    private Lease currentLease;
+
     public String getName(){
         return Stream.of(firstName, lastName).filter(Objects::nonNull).collect(Collectors.joining(" "));
     }
@@ -96,16 +107,23 @@ public class Student extends Auditable {
         StudentForm form = new StudentForm();
         form.setFirstName(firstName);
         form.setLastName(lastName);
-        form.setGender(gender);
+        form.setDateOfBirth(dateOfBirth);
         form.setPlaceOfBirth(placeOfBirth);
-        form.setGrade(grade);
-        form.setSchool(school);
+        form.setGender(gender);
 
+        form.setSchool(school);
+        form.setSpecialities(specialities);
+        form.setGrade(grade);
+        form.setPhone(phone);
+        form.setEmail(email);
+
+        form.setFirstParentRelation(firstParentRelation);
         form.setFirstParentName(firstParentName);
         form.setFirstParentAddress(firstParentAddress);
         form.setFirstParentPhone(firstParentPhone);
         form.setFirstParentEmail(firstParentEmail);
 
+        form.setSecondParentRelation(secondParentRelation);
         form.setSecondParentName(secondParentName);
         form.setSecondParentAddress(secondParentAddress);
         form.setSecondParentPhone(secondParentPhone);

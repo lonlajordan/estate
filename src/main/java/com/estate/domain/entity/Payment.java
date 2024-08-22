@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -29,8 +28,9 @@ public class Payment extends Auditable {
     private User validator;
     @ManyToOne(optional = false)
     private Student student;
-    @Column(nullable = false)
-    private LocalDateTime date = LocalDateTime.now();
+    @ManyToOne
+    private Housing desiderata;
+    private String proof;
 
     private Status status = Status.PENDING;
 }

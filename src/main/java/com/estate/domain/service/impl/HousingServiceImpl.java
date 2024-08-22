@@ -16,6 +16,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
@@ -53,6 +54,7 @@ public class HousingServiceImpl implements HousingService {
     }
 
     @Override
+    @Transactional
     public Notification save(HousingForm form) {
         boolean creation = form.getId() == null;
         Notification notification = Notification.info();

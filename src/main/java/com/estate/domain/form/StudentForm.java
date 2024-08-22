@@ -2,7 +2,9 @@ package com.estate.domain.form;
 
 import com.estate.domain.enumaration.Gender;
 import com.estate.domain.enumaration.Grade;
+import com.estate.domain.enumaration.Relationship;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.Email;
@@ -17,21 +19,33 @@ public class StudentForm {
     private String firstName;
     private String lastName;
     @NotNull
-    private Gender gender;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    private LocalDate dateOfBirth;
     @NotBlank
     private String placeOfBirth;
     @NotNull
-    private LocalDate dateOfBirth;
-    @NotBlank
-    @Email
-    private String email;
+    private Gender gender;
+    private MultipartFile birthCertificatFile;
+    private MultipartFile cniRectoFile;
+    private MultipartFile cniVersoFile;
+
+
     @NotBlank
     private String school;
     @NotBlank
     private String specialities;
     @NotNull
     private Grade grade;
+    private MultipartFile studentCardFile;
 
+    @NotBlank
+    @Email
+    private String email;
+    @NotBlank
+    private String phone;
+
+    @NotNull
+    private Relationship firstParentRelation;
     @NotBlank
     private String firstParentName;
     @NotBlank
@@ -42,6 +56,8 @@ public class StudentForm {
     @Email
     private String firstParentEmail;
 
+    @NotNull
+    private Relationship secondParentRelation;
     @NotBlank
     private String secondParentName;
     @NotBlank
@@ -52,8 +68,4 @@ public class StudentForm {
     @Email
     private String secondParentEmail;
 
-    private MultipartFile cniRectoFile;
-    private MultipartFile cniVersoFile;
-    private MultipartFile birthCertificatFile;
-    private MultipartFile studentCardFile;
 }

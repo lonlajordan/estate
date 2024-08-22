@@ -12,7 +12,7 @@ import java.util.Optional;
 @Setter
 @Getter
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(name = "unique_name", columnNames = {"name"}))
+@Table(uniqueConstraints = @UniqueConstraint(name = "UK_NAME", columnNames = {"name"}))
 public class Housing extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,6 +21,8 @@ public class Housing extends Auditable {
     private String name;
     @ManyToOne(optional = false)
     private Standing standing;
+    @OneToOne
+    private Student resident;
     @Enumerated(EnumType.STRING)
     private Availability status = Availability.FREE;
 

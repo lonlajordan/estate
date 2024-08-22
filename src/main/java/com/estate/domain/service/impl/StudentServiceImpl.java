@@ -14,6 +14,7 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.util.Optional;
@@ -40,6 +41,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
+    @Transactional
     public Notification save(StudentForm form) {
         boolean creation = form.getId() == null;
         Notification notification = Notification.info();
@@ -47,7 +49,27 @@ public class StudentServiceImpl implements StudentService {
         if(student == null) return Notification.error("Visiteur introuvable");
         student.setFirstName(form.getFirstName());
         student.setLastName(form.getLastName());
+        student.setDateOfBirth(form.getDateOfBirth());
+        student.setPlaceOfBirth(form.getPlaceOfBirth());
+        student.setGender(form.getGender());
+
+        student.setSchool(form.getSchool());
+        student.setSpecialities(form.getSpecialities());
+        student.setGrade(form.getGrade());
+        student.setPhone(form.getPhone());
         student.setEmail(form.getEmail());
+
+        student.setFirstParentRelation(form.getFirstParentRelation());
+        student.setFirstParentName(form.getFirstParentName());
+        student.setFirstParentAddress(form.getFirstParentAddress());
+        student.setFirstParentPhone(form.getFirstParentPhone());
+        student.setFirstParentEmail(form.getFirstParentEmail());
+
+        student.setSecondParentRelation(form.getSecondParentRelation());
+        student.setSecondParentName(form.getSecondParentName());
+        student.setSecondParentAddress(form.getSecondParentAddress());
+        student.setSecondParentPhone(form.getSecondParentPhone());
+        student.setSecondParentEmail(form.getSecondParentEmail());
 
         try {
             if(creation){
@@ -55,7 +77,7 @@ public class StudentServiceImpl implements StudentService {
                 // Send mail here
             }
             studentRepository.saveAndFlush(student);
-            notification.setMessage("Un visiteur a été " + (creation ? "ajouté." : "modifié."));
+            notification.setMessage("Un étudiant a été " + (creation ? "ajouté." : "modifié."));
             log.info(notification.getMessage());
         } catch (Throwable e){
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();

@@ -3,7 +3,7 @@ package com.estate.domain.service.impl;
 import com.estate.domain.entity.Notification;
 import com.estate.domain.entity.*;
 import com.estate.domain.enumaration.Status;
-import com.estate.domain.service.face.RechargeService;
+import com.estate.domain.service.face.PaymentService;
 import com.estate.repository.*;
 import com.estate.utils.DateUtils;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +30,7 @@ import java.util.*;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class RechargeServiceImpl implements RechargeService {
+public class PaymentServiceImpl implements PaymentService {
     @PersistenceContext
     private EntityManager em;
     private final PaymentRepository rechargeRepository;
@@ -49,7 +49,7 @@ public class RechargeServiceImpl implements RechargeService {
         CriteriaQuery<Long> countQuery = cb.createQuery(Long.class);
         Root<Payment> recharge = cq.from(Payment.class);
         List<Predicate> predicates = new ArrayList<>();
-        ModelAndView view = new ModelAndView("admin/recharge/list");
+        ModelAndView view = new ModelAndView("admin/payment/list");
         if(start.toInstant().getEpochSecond() > 0){
             predicates.add(cb.greaterThanOrEqualTo(recharge.get("date"), DateUtils.dateToLocalDateTime(start).with(LocalTime.MIN)));
             view.getModel().put("start", start);

@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 
-<head th:replace="base.html :: head('Détails sur l''étudiant')"></head>
+<head th:replace="base.html :: head(${'Détails de l''étudiant'})"></head>
 
 <body>
 <div id="wrapper">
     <div th:replace="header.html"></div>
     <!--/*@thymesVar id="student" type="com.estate.domain.entity.Student"*/-->
-    <div id="page-wrapper" th:object="${player}">
+    <div id="page-wrapper" th:object="${student}">
         <div class="row mt-6">
             <ol class="breadcrumb">
                 <li><i class="fa fa-home"></i> <a class="lazy-link" th:href="@{/home}">Accueil</a></li>
@@ -44,12 +44,12 @@
                             <span class="pull-right"><em th:text="*{gender.name}"></em></span>
                         </div>
                         <div class="list-group-item">
-                            <b>École</b>
+                            <b>Nom de l'établissement fréquenté</b>
                             <span class="pull-right"><em th:text="*{school}"></em></span>
                         </div>
                         <div class="list-group-item">
-                            <b>Téléphone</b>
-                            <span class="pull-right"><em th:text="*{phoneNumber}"></em></span>
+                            <b>Téléphone(s)</b>
+                            <span class="pull-right"><em th:text="*{phone}"></em></span>
                         </div>
                         <div class="list-group-item">
                             <b>Adresse e-mail</b>

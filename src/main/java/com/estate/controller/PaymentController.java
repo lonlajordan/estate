@@ -2,7 +2,7 @@ package com.estate.controller;
 
 import com.estate.domain.enumaration.Status;
 import com.estate.domain.entity.Payment;
-import com.estate.domain.service.face.RechargeService;
+import com.estate.domain.service.face.PaymentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -21,7 +21,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @RequestMapping("/payment")
 public class PaymentController {
-    private final RechargeService paymentService;
+    private final PaymentService paymentService;
 
     @GetMapping(value="list")
     public String getAll(@RequestParam(required = false, defaultValue = "1") int p, Model model){

@@ -12,7 +12,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-public interface RechargeService {
+public interface PaymentService {
 
     Page<Payment> findAll(int p);
 

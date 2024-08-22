@@ -75,9 +75,11 @@
                     <thead>
                         <tr>
                             <th class="action fit-cell-content">ID</th>
-                            <th>Nom</th>
-                            <th>Standing</th>
-                            <th>Statut</th>
+                            <th class="fit-cell-content">Nom</th>
+                            <th class="fit-cell-content">Standing</th>
+                            <th class="fit-cell-content">Statut</th>
+                            <th>Résident</th>
+                            <th class="fit-cell-content">Période de location</th>
                             <th class="action fit-cell-content">Date de création</th>
                             <th class="action fit-cell-content">Date de modification</th>
                             <th class="action fit-cell-content">Actions</th>
@@ -90,6 +92,10 @@
                             <td th:text="${housing.name}"></td>
                             <td th:text="${housing.standing?.name}"></td>
                             <td th:text="${housing.status?.name}"></td>
+                            <td th:text="${housing.resident?.name}"></td>
+                            <td>
+                                <span th:text="${#temporals.format(housing.resident?.currentLease?.startDate, 'dd/MM/yyyy')}"></span> - <span th:text="${#temporals.format(housing.resident?.currentLease?.endDate, 'dd/MM/yyyy')}"></span>
+                            </td>
                             <td th:text="${#temporals.format(housing.creationDate, 'dd-MM-yyyy HH:mm')}"></td>
                             <td th:text="${#temporals.format(housing.lastModifiedDate, 'dd-MM-yyyy HH:mm')}"></td>
                             <td class="text-center fit-cell-content">
