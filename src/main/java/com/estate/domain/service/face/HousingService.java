@@ -1,8 +1,9 @@
 package com.estate.domain.service.face;
 
 import com.estate.domain.entity.Housing;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.ModelAndView;
+import com.estate.domain.entity.Notification;
+import com.estate.domain.form.HousingForm;
+import com.estate.domain.form.HousingSearch;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -14,11 +15,13 @@ public interface HousingService {
 
     List<Housing> findAll();
 
-    Optional<Housing> findById(long id);
+    List<Housing> findAll(HousingSearch form);
 
-    ModelAndView save(Housing housing, Boolean multiple, RedirectAttributes attributes);
+    Optional<Housing> findById(long id);
 
     RedirectView deleteAllByIds(ArrayList<Long> ids, RedirectAttributes attributes);
 
     long count();
+
+    Notification save(HousingForm form);
 }

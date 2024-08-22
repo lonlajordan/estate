@@ -1,10 +1,12 @@
 package com.estate.domain.entity;
 
 import com.estate.domain.enumaration.Availability;
+import com.estate.domain.form.HousingForm;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.Optional;
 
 
 @Setter
@@ -23,6 +25,15 @@ public class Housing extends Auditable {
     private Availability status = Availability.FREE;
 
     public Housing() {
+    }
+
+    public HousingForm toForm(){
+        HousingForm form = new HousingForm();
+        form.setId(id);
+        form.setName(name);
+        form.setStandingId(Optional.ofNullable(standing).map(Standing::getId).orElse(null));
+        form.setStatus(status);
+        return form;
     }
 
     @PrePersist

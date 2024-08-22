@@ -44,6 +44,16 @@
                             <span class="pull-right"><em th:text="*{#temporals.format(lastModifiedDate, 'dd-MM-yyyy  HH:mm')}"></em></span>
                         </a>
                     </div>
+                    <div class="panel-footer">
+                        <a role="button" th:href="@{/housing/save}" class="btn btn-success lazy-link mr-3">
+                            <i class="fa fa-plus-circle"></i>
+                            &nbsp; Ajouter
+                        </a>
+                        <a role="button" th:href="@{'/housing/save?id=' + ${housing.id}}" class="btn btn-primary lazy-link">
+                            <i class="fa fa-pencil"></i>
+                            &nbsp; Éditer
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
