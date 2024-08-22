@@ -1,5 +1,8 @@
 package com.estate.domain.entity;
 
+import com.estate.domain.enumaration.Gender;
+import com.estate.domain.enumaration.Grade;
+import com.estate.domain.form.StudentForm;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,6 +31,7 @@ public class Student extends Auditable {
     @Column(nullable = false)
     private String firstName;
     private String lastName;
+    @Column(nullable = false)
     private String placeOfBirth;
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate dateOfBirth;
@@ -36,27 +40,46 @@ public class Student extends Auditable {
     private String cniVerso; // CNI face verso
     private String birthCertificat; // Acte de naissance
     private String studentCard; // Carte d'étudiant
-    private String school;
-    private String speciality1;
-    private String speciality2;
-    private String speciality3;
+    @Column(nullable = false)
+    private String school = "";
+    @Enumerated(EnumType.STRING)
+    private Grade grade = Grade.L1;
+    @Column(nullable = false)
+    private String specialities = "";
 
     @Column(nullable = false)
     private String email;
     private String password;
-    private String phone;
-    private char sex = 'M';
-    @ManyToOne
-    private Housing city;
     @Column(nullable = false)
-    private String phoneNumber;
+    private String phone;
+    @Enumerated(EnumType.STRING)
+    private Gender gender = Gender.MALE;
+    @ManyToOne
+    private Housing housing;
+
+    @Column(nullable = false)
+    private String firstParentName;
+    @Column(nullable = false)
+    private String firstParentAddress;
+    @Column(nullable = false)
+    private String firstParentPhone;
+    @Column(nullable = false)
+    private String firstParentEmail;
+
+    @Column(nullable = false)
+    private String secondParentName;
+    @Column(nullable = false)
+    private String secondParentAddress;
+    @Column(nullable = false)
+    private String secondParentPhone;
+    @Column(nullable = false)
+    private String secondParentEmail;
+
 
     @Column(nullable = false)
     private String otp = "";
     @Column(nullable = false)
     private LocalDateTime otpExpiredAt = LocalDateTime.now();
-    @Column(nullable = false)
-    private LocalDateTime createdAt = LocalDateTime.now();
     @Column(nullable = false)
     private Boolean enabled = true;
     @Column(nullable = false)
@@ -69,12 +92,34 @@ public class Student extends Auditable {
         return Stream.of(firstName, lastName).filter(Objects::nonNull).collect(Collectors.joining(" "));
     }
 
+    public StudentForm toForm(){
+        StudentForm form = new StudentForm();
+        form.setFirstName(firstName);
+        form.setLastName(lastName);
+        form.setGender(gender);
+        form.setPlaceOfBirth(placeOfBirth);
+        form.setGrade(grade);
+        form.setSchool(school);
+
+        form.setFirstParentName(firstParentName);
+        form.setFirstParentAddress(firstParentAddress);
+        form.setFirstParentPhone(firstParentPhone);
+        form.setFirstParentEmail(firstParentEmail);
+
+        form.setSecondParentName(secondParentName);
+        form.setSecondParentAddress(secondParentAddress);
+        form.setSecondParentPhone(secondParentPhone);
+        form.setSecondParentEmail(secondParentEmail);
+        return form;
+    }
+
     @PrePersist
     @PreUpdate
     public void beforeSave(){
         if(this.firstName != null) this.firstName = this.firstName.trim().toUpperCase();
         if(this.lastName != null) this.lastName = Arrays.stream(this.lastName.trim().toLowerCase().split("\\s+")).map(StringUtils::capitalize).collect(Collectors.joining(" "));
         if(this.email != null) this.email = this.email.trim();
+        if(this.phone != null) this.phone = this.phone.trim();
     }
 
     @PreRemove

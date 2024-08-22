@@ -1,12 +1,89 @@
 package com.estate.controller;
 
+import com.estate.domain.entity.Notification;
+import com.estate.domain.entity.Student;
+import com.estate.domain.form.StudentForm;
+import com.estate.domain.form.StudentSearch;
+import com.estate.domain.service.face.StudentService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.support.RequestContextUtils;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/student")
 public class StudentController {
+    private final StudentService studentService;
+    
+    @GetMapping("list")
+    public String list(Model model, @RequestParam(required = false, defaultValue = "1") int page, HttpServletRequest request) {
+        Page<Student> students;
+        StudentSearch form = new StudentSearch();
+        Map<String, ?> attributes = RequestContextUtils.getInputFlashMap(request);
+        boolean search = attributes != null && attributes.containsKey("searchForm");
+        if(search){
+            form = (StudentSearch) attributes.get("searchForm");
+            students = studentService.findAll(form);
+            if(students.isEmpty()) model.addAttribute("notification", Notification.info("Aucun résultat"));
+        } else {
+            students = studentService.findAll(page);
+        }
+        model.addAttribute("students", students.toList());
+        model.addAttribute("totalPages", students.getTotalPages());
+        model.addAttribute("currentPage", students.getNumber() + 1);
+        model.addAttribute("searchForm", form);
+        model.addAttribute("search", search);
+        return "admin/student/list";
+    }
 
+    @PostMapping("search")
+    public String search(StudentSearch form, RedirectAttributes attributes){
+        attributes.addFlashAttribute("searchForm", form);
+        return "redirect:/student/list";
+    }
+
+    @GetMapping("save")
+    public String save(Model model, @RequestParam(required = false) Long id, RedirectAttributes attributes){
+        Student student = new Student();
+        if(id != null)  student = studentService.findById(id).orElse(null);
+        if(student == null){
+            attributes.addFlashAttribute("notification", Notification.error("Étudiant introuvable"));
+            return "redirect:/student/list";
+        }
+        model.addAttribute("student", student.toForm());
+        return "admin/student/save";
+    }
+
+    @PostMapping("save")
+    public String save(@Valid @ModelAttribute("student") StudentForm student, BindingResult result, @RequestParam(required = false, defaultValue = "false") boolean multiple, Model model, RedirectAttributes attributes){
+        if(result.hasErrors()) return "admin/student/save";
+        Notification notification =  studentService.save(student);
+        if(multiple || notification.hasError()){
+            model.addAttribute("notification", notification);
+            model.addAttribute("student", notification.hasError() ? student : new StudentForm());
+            return "admin/student/save";
+        }
+        attributes.addFlashAttribute("notification", notification);
+        return "redirect:/student/list";
+    }
+
+    @GetMapping("view/{id}")
+    public String view(@PathVariable long id, Model model, RedirectAttributes attributes){
+        Student student = studentService.findById(id).orElse(null);
+        if(student == null){
+            attributes.addFlashAttribute("notification", Notification.error("Étudiant introuvable"));
+            return "redirect:/student/list";
+        }
+        model.addAttribute("student", student);
+        return "admin/student/view";
+    }
 }

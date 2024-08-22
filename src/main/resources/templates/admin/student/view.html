@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 
-<head th:replace="base.html :: head('Détails sur le joueur')"></head>
+<head th:replace="base.html :: head('Détails sur l''étudiant')"></head>
 
 <body>
 <div id="wrapper">
     <div th:replace="header.html"></div>
-    <!--/*@thymesVar id="player" type="com.estate.domain.entity.Student"*/-->
+    <!--/*@thymesVar id="student" type="com.estate.domain.entity.Student"*/-->
     <div id="page-wrapper" th:object="${player}">
         <div class="row mt-6">
             <ol class="breadcrumb">
                 <li><i class="fa fa-home"></i> <a class="lazy-link" th:href="@{/home}">Accueil</a></li>
-                <li><a class="lazy-link" th:href="@{/player/list}">Liste des joueurs</a></li>
-                <li th:utext="*{'Détails du joueur <b>[ ' + name + ' ]</b>'}"></li>
+                <li><a class="lazy-link" th:href="@{/student/list}">Liste des étudiants</a></li>
+                <li th:utext="*{'Détails de l''étudiant <b>[ ' + id + ' ]</b>'}"></li>
             </ol>
         </div>
         <div class="row">
@@ -20,7 +20,7 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <i class="fa fa-info-circle fa-fw"></i>
-                        <b>Informations sur le joueur</b>
+                        <b>Informations sur l'étudiant</b>
                     </div>
                     <div class="list-group">
                         <div class="list-group-item">
@@ -32,28 +32,20 @@
                             <span class="pull-right"><em th:text="*{lastName}"></em></span>
                         </div>
                         <div class="list-group-item">
-                            <b>Pseudo</b>
-                            <span class="pull-right"><em th:text="*{pseudo}"></em></span>
+                            <b>Date de naissance</b>
+                            <span class="pull-right"><em th:text="*{#temporals.format(dateOfBirth, 'dd-MM-yyyy')}"></em></span>
                         </div>
                         <div class="list-group-item">
-                            <b>Année de naissance</b>
-                            <span class="pull-right"><em th:text="*{birthYear}"></em></span>
+                            <b>Lieu de naissance</b>
+                            <span class="pull-right"><em th:text="*{placeOfBirth}"></em></span>
                         </div>
                         <div class="list-group-item">
                             <b>Sexe</b>
-                            <span class="pull-right"><em th:text="${#strings.equals(player?.sex, 'M') ? 'Masculin' : 'Féminin'}"></em></span>
+                            <span class="pull-right"><em th:text="*{gender.name}"></em></span>
                         </div>
                         <div class="list-group-item">
-                            <b>Province</b>
-                            <span class="pull-right"><em th:text="*{city?.province?.name}"></em></span>
-                        </div>
-                        <div class="list-group-item">
-                            <b>Ville</b>
-                            <span class="pull-right"><em th:text="*{city?.name}"></em></span>
-                        </div>
-                        <div class="list-group-item">
-                            <b>Langue</b>
-                            <span class="pull-right"><em th:text="*{language?.language}"></em></span>
+                            <b>École</b>
+                            <span class="pull-right"><em th:text="*{school}"></em></span>
                         </div>
                         <div class="list-group-item">
                             <b>Téléphone</b>
@@ -65,16 +57,18 @@
                         </div>
                         <div class="list-group-item">
                             <b>Date d'inscription</b>
-                            <span class="pull-right"><em th:text="*{#temporals.format(createdAt, 'dd-MM-yyyy  HH:mm')}"></em></span>
+                            <span class="pull-right"><em th:text="*{#temporals.format(creationDate, 'dd-MM-yyyy  HH:mm')}"></em></span>
                         </div>
+                        <div class="list-group-item">
+                            <b>Date de modification</b>
+                            <span class="pull-right"><em th:text="*{#temporals.format(lastModifiedDate, 'dd-MM-yyyy  HH:mm')}"></em></span>
+                        </div>
+                        <!--
                         <div class="list-group-item">
                             <b>Photo</b>
                             <span class="pull-right"><a th:href="*{picture}" th:data-download-src="*{picture}" data-fancybox th:data-caption="*{name}" th:data-thumb="${#request.getContextPath() + '/images/waterfall.png'}">Aperçu</a></span>
                         </div>
-                        <div class="list-group-item">
-                            <b>Solde</b>
-                            <span class="pull-right"><em th:text="*{balance}"></em></span>
-                        </div>
+                        -->
                     </div>
                 </div>
             </div>

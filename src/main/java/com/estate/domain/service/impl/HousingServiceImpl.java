@@ -16,6 +16,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -66,6 +67,7 @@ public class HousingServiceImpl implements HousingService {
             notification.setMessage("Un logement a été " + (creation ? "ajouté." : "modifié."));
             log.info(notification.getMessage());
         } catch (Throwable e){
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             String message = ExceptionUtils.getRootCauseMessage(e);
             notification.setType(Level.ERROR);
             if(StringUtils.containsIgnoreCase(message, "UK_NAME")){

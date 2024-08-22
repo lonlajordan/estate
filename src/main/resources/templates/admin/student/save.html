@@ -1,10 +1,122 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<!--/*@thymesVar id="student" type="com.estate.domain.entity.Student"*/-->
+<!--/*@thymesVar id="notification" type="com.estate.domain.entity.Notification"*/-->
+<head th:insert="base.html :: head(${student.id == null ? 'Nouvel étudiant' : 'Modification de l''étudiant'})"></head>
+
 <body>
+<div id="wrapper">
+    <div th:replace="header.html"></div>
+    <div id="page-wrapper">
+        <div class="row mt-6">
+            <ol class="breadcrumb">
+                <li><i class="fa fa-home"></i> <a class="lazy-link" th:href="@{/home}">Accueil</a></li>
+                <li><a class="lazy-link" th:href="@{/student/list}">Liste des étudiants</a></li>
+                <li th:text="${student.id == null ? 'Nouvel étudiant' : 'Modification de l''étudiant'}"></li>
+            </ol>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div th:replace="base.html :: alert(${notification})"></div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <b>Formulaire</b>
+                    </div>
+                    <form th:object="${student}" onsubmit="return submitForm(event)" th:action="@{/student/save}" autocomplete="off" method="post">
+                        <div class="panel-body">
+                            <div class="row">
+                                <input th:field="*{id}" type="hidden">
+                                <div class="form-group col-lg-6" th:classappend="${#fields.hasErrors('firstName') ? 'has-error' : ''}">
+                                    <label class="control-label" for="firstName">Nom <span class="required-field">*</span></label>
+                                    <input id="firstName" th:field="*{firstName}" class="form-control" autocomplete="off" required>
+                                    <p th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}" class="help-block"></p>
+                                </div>
+                                <div class="form-group col-lg-6" th:classappend="${#fields.hasErrors('lastName') ? 'has-error' : ''}">
+                                    <label class="control-label" for="lastName">Prénom</label>
+                                    <input id="lastName" th:field="*{lastName}" class="form-control" autocomplete="off">
+                                    <p th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}" class="help-block"></p>
+                                </div>
+                                <div class="form-group col-lg-6" th:classappend="${#fields.hasErrors('dateOfBirth') ? 'has-error' : ''}">
+                                    <label class="control-label" for="caution">Date de naissance <span class="required-field">*</span></label>
+                                    <input id="caution" type="date" th:field="*{dateOfBirth}" class="form-control" autocomplete="off" required>
+                                    <p th:if="${#fields.hasErrors('dateOfBirth')}" th:errors="*{dateOfBirth}" class="help-block"></p>
+                                </div>
+                                <div class="form-group col-lg-6" th:classappend="${#fields.hasErrors('placeOfBirth') ? 'has-error' : ''}">
+                                    <label class="control-label" for="placeOfBirth">Lieu de naissance <span class="required-field">*</span></label>
+                                    <input id="placeOfBirth" th:field="*{placeOfBirth}" class="form-control" autocomplete="off" required>
+                                    <p th:if="${#fields.hasErrors('placeOfBirth')}" th:errors="*{placeOfBirth}" class="help-block"></p>
+                                </div>
+                                <div class="form-group col-lg-6">
+                                    <label for="gender" class="control-label">Sexe <span class="required-field">*</span></label>
+                                    <select id="gender" th:field="*{gender}" class="form-control searchable-select-box" required>
+                                        <option value="">Choisir un sexe</option>
+                                        <option th:each="gender: ${T(com.estate.domain.enumaration.Gender).values()}" th:value="${gender}" th:text="${gender.name}"></option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-lg-6" th:classappend="${#fields.hasErrors('birthCertificatFile') ? 'has-error' : ''}">
+                                    <label class="control-label" for="birthCertificatFile">Acte de naissance</label>
+                                    <input id="birthCertificatFile" type="file" th:field="*{birthCertificatFile}" class="form-control" autocomplete="off">
+                                    <p th:if="${#fields.hasErrors('birthCertificatFile')}" th:errors="*{birthCertificatFile}" class="help-block"></p>
+                                </div>
+                                <div class="form-group col-lg-6" th:classappend="${#fields.hasErrors('cniRectoFile') ? 'has-error' : ''}">
+                                    <label class="control-label" for="cniRectoFile">Pièce d'identité (face recto)</label>
+                                    <input id="cniRectoFile" type="file" th:field="*{cniRectoFile}" class="form-control" autocomplete="off">
+                                    <p th:if="${#fields.hasErrors('cniRectoFile')}" th:errors="*{cniRectoFile}" class="help-block"></p>
+                                </div>
+                                <div class="form-group col-lg-6" th:classappend="${#fields.hasErrors('cniVersoFile') ? 'has-error' : ''}">
+                                    <label class="control-label" for="cniRectoFile">Pièce d'identité (face verso)</label>
+                                    <input id="cniVersoFile" type="file" th:field="*{cniVersoFile}" class="form-control" autocomplete="off">
+                                    <p th:if="${#fields.hasErrors('cniVersoFile')}" th:errors="*{cniVersoFile}" class="help-block"></p>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="form-group col-lg-6" th:classappend="${#fields.hasErrors('school') ? 'has-error' : ''}">
+                                    <label class="control-label" for="school">Nom de l'établissement fréquenté <span class="required-field">*</span></label>
+                                    <input id="school" th:field="*{firstName}" class="form-control" autocomplete="off" required>
+                                    <p th:if="${#fields.hasErrors('school')}" th:errors="*{school}" class="help-block"></p>
+                                </div>
+                                <div class="form-group col-lg-6" th:classappend="${#fields.hasErrors('school') ? 'has-error' : ''}">
+                                    <label class="control-label" for="specialities">Spécialité <span class="required-field">*</span></label>
+                                    <input id="specialities" th:field="*{specialities}" class="form-control" autocomplete="off" required>
+                                    <p th:if="${#fields.hasErrors('specialities')}" th:errors="*{specialities}" class="help-block"></p>
+                                </div>
+                                <div class="form-group col-lg-6">
+                                    <label for="grade" class="control-label">Niveau <span class="required-field">*</span></label>
+                                    <select id="grade" th:field="*{grade}" class="form-control searchable-select-box" required>
+                                        <option value="">Choisir un niveau</option>
+                                        <option th:each="grade: ${T(com.estate.domain.enumaration.Grade).values()}" th:value="${grade}" th:text="${grade.name}"></option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-lg-6" th:classappend="${#fields.hasErrors('studentCardFile') ? 'has-error' : ''}">
+                                    <label class="control-label" for="studentCardFile">Carte d'étudiant</label>
+                                    <input id="studentCardFile" type="file" th:field="*{studentCardFile}" class="form-control" autocomplete="off">
+                                    <p th:if="${#fields.hasErrors('studentCardFile')}" th:errors="*{studentCardFile}" class="help-block"></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-footer">
+                            <button type="submit" class="btn btn-primary save-multiple">
+                                <i class="fa fa-save"></i>
+                                &nbsp; Enregistrer et ajouter un autre
+                            </button>
+                            <button type="submit" class="btn btn-success mx-2">
+                                <i class="fa fa-save"></i>
+                                &nbsp; Enregistrer
+                            </button>
+                            <button type="reset" class="btn btn-default">
+                                <i class="fa fa-refresh"></i>
+                                &nbsp; Réinitialiser
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<th:block th:insert="base.html :: scripts"></th:block>
 
 </body>
+
 </html>
