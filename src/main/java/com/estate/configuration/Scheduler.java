@@ -31,7 +31,7 @@ public class Scheduler {
     public void uploadLocalQuestionVideo(List<Question> questions){
         if(questions.isEmpty()) questions = questionRepository.findAllByUploadedFalse();
         File folder = new File("questions");
-        if (!folder.exists() && !folder.mkdirs()) throw new SecurityException("Erreur lors de la création du dossier de sauvegarde des questions.");
+
         for(Question question: questions){
             String formulationFileName = "questions/" + question.getFormulationFileName();
             String justificationFileName = "questions/" + question.getJustificationFileName();

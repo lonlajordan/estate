@@ -25,7 +25,7 @@ public class StudentForm {
     private String placeOfBirth;
     @NotNull
     private Gender gender;
-    private MultipartFile birthCertificatFile;
+    private MultipartFile birthCertificateFile;
     private MultipartFile cniRectoFile;
     private MultipartFile cniVersoFile;
 

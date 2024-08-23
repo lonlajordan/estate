@@ -74,9 +74,9 @@
             </div>
         </div>
         <div class="row">
-            <table class="table table-hover table-striped">
+            <table class="table table-bordered table-hover table-striped">
                 <tr>
-                    <th>Contacts</th>
+                    <th class="fit-cell-content">Contacts</th>
                     <th th:text="*{firstParentRelation.name}"></th>
                     <th th:text="*{secondParentRelation.name}"></th>
                 </tr>
@@ -103,26 +103,26 @@
             </table>
         </div>
         <div class="row">
-            <table class="table table-hover table-striped">
+            <table class="table table-bordered table-hover table-striped">
                 <tr>
                     <th>Documents</th>
-                    <th>Action</th>
+                    <th class="fit-cell-content">Action</th>
                 </tr>
-                <tr>
+                <tr th:unless="${#strings.isEmpty(student.cniRecto)}">
                     <td>Pièce d'identité (Recto)</td>
-                    <td><a target="_blank" href="">Voir</a></td>
+                    <td><a target="_blank" th:href="@{'/explorer/' + ${student.cniRecto}}">Voir</a></td>
                 </tr>
-                <tr>
+                <tr th:unless="${#strings.isEmpty(student.cniVerso)}">
                     <td>Pièce d'identité (Verso)</td>
-                    <td><a target="_blank" href="">Voir</a></td>
+                    <td><a target="_blank" th:href="@{'/explorer/' + ${student.cniVerso}}">Voir</a></td>
                 </tr>
-                <tr>
+                <tr th:unless="${#strings.isEmpty(student.birthCertificate)}">
                     <td>Acte de naissance</td>
-                    <td><a target="_blank" href="">Voir</a></td>
+                    <td><a target="_blank" th:href="@{'/explorer/' + ${student.birthCertificate}}">Voir</a></td>
                 </tr>
-                <tr>
+                <tr th:unless="${#strings.isEmpty(student.studentCard)}">
                     <td>Carte d'étudiant</td>
-                    <td><a target="_blank" href="">Voir</a></td>
+                    <td><a target="_blank" th:href="@{'/explorer/' + ${student.studentCard}}">Voir</a></td>
                 </tr>
             </table>
         </div>

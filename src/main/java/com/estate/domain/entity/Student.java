@@ -40,7 +40,7 @@ public class Student extends Auditable {
     @Column(nullable = false)
     private String cniRecto = ""; // CNI face recto
     private String cniVerso = ""; // CNI face verso
-    private String birthCertificat = ""; // Acte de naissance
+    private String birthCertificate = ""; // Acte de naissance
     private String studentCard = ""; // Carte d'étudiant
     @Column(nullable = false)
     private String school = "ENSP";
@@ -89,7 +89,7 @@ public class Student extends Auditable {
     @Column(nullable = false)
     private LocalDateTime otpExpiredAt = LocalDateTime.now();
     @Column(nullable = false)
-    private Boolean enabled = true;
+    private Boolean enabled = false;
     @Column(nullable = false)
     private Boolean deleted = false;
     @OneToMany(mappedBy = "student", cascade = CascadeType.REMOVE, orphanRemoval = true)
@@ -105,6 +105,7 @@ public class Student extends Auditable {
 
     public StudentForm toForm(){
         StudentForm form = new StudentForm();
+        form.setId(id);
         form.setFirstName(firstName);
         form.setLastName(lastName);
         form.setDateOfBirth(dateOfBirth);

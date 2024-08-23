@@ -121,6 +121,9 @@
                                     <a class="list-group-item lazy-link text-decoration-none text-left" th:href="@{'/student/view/' + ${student.id}}">
                                         <i class="fa fa-fw fa-eye"></i> Détails
                                     </a>
+                                    <a class="list-group-item lazy-link text-decoration-none text-left" th:href="@{'/student/save?id=' + ${student.id}}">
+                                        <i class="fa fa-fw fa-pencil"></i> Modifier
+                                    </a>
                                     <a class="list-group-item lazy-link text-decoration-none text-left" th:data-student-id="${student.id}" onclick="toggleItem(this.getAttribute('data-student-id'), 'student/toggle')" href="#">
                                         <i class="fa fa-fw" th:classappend="${student.enabled ? 'fa-toggle-off' : 'fa-toggle-on'}"></i> <span th:text="${student.enabled ? 'Désactiver' : 'Activer'}"></span>
                                     </a>

@@ -9,6 +9,8 @@ import com.estate.domain.service.face.StudentService;
 import com.estate.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.data.domain.Page;
@@ -17,6 +19,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Optional;
 
 @Slf4j
@@ -75,11 +79,87 @@ public class StudentServiceImpl implements StudentService {
         student.setSecondParentAddress(form.getSecondParentAddress());
         student.setSecondParentPhone(form.getSecondParentPhone());
         student.setSecondParentEmail(form.getSecondParentEmail());
+        long date = System.currentTimeMillis();
+        String extension;
+        File root = new File("documents");
+        if (!root.exists() && !root.mkdirs()) return Notification.error("Impossible de créer le dossier de sauvegarde des documents.");
+        if(form.getCniRectoFile() != null && !form.getCniRectoFile().isEmpty()){
+            File cniRecto;
+            if(StringUtils.isNotBlank(student.getCniRecto())){
+                cniRecto = new File(student.getCniRecto());
+                try {
+                    if(cniRecto.exists()) FileUtils.deleteQuietly(cniRecto);
+                }catch (Exception ignored) {}
+            }
+            try {
+                extension = FilenameUtils.getExtension(form.getCniRectoFile().getOriginalFilename());
+                cniRecto = new File(root.getAbsolutePath() + File.separator + "identification-recto-" + date + "." + extension);
+                form.getCniRectoFile().transferTo(cniRecto);
+                student.setCniRecto(root.getName() + File.separator + cniRecto.getName());
+            } catch (IOException e) {
+                log.error("unable to write identification file recto face", e);
+                return Notification.error("Impossible d'enregistrer la pièce d'identification (face recto).");
+            }
+        }
+        if(form.getCniVersoFile() != null && !form.getCniVersoFile().isEmpty()){
+            File cniVerso;
+            if(StringUtils.isNotBlank(student.getCniVerso())){
+                cniVerso = new File(student.getCniVerso());
+                try {
+                    if(cniVerso.exists()) FileUtils.deleteQuietly(cniVerso);
+                }catch (Exception ignored) {}
+            }
+            try {
+                extension = FilenameUtils.getExtension(form.getCniVersoFile().getOriginalFilename());
+                cniVerso = new File(root.getAbsolutePath() + File.separator + "identification-verso-" + date + "." + extension);
+                form.getCniVersoFile().transferTo(cniVerso);
+                student.setCniVerso(root.getName() + File.separator + cniVerso.getName());
+            } catch (IOException e) {
+                log.error("unable to write identification file verso face", e);
+                return Notification.error("Impossible d'enregistrer la pièce d'identification (face verso).");
+            }
+        }
+        if(form.getBirthCertificateFile() != null && !form.getBirthCertificateFile().isEmpty()){
+            File birthCertificate;
+            if(StringUtils.isNotBlank(student.getBirthCertificate())){
+                birthCertificate = new File(student.getBirthCertificate());
+                try {
+                    if(birthCertificate.exists()) FileUtils.deleteQuietly(birthCertificate);
+                }catch (Exception ignored) {}
+            }
+            try {
+                extension = FilenameUtils.getExtension(form.getBirthCertificateFile().getOriginalFilename());
+                birthCertificate = new File(root.getAbsolutePath() + File.separator + "birth-certificate-" + date + "." + extension);
+                form.getBirthCertificateFile().transferTo(birthCertificate);
+                student.setBirthCertificate(root.getName() + File.separator + birthCertificate.getName());
+            } catch (IOException e) {
+                log.error("unable to write birth certificate", e);
+                return Notification.error("Impossible d'enregistrer l'acte de naissance.");
+            }
+        }
+        if(form.getStudentCardFile() != null && !form.getStudentCardFile().isEmpty()){
+            File studentCard;
+            if(StringUtils.isNotBlank(student.getStudentCard())){
+                studentCard = new File(student.getStudentCard());
+                try {
+                    if(studentCard.exists()) FileUtils.deleteQuietly(studentCard);
+                }catch (Exception ignored) {}
+            }
+            try {
+                extension = FilenameUtils.getExtension(form.getStudentCardFile().getOriginalFilename());
+                studentCard = new File(root.getAbsolutePath() + File.separator + "student-card-" + date + "." + extension);
+                form.getStudentCardFile().transferTo(studentCard);
+                student.setStudentCard(root.getName() + File.separator + studentCard.getName());
+            } catch (IOException e) {
+                log.error("unable to write student card", e);
+                return Notification.error("Impossible d'enregistrer la carte d'étudiant.");
+            }
+        }
 
         try {
             if(creation){
-                // generate password and send mail
-                // Send mail here
+                student.setEnabled(false);
+                // Send mail
             }
             studentRepository.saveAndFlush(student);
             notification.setMessage("Un étudiant a été " + (creation ? "ajouté." : "modifié."));
@@ -90,8 +170,6 @@ public class StudentServiceImpl implements StudentService {
             notification.setType(Level.ERROR);
             if(StringUtils.containsIgnoreCase(message, "UK_EMAIL")){
                 notification.setMessage("Adresse e-mail existante");
-            }else if(StringUtils.containsIgnoreCase(message, "UK_PHONE")){
-                notification.setMessage("Numéro de téléphone existant");
             } else {
                 notification.setMessage("Erreur lors de la " + (creation ? "création" : "modification") + " de l'étudiant.");
             }

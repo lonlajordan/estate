@@ -53,19 +53,19 @@
                                         <option th:each="gender: ${T(com.estate.domain.enumaration.Gender).values()}" th:value="${gender}" th:text="${gender.name}"></option>
                                     </select>
                                 </div>
-                                <div class="form-group col-lg-6" th:classappend="${#fields.hasErrors('birthCertificatFile') ? 'has-error' : ''}">
-                                    <label class="control-label" for="birthCertificatFile">Acte de naissance</label>
-                                    <input id="birthCertificatFile" type="file" th:field="*{birthCertificatFile}" class="form-control" autocomplete="off">
-                                    <p th:if="${#fields.hasErrors('birthCertificatFile')}" th:errors="*{birthCertificatFile}" class="help-block"></p>
+                                <div class="form-group col-lg-6" th:classappend="${#fields.hasErrors('birthCertificateFile') ? 'has-error' : ''}">
+                                    <label class="control-label" for="birthCertificateFile">Acte de naissance <span th:if="${student.id == null}" class="required-field">*</span></label>
+                                    <input id="birthCertificateFile" type="file" th:field="*{birthCertificateFile}" class="form-control" th:required="${student.id == null}" autocomplete="off">
+                                    <p th:if="${#fields.hasErrors('birthCertificateFile')}" th:errors="*{birthCertificateFile}" class="help-block"></p>
                                 </div>
                                 <div class="form-group col-lg-6" th:classappend="${#fields.hasErrors('cniRectoFile') ? 'has-error' : ''}">
-                                    <label class="control-label" for="cniRectoFile">Pièce d'identité (face recto)</label>
-                                    <input id="cniRectoFile" type="file" th:field="*{cniRectoFile}" class="form-control" autocomplete="off">
+                                    <label class="control-label" for="cniRectoFile">Pièce d'identité (face recto) <span th:if="${student.id == null}" class="required-field">*</span></label>
+                                    <input id="cniRectoFile" type="file" th:field="*{cniRectoFile}" class="form-control" th:required="${student.id == null}" autocomplete="off">
                                     <p th:if="${#fields.hasErrors('cniRectoFile')}" th:errors="*{cniRectoFile}" class="help-block"></p>
                                 </div>
                                 <div class="form-group col-lg-6" th:classappend="${#fields.hasErrors('cniVersoFile') ? 'has-error' : ''}">
-                                    <label class="control-label" for="cniRectoFile">Pièce d'identité (face verso)</label>
-                                    <input id="cniVersoFile" type="file" th:field="*{cniVersoFile}" class="form-control" autocomplete="off">
+                                    <label class="control-label" for="cniRectoFile">Pièce d'identité (face verso) <span th:if="${student.id == null}" class="required-field">*</span></label>
+                                    <input id="cniVersoFile" type="file" th:field="*{cniVersoFile}" class="form-control" th:required="${student.id == null}" autocomplete="off">
                                     <p th:if="${#fields.hasErrors('cniVersoFile')}" th:errors="*{cniVersoFile}" class="help-block"></p>
                                 </div>
                             </div>
