@@ -1,8 +1,9 @@
 package com.estate.controller;
 
 import com.estate.domain.entity.*;
-import com.estate.domain.enumaration.Status;
+import com.estate.domain.form.HousingSearch;
 import com.estate.domain.form.PaymentForm;
+import com.estate.domain.form.PaymentSearch;
 import com.estate.domain.service.face.HousingService;
 import com.estate.domain.service.face.PaymentService;
 import com.estate.domain.service.face.StandingService;
@@ -10,15 +11,16 @@ import com.estate.domain.service.face.StudentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.support.RequestContextUtils;
 import org.springframework.web.servlet.view.RedirectView;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.*;
 
@@ -33,11 +35,23 @@ public class PaymentController {
     private final PaymentService paymentService;
 
     @GetMapping(value="list")
-    public String getAll(@RequestParam(required = false, defaultValue = "1") int p, Model model){
-        Page<Payment> payments = paymentService.findAll(p);
+    public String findAll(@RequestParam(required = false, defaultValue = "1") int page, Model model, HttpServletRequest request){
+        PaymentSearch form = new PaymentSearch();
+        Page<Payment> payments;
+        Map<String, ?> attributes = RequestContextUtils.getInputFlashMap(request);
+        boolean search = attributes != null && attributes.containsKey("searchForm");
+        if(search){
+            form = (PaymentSearch) attributes.get("searchForm");
+            payments = paymentService.findAll(form);
+            if(payments.isEmpty()) model.addAttribute("notification", Notification.info("Aucun résultat"));
+        } else {
+            payments = paymentService.findAll(page);
+        }
         model.addAttribute("payments", payments.toList());
         model.addAttribute("totalPages", payments.getTotalPages());
-        model.addAttribute("currentPage", p);
+        model.addAttribute("currentPage", payments.getPageable().getPageNumber());
+        model.addAttribute("searchForm", form);
+        model.addAttribute("search", search);
         return "admin/payment/list";
     }
 
@@ -135,14 +149,10 @@ public class PaymentController {
         return "redirect:/payment/list";
     }
 
-    @PostMapping(value="search")
-    public ModelAndView search(@RequestParam(required = false, defaultValue = "1") int page,
-                         @RequestParam(required = false) String name,
-                         @RequestParam(required = false) String phone,
-                         @RequestParam(required = false) Status status,
-                         @RequestParam(required = false, defaultValue = "1970-01-01") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date start,
-                         @RequestParam(required = false, defaultValue = "1970-01-01") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date end){
-        return paymentService.search(name, phone, status, start, end, page);
+    @PostMapping("search")
+    public String search(HousingSearch form, RedirectAttributes attributes){
+        attributes.addFlashAttribute("searchForm", form);
+        return "redirect:/payment/list";
     }
 
     @RequestMapping(value="delete")

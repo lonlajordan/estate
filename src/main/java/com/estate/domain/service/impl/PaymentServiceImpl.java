@@ -5,6 +5,7 @@ import com.estate.domain.entity.*;
 import com.estate.domain.enumaration.Level;
 import com.estate.domain.enumaration.Status;
 import com.estate.domain.form.PaymentForm;
+import com.estate.domain.form.PaymentSearch;
 import com.estate.domain.service.face.PaymentService;
 import com.estate.repository.*;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +15,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -31,13 +31,13 @@ public class PaymentServiceImpl implements PaymentService {
     private final LogRepository logRepository;
 
     @Override
-    public Page<Payment> findAll(int p){
-        return paymentRepository.findAllByOrderByCreationDateDesc(PageRequest.of(p  - 1, 1000));
+    public Page<Payment> findAll(int page){
+        return paymentRepository.findAllByOrderByCreationDateDesc(PageRequest.of(page  - 1, 500));
     }
 
     @Override
-    public ModelAndView search(String name, String phone, Status status, Date start, Date end, int page){
-        return null;
+    public Page<Payment> findAll(PaymentSearch form) {
+        return paymentRepository.findAll(form.toSpecification(), PageRequest.of(form.getPage()  - 1, 500));
     }
 
     @Override
