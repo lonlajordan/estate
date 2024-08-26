@@ -1,61 +1,158 @@
 package com.estate.controller;
 
+import com.estate.domain.entity.*;
 import com.estate.domain.enumaration.Status;
-import com.estate.domain.entity.Payment;
+import com.estate.domain.form.HousingSearch;
+import com.estate.domain.form.PaymentForm;
+import com.estate.domain.form.PaymentSearch;
+import com.estate.domain.service.face.HousingService;
 import com.estate.domain.service.face.PaymentService;
+import com.estate.domain.service.face.StandingService;
+import com.estate.domain.service.face.StudentService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.support.RequestContextUtils;
 import org.springframework.web.servlet.view.RedirectView;
 
-import java.util.Date;
-import java.util.Optional;
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+import java.util.*;
 
+@Slf4j
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/payment")
 public class PaymentController {
+    private final StudentService studentService;
+    private final StandingService standingService;
+    private final HousingService housingService;
     private final PaymentService paymentService;
 
     @GetMapping(value="list")
-    public String getAll(@RequestParam(required = false, defaultValue = "1") int p, Model model){
-        Page<Payment> payments = paymentService.findAll(p);
+    public String findAll(@RequestParam(required = false, defaultValue = "1") int page, Model model, HttpServletRequest request){
+        PaymentSearch form = new PaymentSearch();
+        Page<Payment> payments;
+        Map<String, ?> attributes = RequestContextUtils.getInputFlashMap(request);
+        boolean search = attributes != null && attributes.containsKey("searchForm");
+        if(search){
+            form = (PaymentSearch) attributes.get("searchForm");
+            payments = paymentService.findAll(form);
+            if(payments.isEmpty()) model.addAttribute("notification", Notification.info("Aucun résultat"));
+        } else {
+            payments = paymentService.findAll(page);
+        }
         model.addAttribute("payments", payments.toList());
         model.addAttribute("totalPages", payments.getTotalPages());
-        model.addAttribute("currentPage", p);
+        model.addAttribute("currentPage", payments.getPageable().getPageNumber());
+        model.addAttribute("searchForm", form);
+        model.addAttribute("search", search);
         return "admin/payment/list";
     }
 
-    @GetMapping(value="view/{id}")
-    public ModelAndView getDetails(@PathVariable long id){
-        ModelAndView view = new ModelAndView("redirect:/error/404");
-        Optional<Payment> payment = paymentService.findById(id);
-        payment.ifPresent(value -> {
-            view.getModel().put("payment", value);
-            view.setViewName("admin/payment/view");
-        });
-        return view;
+    @GetMapping("save")
+    public String findById(@RequestParam(required = false) Long id, @RequestParam(required = false) Long standingId, @RequestParam(required = false) Long studentId, Model model, RedirectAttributes attributes){
+        Payment payment = null;
+        Standing standing = null;
+        Student student;
+        List<Housing> housings = new ArrayList<>();
+        List<Standing> standings = standingService.findAll();
+        if(id != null){
+            payment = paymentService.findById(id).orElse(null);
+        }else if(studentId != null){
+            student = studentService.findById(studentId).orElse(null);
+            if(student == null){
+                attributes.addFlashAttribute("notification", Notification.error("Étudiant introuvable"));
+                return "redirect:/student/list";
+            }
+            payment = new Payment();
+            payment.setStudent(student);
+            if(student.getHousing() != null){
+                payment.setDesiderata(student.getHousing());
+                standing = student.getHousing().getStanding();
+                if(standing != null){
+                    payment.setStanding(standing);
+                    payment.setRent(standing.getRent());
+                }
+            }else {
+                if(standingId != null){
+                    standing = standingService.findById(standingId).orElse(null);
+                } else if(!standings.isEmpty()) {
+                    standing = standings.get(0);
+                }
+
+                if(standing != null){
+                    payment.setStanding(standing);
+                    payment.setRent(standing.getRent());
+                    if(student.getHousing() == null || !Objects.equals(standing.getId(), student.getHousing().getStanding().getId())){
+                        payment.setCaution(standing.getCaution());
+                        payment.setRepair(standing.getRepair());
+                    }
+                }
+            }
+        }
+        if(payment == null){
+            attributes.addFlashAttribute("notification", Notification.error("Paiement introuvable"));
+            return "redirect:/payment/list";
+        }
+
+        if(payment.getStanding() != null){
+            housings = housingService.findAllByStandingId(payment.getStanding().getId());
+            if(payment.getDesiderata() == null && !housings.isEmpty()){
+                payment.setDesiderata(housings.get(0));
+            }
+        }
+
+        model.addAttribute("payment", payment.toForm());
+        model.addAttribute("student", payment.getStudent());
+        model.addAttribute("standings", standings);
+        model.addAttribute("housings", housings);
+        return "admin/payment/save";
     }
 
-    @GetMapping(value="status/{id}")
-    public String getAll(@PathVariable long id, RedirectAttributes attributes){
-        attributes.addFlashAttribute("notification", paymentService.status(id));
+    @PostMapping("save")
+    public String save(@Valid @ModelAttribute("payment") PaymentForm payment, BindingResult result, Model model, RedirectAttributes attributes){
+        if(result.hasErrors()) return "admin/payment/save";
+        Notification notification =  paymentService.save(payment);
+        if(notification.hasError()){
+            List<Standing> standings = standingService.findAll();
+            model.addAttribute("notification", notification);
+            model.addAttribute("payment", payment);
+            model.addAttribute("student", studentService.findById(payment.getStudentId()).orElse(null));
+            model.addAttribute("standings", standings);
+            model.addAttribute("housings", housingService.findAllByStandingId(payment.getStandingId()));
+            return "admin/payment/save";
+        }
+        attributes.addFlashAttribute("notification", notification);
+        return "redirect:/housing/list";
+    }
+
+    @GetMapping(value="view/{id}")
+    public String findById(@PathVariable long id, Model model, RedirectAttributes attributes){
+        Payment payment = paymentService.findById(id).orElse(null);
+        if(payment == null){
+            attributes.addFlashAttribute("notification", Notification.error("Paiement introuvable"));
+            return "redirect:/payment/list";
+        }
+        model.addAttribute("payment", payment);
+        return "admin/payment/view";
+    }
+
+    @GetMapping(value="toggle/{id}")
+    public String toggle(@PathVariable long id, @RequestParam Status status, RedirectAttributes attributes){
+        attributes.addFlashAttribute("notification", paymentService.toggle(id, status));
         return "redirect:/payment/list";
     }
 
-    @PostMapping(value="search")
-    public ModelAndView search(@RequestParam(required = false, defaultValue = "1") int page,
-                         @RequestParam(required = false) String name,
-                         @RequestParam(required = false) String phone,
-                         @RequestParam(required = false) Status status,
-                         @RequestParam(required = false, defaultValue = "1970-01-01") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date start,
-                         @RequestParam(required = false, defaultValue = "1970-01-01") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date end){
-        return paymentService.search(name, phone, status, start, end, page);
+    @PostMapping("search")
+    public String search(HousingSearch form, RedirectAttributes attributes){
+        attributes.addFlashAttribute("searchForm", form);
+        return "redirect:/payment/list";
     }
 
     @RequestMapping(value="delete")

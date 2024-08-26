@@ -121,6 +121,9 @@
                                     <a class="list-group-item lazy-link text-decoration-none text-left" th:href="@{'/student/view/' + ${student.id}}">
                                         <i class="fa fa-fw fa-eye"></i> Détails
                                     </a>
+                                    <a class="list-group-item lazy-link text-decoration-none text-left" th:href="@{'/payment/save?studentId=' + ${student.id}}">
+                                        <i class="fa fa-fw fa-money"></i> Payer
+                                    </a>
                                     <a class="list-group-item lazy-link text-decoration-none text-left" th:href="@{'/student/save?id=' + ${student.id}}">
                                         <i class="fa fa-fw fa-pencil"></i> Modifier
                                     </a>

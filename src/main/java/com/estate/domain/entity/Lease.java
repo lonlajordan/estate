@@ -25,4 +25,6 @@ public class Lease {
     private Payment payment;
     @ManyToOne
     private Housing housing;
+    @OneToOne
+    private Lease nextLease;
 }

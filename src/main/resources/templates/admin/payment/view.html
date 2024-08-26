@@ -6,8 +6,8 @@
 <body>
 <div id="wrapper">
     <div th:replace="header.html"></div>
-    <!--/*@thymesVar id="recharge" type="com.estate.domain.entity.Payment"*/-->
-    <div id="page-wrapper" th:object="${recharge}">
+    <!--/*@thymesVar id="payment" type="com.estate.domain.entity.Payment"*/-->
+    <div id="page-wrapper" th:object="${payment}">
         <div class="row mt-6">
             <ol class="breadcrumb">
                 <li><i class="fa fa-home"></i> <a class="lazy-link" th:href="@{/home}">Accueil</a></li>
@@ -49,7 +49,7 @@
                         </a>
                     </div>
                 </div>
-                <div th:if="${!#strings.isEmpty(recharge?.message)}" class="panel-group" id="accordion">
+                <div th:if="${!#strings.isEmpty(payment?.message)}" class="panel-group" id="accordion">
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             <h4 class="panel-title">

@@ -18,21 +18,18 @@ function toggleItem(id, url){
     fetch(ctx + '/' + url + '/' + id, false);
 }
 
-function changeQuestionType(event) {
-    let institution = event.target.value;
-    if(institution.includes('QRO')){
-        $('#propositions').addClass('d-none');
-    }else{
-        $('#propositions').removeClass('d-none');
+function toggleStanding(id, studentId, standingId, url){
+    let query = '';
+    if(id !== null) query = 'id=' + id;
+    if(studentId !== null){
+        query += (query.length === 0 ? '' : '&') + 'studentId=' + studentId;
     }
+    if(standingId !== null){
+        query += (query.length === 0 ? '' : '&') + 'standingId=' + standingId;
+    }
+    fetch(ctx + '/' + url + '?' + query, false);
 }
 
-function changeQuizType(id, event) {
-    let type = event.target.value;
-    let url = ctx + '/quiz/save?type=' + type
-    if(id) url += '&id=' + id;
-    fetch(url);
-}
 
 function invokeActionOnItems(url, action){
     let n = table.rows({selected: true}).count();
@@ -275,24 +272,6 @@ function initDataList() {
             extend: 'colvis',
         },
     ];
-    if(list.hasClass("can-import")) buttons = [
-        {
-            text: '<i class="fa fa-upload"></i> Importer',
-            action: function () {
-                $('#import-items').click();
-            }
-        },
-        ...buttons
-    ]
-    if(list.hasClass("can-import-series")) buttons = [
-        {
-            text: '<i class="fa fa-list-alt"></i> Series',
-            action: function () {
-                $('#import-series').click();
-            }
-        },
-        ...buttons
-    ]
     if(list.hasClass("can-delete")) buttons = [
         {
             text: '<i class="fa fa-trash"></i> Supprimer',
@@ -424,51 +403,3 @@ $(document).ready(function(){
     initDataList();
     initPagination();
 });
-
-function downloadTemplate(name){
-    let xhr = new XMLHttpRequest();
-    xhr.open('GET',ctx + "/templates/" + name,true);
-    xhr.responseType = "arraybuffer";
-    xhr.onload = function () {
-        if(this.status === 200) {
-            let filename = '';
-            let disposition = xhr.getResponseHeader('Content-Disposition');
-            if(disposition && disposition.indexOf('attachment') !== -1){
-                let filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
-                let matches = filenameRegex.exec(disposition);
-                if(matches !== null && matches[1])
-                    filename = matches[1].replace(/['"]/g,'');
-            }
-            let type = xhr.getResponseHeader('Content-Type');
-            let blob = new Blob([this.response],{type: type});
-
-            if(typeof window.navigator.msSaveBlob != 'undefined') {
-                window.navigator.msSaveBlob(blob, filename);
-            } else {
-                let URL = window.URL || window.webkitURL;
-                let download_URL = URL.createObjectURL(blob);
-                if(filename) {
-                    let a_link = document.createElement('a');
-                    if(typeof a_link.download == 'undefined') {
-                        window.location = download_URL;
-                    }else {
-                        a_link.href = download_URL;
-                        a_link.download = filename;
-                        document.body.appendChild(a_link);
-                        a_link.click();
-                    }
-                }else {
-                    window.location = download_URL;    }
-
-                setTimeout(function() {
-                    URL.revokeObjectURL(download_URL);
-                }, 10000);}
-
-        } else {
-          console.log("Fichier introuvable");
-        }
-    };
-
-    xhr.setRequestHeader('Content-Type','application/*');
-    xhr.send();
-}

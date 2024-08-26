@@ -11,6 +11,5 @@
         <p>Si vous n'avez pas demandé de réinitialisation de mot de passe, vous pouvez ignorer ce mail. Votre mot de passe ne sera pas modifié.</p>
         <p>Merci,</p>
         <p>L'équipe Support</p>
-        <img width="100" src="${logo}" alt="">
     </body>
 </html>

@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface HousingRepository extends JpaRepository<Housing, Long>, JpaSpecificationExecutor<Housing> {
     List<Housing> findAllByOrderByNameAsc();
+    List<Housing> findAllByStandingIdOrderByNameAsc(long standingId);
 }

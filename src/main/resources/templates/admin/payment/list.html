@@ -31,50 +31,30 @@
                         </div>
                         <div id="collapseBox" class="panel-collapse collapse">
                             <div class="panel-body">
-                                <form onsubmit="submitForm(event)" th:action="@{/payment/search}" autocomplete="off" method="post">
-                                    <input name="page" type="hidden" id="current-page" th:value="${currentPage}">
+                                <form th:object="${searchForm}" onsubmit="submitForm(event)" th:action="@{/payment/search}" autocomplete="off" method="post">
+                                    <input th:field="*{page}" type="hidden" id="current-page">
                                     <div class="row">
-                                        <div class="col-lg-6">
-                                            <div class="form-group">
-                                                <label for="name">Nom du client</label>
-                                                <input id="name" name="name" th:value="${name}" class="form-control">
-                                            </div>
+                                        <div class="form-group col-lg-6">
+                                            <label for="operator">Modes de paiement</label>
+                                            <select id="operator" th:field="*{mode}" class="form-control">
+                                                <option value="">Tous les modes...</option>
+                                                <option th:each="mode: ${T(com.estate.domain.enumaration.Mode).values()}" th:value="${mode}" th:text="${mode.name}"></option>
+                                            </select>
                                         </div>
-                                        <div class="col-lg-6">
-                                            <div class="form-group">
-                                                <label for="phone">Numéro</label>
-                                                <input id="phone" name="phone" th:value="${phone}" class="form-control">
-                                            </div>
+                                        <div class="form-group col-lg-6">
+                                            <label for="status">Statut</label>
+                                            <select id="status" th:field="*{status}" class="form-control">
+                                                <option value="">Tous les statuts...</option>
+                                                <option th:each="status: ${T(com.estate.domain.enumaration.Status).values()}" th:value="${status}" th:text="${status.name}"></option>
+                                            </select>
                                         </div>
-                                        <div class="col-lg-6">
-                                            <div class="form-group">
-                                                <label for="operator">Modes de paiement</label>
-                                                <select id="operator" name="operator" class="form-control">
-                                                    <option value="">Tous les modes...</option>
-                                                    <option th:each="mode: ${T(com.estate.domain.enumaration.Mode).values()}" th:value="${mode}" th:text="${mode.name}"></option>
-                                                </select>
-                                            </div>
+                                        <div class="form-group col-lg-6">
+                                            <label for="start">A partir du</label>
+                                            <input id="start" name="startDate" th:value="${#calendars.format(searchForm.startDate, 'yyyy-MM-dd')}" type="date" class="form-control">
                                         </div>
-                                        <div class="col-lg-6">
-                                            <div class="form-group">
-                                                <label for="status">Statut</label>
-                                                <select id="status" name="status" class="form-control">
-                                                    <option value="">Tous les statuts...</option>
-                                                    <option th:each="status: ${T(com.estate.domain.enumaration.Status).values()}" th:value="${status}" th:text="${status.name}"></option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-6">
-                                            <div class="form-group">
-                                                <label for="start">A partir du</label>
-                                                <input id="start" name="start" th:value="${#calendars.format(start, 'yyyy-MM-dd')}" type="date" class="form-control">
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-6">
-                                            <div class="form-group">
-                                                <label for="end">Jusqu'au</label>
-                                                <input id="end" name="end" th:value="${#calendars.format(end, 'yyyy-MM-dd')}" type="date" class="form-control">
-                                            </div>
+                                        <div class="form-group col-lg-6">
+                                            <label for="end">Jusqu'au</label>
+                                            <input id="end" name="endDate" th:value="${#calendars.format(searchForm.endDate, 'yyyy-MM-dd')}" type="date" class="form-control">
                                         </div>
                                     </div>
                                     <button type="submit" class="btn btn-success mr-2">
@@ -103,7 +83,7 @@
                                 <input type="checkbox">
                             </th>
                             <th>ID</th>
-                            <th>Etudiant</th>
+                            <th>Étudiant</th>
                             <th>Montant</th>
                             <th>Date et heure (GMT)</th>
                             <th>Mode</th>
@@ -124,17 +104,17 @@
                             <td th:text="${payement.mode?.name}"></td>
                             <td th:text="${payement.status?.name}"></td>
                             <td class="text-center fit-cell-content">
-                                <a class="dropdown-toggle" tabindex="0" data-toggle="popover" data-placement="auto" data-trigger="focus" th:data-target="${'popover-content-' + recharge.id}" href="#">
+                                <a class="dropdown-toggle" tabindex="0" data-toggle="popover" data-placement="auto" data-trigger="focus" th:data-target="${'popover-content-' + payment.id}" href="#">
                                     <i class="fa fa-ellipsis-h"></i>
                                 </a>
-                                <div th:id="${'popover-content-' + recharge.id}" class="list-group" style="display: none">
+                                <div th:id="${'popover-content-' + payement.id}" class="list-group" style="display: none">
                                     <a class="list-group-item lazy-link text-decoration-none text-left" th:href="@{'/payment/status/' + ${payement.id}}">
                                         <i class="fa fa-refresh fa-fw"></i> Valider
                                     </a>
                                     <a class="list-group-item lazy-link text-decoration-none text-left" th:href="@{'/payment/view/' + ${payement.id}}">
                                         <i class="fa fa-eye fa-fw"></i> Details
                                     </a>
-                                    <a class="list-group-item text-decoration-none text-danger text-left" th:data-recharge-id="${recharge.id}" onclick="deleteItem(this.getAttribute('data-recharge-id'), 'recharge/delete')" href="#">
+                                    <a class="list-group-item text-decoration-none text-danger text-left" th:data-payment-id="${payment.id}" onclick="deleteItem(this.getAttribute('data-payment-id'), 'payment/delete')" href="#">
                                         <i class="fa fa-trash-o fa-fw"></i> Supprimer
                                     </a>
                                 </div>

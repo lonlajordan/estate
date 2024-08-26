@@ -2,94 +2,43 @@ package com.estate.domain.service.impl;
 
 import com.estate.domain.entity.Notification;
 import com.estate.domain.entity.*;
+import com.estate.domain.enumaration.Level;
 import com.estate.domain.enumaration.Status;
+import com.estate.domain.form.PaymentForm;
+import com.estate.domain.form.PaymentSearch;
 import com.estate.domain.service.face.PaymentService;
 import com.estate.repository.*;
-import com.estate.utils.DateUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-import java.time.LocalTime;
 import java.util.*;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class PaymentServiceImpl implements PaymentService {
-    @PersistenceContext
-    private EntityManager em;
+    private final StandingRepository standingRepository;
+    private final StudentRepository studentRepository;
     private final PaymentRepository paymentRepository;
+    private final HousingRepository housingRepository;
     private final LogRepository logRepository;
 
     @Override
-    public Page<Payment> findAll(int p){
-        return paymentRepository.findAllByOrderByCreationDateDesc(PageRequest.of(p  - 1, 1000));
+    public Page<Payment> findAll(int page){
+        return paymentRepository.findAllByOrderByCreationDateDesc(PageRequest.of(page  - 1, 500));
     }
 
     @Override
-    public ModelAndView search(String name, String phone, Status status, Date start, Date end, int page){
-        int pageSize = 1000;
-        CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<Payment> cq = cb.createQuery(Payment.class);
-        CriteriaQuery<Long> countQuery = cb.createQuery(Long.class);
-        Root<Payment> recharge = cq.from(Payment.class);
-        List<Predicate> predicates = new ArrayList<>();
-        ModelAndView view = new ModelAndView("admin/payment/list");
-        if(start.toInstant().getEpochSecond() > 0){
-            predicates.add(cb.greaterThanOrEqualTo(recharge.get("date"), DateUtils.dateToLocalDateTime(start).with(LocalTime.MIN)));
-            view.getModel().put("start", start);
-        }
-        if(end.toInstant().getEpochSecond() > 0){
-            predicates.add(cb.lessThanOrEqualTo(recharge.get("date"), DateUtils.dateToLocalDateTime(end).with(LocalTime.MAX)));
-            view.getModel().put("end", end);
-        }
-        if(StringUtils.isNotEmpty(name)){
-            predicates.add(
-                cb.or(
-                    cb.like(cb.upper(recharge.get("player").get("firstName")), "%" + name.toUpperCase() + "%"),
-                    cb.like(cb.lower(recharge.get("player").get("lastName")), "%" + name.toLowerCase() + "%")
-                )
-            );
-            view.getModel().put("name", name);
-        }
-        if(StringUtils.isNotEmpty(phone)){
-            predicates.add(cb.like(recharge.get("clientNumber"), "%" + phone + "%"));
-            view.getModel().put("phone", phone);
-        }
-        if(status != null){
-            predicates.add(cb.equal(recharge.get("status"), status));
-            view.getModel().put("status", status);
-        }
-        cq.where(predicates.toArray(new Predicate[0]));
-        cq.orderBy(cb.desc(recharge.get("date")));
-        countQuery.select(cb.count(countQuery.where(predicates.toArray(new Predicate[0])).from(Payment.class)));
-        TypedQuery<Payment> query = em.createQuery(cq).setMaxResults(pageSize).setFirstResult((page - 1) * pageSize);
-        List<Payment> payments = query.getResultList();
-        long count = em.createQuery(countQuery).getSingleResult();
-        int totalPages = ((int) count / pageSize) + (count % pageSize == 0 ? 0 : 1);
-        view.getModel().put("recharges", payments);
-        view.getModel().put("totalPages", totalPages);
-        view.getModel().put("currentPage", page);
-        view.getModel().put("search", true);
-        return view;
+    public Page<Payment> findAll(PaymentSearch form) {
+        return paymentRepository.findAll(form.toSpecification(), PageRequest.of(form.getPage()  - 1, 500));
     }
-
-
 
     @Override
     public Optional<Payment> findById(long id) {
@@ -110,12 +59,54 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public Notification status(long id) {
-        return null;
+    public Notification toggle(long id, Status status) {
+        Payment payment = paymentRepository.findById(id).orElse(null);
+        if(payment == null) return Notification.error("Paiement introuvable");
+        payment.setStatus(status);
+        paymentRepository.saveAndFlush(payment);
+        return Notification.info();
     }
 
     @Override
     public long countByStatus(Status status) {
         return paymentRepository.countAllByStatus(status);
+    }
+
+    @Override
+    public Notification save(PaymentForm form) {
+        boolean creation = form.getId() == null;
+        Notification notification = Notification.info();
+        Payment payment = creation ? new Payment() : paymentRepository.findById(form.getId()).orElse(null);
+        if(payment == null) return Notification.error("Paiement introuvable");
+        if(creation){
+            Student student = studentRepository.findById(form.getStudentId()).orElse(null);
+            if(student == null) return Notification.error("Étudiant introuvable");
+            payment.setStudent(student);
+            Standing standing = standingRepository.findById(form.getStandingId()).orElse(null);
+            if(standing == null) return Notification.error("Standing introuvable");
+            payment.setStanding(standing);
+            Housing desiderata = housingRepository.findById(form.getDesiderataId()).orElse(null);
+            if(desiderata == null) return Notification.error("Logement introuvable");
+            payment.setDesiderata(desiderata);
+            payment.setMonths(form.getMonths());
+            payment.setRent(standing.getRent());
+            payment.setCaution(standing.getCaution());
+            payment.setRepair(standing.getRepair());
+            payment.setMode(form.getMode());
+        }
+
+        try {
+            paymentRepository.saveAndFlush(payment);
+            notification.setMessage("Un paiement a été " + (creation ? "ajouté." : "modifié."));
+            log.info(notification.getMessage());
+        } catch (Throwable e){
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            notification.setType(Level.ERROR);
+            notification.setMessage("Erreur lors de la " + (creation ? "création" : "modification") + " du paiement.");
+            log.error(notification.getMessage(), e);
+            logRepository.save(Log.error(notification.getMessage(), ExceptionUtils.getStackTrace(e)));
+        }
+
+        return notification;
     }
 }
