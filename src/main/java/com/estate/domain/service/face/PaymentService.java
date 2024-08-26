@@ -21,7 +21,7 @@ public interface PaymentService {
 
     RedirectView deleteById(long id, RedirectAttributes attributes);
 
-    Notification status(long id);
+    Notification toggle(long id, Status status);
 
     long countByStatus(Status status);
 

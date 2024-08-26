@@ -59,8 +59,12 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public Notification status(long id) {
-        return null;
+    public Notification toggle(long id, Status status) {
+        Payment payment = paymentRepository.findById(id).orElse(null);
+        if(payment == null) return Notification.error("Paiement introuvable");
+        payment.setStatus(status);
+        paymentRepository.saveAndFlush(payment);
+        return Notification.info();
     }
 
     @Override

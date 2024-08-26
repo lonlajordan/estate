@@ -1,6 +1,7 @@
 package com.estate.controller;
 
 import com.estate.domain.entity.*;
+import com.estate.domain.enumaration.Status;
 import com.estate.domain.form.HousingSearch;
 import com.estate.domain.form.PaymentForm;
 import com.estate.domain.form.PaymentSearch;
@@ -15,7 +16,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.support.RequestContextUtils;
 import org.springframework.web.servlet.view.RedirectView;
@@ -133,19 +133,19 @@ public class PaymentController {
     }
 
     @GetMapping(value="view/{id}")
-    public ModelAndView getDetails(@PathVariable long id){
-        ModelAndView view = new ModelAndView("redirect:/error/404");
-        Optional<Payment> payment = paymentService.findById(id);
-        payment.ifPresent(value -> {
-            view.getModel().put("payment", value);
-            view.setViewName("admin/payment/view");
-        });
-        return view;
+    public String findById(@PathVariable long id, Model model, RedirectAttributes attributes){
+        Payment payment = paymentService.findById(id).orElse(null);
+        if(payment == null){
+            attributes.addFlashAttribute("notification", Notification.error("Paiement introuvable"));
+            return "redirect:/payment/list";
+        }
+        model.addAttribute("payment", payment);
+        return "admin/payment/view";
     }
 
-    @GetMapping(value="status/{id}")
-    public String getAll(@PathVariable long id, RedirectAttributes attributes){
-        attributes.addFlashAttribute("notification", paymentService.status(id));
+    @GetMapping(value="toggle/{id}")
+    public String toggle(@PathVariable long id, @RequestParam Status status, RedirectAttributes attributes){
+        attributes.addFlashAttribute("notification", paymentService.toggle(id, status));
         return "redirect:/payment/list";
     }
 
