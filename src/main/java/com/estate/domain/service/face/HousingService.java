@@ -15,6 +15,8 @@ public interface HousingService {
 
     List<Housing> findAll();
 
+    List<Housing> findAllByStandingId(long standingId);
+
     List<Housing> findAll(HousingSearch form);
 
     Optional<Housing> findById(long id);

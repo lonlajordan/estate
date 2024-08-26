@@ -3,6 +3,7 @@ package com.estate.domain.service.face;
 import com.estate.domain.entity.Notification;
 import com.estate.domain.entity.Payment;
 import com.estate.domain.enumaration.Status;
+import com.estate.domain.form.PaymentForm;
 import org.springframework.data.domain.Page;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -24,4 +25,6 @@ public interface PaymentService {
     Notification status(long id);
 
     long countByStatus(Status status);
+
+    Notification save(PaymentForm form);
 }

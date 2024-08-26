@@ -5,10 +5,9 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     </head>
     <body>
-        <p>Dear customer,</p>
-        <p>Welcome to TRAFFIC app. Your password is : <b>{password}</b></p>
-        <p>Thanks,</p>
-        <p>The Support Team</p>
-        <img width="100" src="${logo}" alt="">
+        <p>Cher client,</p>
+        <p>Bienvenu dans la <b>MINI CITE CONCORDE</b>. Votre mot de passe de connexion est : <b>${password}</b></p>
+        <p>Merci,</p>
+        <p>L'équipe support</p>
     </body>
 </html>

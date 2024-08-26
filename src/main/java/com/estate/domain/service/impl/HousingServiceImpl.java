@@ -39,6 +39,11 @@ public class HousingServiceImpl implements HousingService {
     }
 
     @Override
+    public List<Housing> findAllByStandingId(long standingId) {
+        return housingRepository.findAllByStandingIdOrderByNameAsc(standingId);
+    }
+
+    @Override
     public List<Housing> findAll(HousingSearch form) {
         return housingRepository.findAll(form.toSpecification(), Sort.by(Sort.Direction.ASC, "name"));
     }

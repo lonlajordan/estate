@@ -100,7 +100,12 @@ public class Student extends Auditable {
     private Lease currentLease;
 
     public String getName(){
-        return Stream.of(firstName, lastName).filter(Objects::nonNull).collect(Collectors.joining(" "));
+        return Stream.of(firstName, lastName).filter(StringUtils::isNotBlank).collect(Collectors.joining(" "));
+    }
+
+    public String getOneName(){
+        String name = getName();
+        return name.substring(name.lastIndexOf(" ") + 1);
     }
 
     public StudentForm toForm(){

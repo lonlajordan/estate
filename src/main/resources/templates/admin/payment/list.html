@@ -124,17 +124,17 @@
                             <td th:text="${payement.mode?.name}"></td>
                             <td th:text="${payement.status?.name}"></td>
                             <td class="text-center fit-cell-content">
-                                <a class="dropdown-toggle" tabindex="0" data-toggle="popover" data-placement="auto" data-trigger="focus" th:data-target="${'popover-content-' + recharge.id}" href="#">
+                                <a class="dropdown-toggle" tabindex="0" data-toggle="popover" data-placement="auto" data-trigger="focus" th:data-target="${'popover-content-' + payment.id}" href="#">
                                     <i class="fa fa-ellipsis-h"></i>
                                 </a>
-                                <div th:id="${'popover-content-' + recharge.id}" class="list-group" style="display: none">
+                                <div th:id="${'popover-content-' + payement.id}" class="list-group" style="display: none">
                                     <a class="list-group-item lazy-link text-decoration-none text-left" th:href="@{'/payment/status/' + ${payement.id}}">
                                         <i class="fa fa-refresh fa-fw"></i> Valider
                                     </a>
                                     <a class="list-group-item lazy-link text-decoration-none text-left" th:href="@{'/payment/view/' + ${payement.id}}">
                                         <i class="fa fa-eye fa-fw"></i> Details
                                     </a>
-                                    <a class="list-group-item text-decoration-none text-danger text-left" th:data-recharge-id="${recharge.id}" onclick="deleteItem(this.getAttribute('data-recharge-id'), 'recharge/delete')" href="#">
+                                    <a class="list-group-item text-decoration-none text-danger text-left" th:data-payment-id="${payment.id}" onclick="deleteItem(this.getAttribute('data-payment-id'), 'payment/delete')" href="#">
                                         <i class="fa fa-trash-o fa-fw"></i> Supprimer
                                     </a>
                                 </div>
