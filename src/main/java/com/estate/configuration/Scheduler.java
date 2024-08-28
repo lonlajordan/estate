@@ -1,5 +1,6 @@
 package com.estate.configuration;
 
+import com.estate.domain.entity.Lease;
 import com.estate.domain.entity.Student;
 import com.estate.domain.mail.EmailHelper;
 import com.estate.repository.*;
@@ -23,12 +24,7 @@ import java.util.stream.Stream;
 public class Scheduler {
     private final EmailHelper emailHelper;
     private final StudentRepository studentRepository;
-
-    @Scheduled(cron = "0 0 1 ? * SUN")
-    public void generateOrdinaryQuiz(){
-
-    }
-
+    private final LeaseRepository leaseRepository;
 
     @Scheduled(cron = "0 0 8 * * ?", zone = "GMT+1")
     public void rememberBirthday(){
@@ -41,6 +37,16 @@ public class Scheduler {
             HashMap<String, Object> context = new HashMap<>();
             context.put("name", name);
             emailHelper.sendMail(to, cc, "JOYEUX ANNIVERSAIRE", "birthday.ftl", Locale.FRENCH, context, Collections.emptyList());
+        }
+
+        List<Lease> leases = leaseRepository.findAllByEndDate(LocalDate.now().plusDays(30));
+        for (Lease lease : leases) {
+            Student student = lease.getPayment().getStudent();
+            name = student.getOneName();
+            HashMap<String, Object> context = new HashMap<>();
+            context.put("name", name);
+            emailHelper.sendMail(student.getEmail(), "", "RAPPEL DE PAIEMENT DU LOYER", "birthday.ftl", Locale.FRENCH, context, Collections.emptyList());
+            emailHelper.sendMail(Stream.of(student.getFirstParentEmail(), student.getSecondParentEmail()).distinct().filter(StringUtils::isNotBlank).collect(Collectors.joining(",")), "", "RAPPEL DE PAIEMENT DU LOYER", "birthday.ftl", Locale.FRENCH, context, Collections.emptyList());
         }
     }
 }

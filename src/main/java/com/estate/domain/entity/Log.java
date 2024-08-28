@@ -22,8 +22,6 @@ public class Log extends Auditable {
     private String message = "";
     @Column(columnDefinition = "TEXT")
     private String details = "";
-    @Column(nullable = false)
-    private Date date = new Date();
 
     public Log(Level level, String message) {
         this.level = level;

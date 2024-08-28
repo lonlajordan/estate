@@ -1,10 +1,10 @@
 package com.estate.controller;
 
 import com.estate.domain.entity.Log;
+import com.estate.domain.form.LogSearch;
 import com.estate.domain.service.face.LogService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -13,7 +13,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Optional;
 
 @Controller
@@ -43,12 +42,8 @@ public class LogController {
     }
 
     @PostMapping(value="search")
-    public String search(@RequestParam(required = false, defaultValue = "") String level,
-                         @RequestParam(required = false, defaultValue = "") String message,
-                         @RequestParam(required = false, defaultValue = "1970-01-01") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date start,
-                         @RequestParam(required = false, defaultValue = "1970-01-01") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date end,
-                         Model model){
-        model.addAttribute("logs", logService.search(level, message, start, end));
+    public String search(LogSearch form, Model model){
+        model.addAttribute("logs", logService.search(form));
         model.addAttribute("totalPages", 1);
         model.addAttribute("currentPage", 0);
         return "admin/log/list";

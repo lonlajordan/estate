@@ -1,6 +1,7 @@
 package com.estate.domain.service.face;
 
 import com.estate.domain.entity.Log;
+import com.estate.domain.form.LogSearch;
 import org.springframework.data.domain.Page;
 import org.springframework.ui.Model;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -18,7 +19,7 @@ public interface LogService {
 
     Optional<Log> findById(long id);
 
-    List<Log> search(String level, String message, Date start, Date end);
+    List<Log> search(LogSearch form);
 
     RedirectView deleteAllByIds(ArrayList<Long> ids, RedirectAttributes attributes);
 

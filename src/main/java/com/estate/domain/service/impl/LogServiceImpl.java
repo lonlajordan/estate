@@ -4,6 +4,7 @@ import com.estate.domain.enumaration.Level;
 import com.estate.domain.entity.Log;
 import com.estate.domain.entity.Notification;
 import com.estate.domain.entity.User;
+import com.estate.domain.form.LogSearch;
 import com.estate.domain.service.face.LogService;
 import com.estate.repository.LogRepository;
 import com.estate.repository.UserRepository;
@@ -13,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -42,7 +44,7 @@ public class LogServiceImpl implements LogService {
     private final UserRepository userRepository;
 
     public Page<Log> findAll(int p){
-        return logRepository.findAllByOrderByDateDesc(PageRequest.of(p  - 1, 500));
+        return logRepository.findAllByOrderByCreationDateDesc(PageRequest.of(p  - 1, 500));
     }
 
     public Optional<Log> findById(long id){
@@ -51,18 +53,8 @@ public class LogServiceImpl implements LogService {
 
 
     @Override
-    public List<Log> search(String level, String message, Date start, Date end){
-        CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<Log> cq = cb.createQuery(Log.class);
-        Root<Log> log = cq.from(Log.class);
-        List<Predicate> predicates = new ArrayList<>();
-        if(StringUtils.isNotEmpty(message)) predicates.add(cb.like(log.get("message"), "%" + message + "%"));
-        if(StringUtils.isNotEmpty(level)) predicates.add(cb.equal(log.get("level"), Level.valueOf(level)));
-        if(start.toInstant().getEpochSecond() > 0) predicates.add(cb.greaterThanOrEqualTo(log.get("date"), DateUtils.atStartOfDay(start)));
-        if(end.toInstant().getEpochSecond() > 0) predicates.add(cb.lessThanOrEqualTo(log.get("date"), DateUtils.atEndOfDay(end)));
-        cq.where(predicates.toArray(new Predicate[0]));
-        TypedQuery<Log> query = em.createQuery(cq).setMaxResults(1000);
-        return query.getResultList();
+    public List<Log> search(LogSearch form){
+        return logRepository.findAll(form.toSpecification(), PageRequest.of(0, 1000, Sort.by(Sort.Direction.DESC, "creationDate"))).toList();
     }
 
     @Override
