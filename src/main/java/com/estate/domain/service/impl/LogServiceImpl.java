@@ -1,6 +1,5 @@
 package com.estate.domain.service.impl;
 
-import com.estate.domain.enumaration.Level;
 import com.estate.domain.entity.Log;
 import com.estate.domain.entity.Notification;
 import com.estate.domain.entity.User;
@@ -8,9 +7,7 @@ import com.estate.domain.form.LogSearch;
 import com.estate.domain.service.face.LogService;
 import com.estate.repository.LogRepository;
 import com.estate.repository.UserRepository;
-import com.estate.utils.DateUtils;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,41 +17,30 @@ import org.springframework.ui.Model;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
 import javax.servlet.http.HttpSession;
 import java.security.Principal;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class LogServiceImpl implements LogService {
-    @PersistenceContext
-    private EntityManager em;
-
     private final LogRepository logRepository;
     private final UserRepository userRepository;
 
-    public Page<Log> findAll(int p){
-        return logRepository.findAllByOrderByCreationDateDesc(PageRequest.of(p  - 1, 500));
+    @Override
+    public Page<Log> findAll(int page){
+        return logRepository.findAllByOrderByCreationDateDesc(PageRequest.of(page  - 1, 500));
     }
-
-    public Optional<Log> findById(long id){
-        return logRepository.findById(id);
-    }
-
 
     @Override
-    public List<Log> search(LogSearch form){
-        return logRepository.findAll(form.toSpecification(), PageRequest.of(0, 1000, Sort.by(Sort.Direction.DESC, "creationDate"))).toList();
+    public Page<Log> findAll(LogSearch form){
+        return logRepository.findAll(form.toSpecification(), PageRequest.of(form.getPage()  - 1, 500, Sort.by(Sort.Direction.DESC, "creationDate")));
+    }
+
+    @Override
+    public Optional<Log> findById(long id){
+        return logRepository.findById(id);
     }
 
     @Override

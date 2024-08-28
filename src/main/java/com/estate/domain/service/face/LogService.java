@@ -10,16 +10,14 @@ import org.springframework.web.servlet.view.RedirectView;
 import javax.servlet.http.HttpSession;
 import java.security.Principal;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 
 public interface LogService {
-    Page<Log> findAll(int p);
+    Page<Log> findAll(int page);
+
+    Page<Log> findAll(LogSearch form);
 
     Optional<Log> findById(long id);
-
-    List<Log> search(LogSearch form);
 
     RedirectView deleteAllByIds(ArrayList<Long> ids, RedirectAttributes attributes);
 

@@ -10,9 +10,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.support.RequestContextUtils;
 import org.springframework.web.servlet.view.RedirectView;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
@@ -21,11 +24,23 @@ public class LogController {
     private final LogService logService;
 
     @GetMapping(value="list")
-    public String findAll(@RequestParam(required = false, defaultValue = "1") int p, Model model){
-        Page<Log> logs = logService.findAll(p);
+    public String findAll(@RequestParam(required = false, defaultValue = "1") int page, Model model, HttpServletRequest request){
+        LogSearch form = new LogSearch();
+        Page<Log> logs;
+        Map<String, ?> attributes = RequestContextUtils.getInputFlashMap(request);
+        boolean search = attributes != null && attributes.containsKey("searchForm");
+        if(search){
+            form = (LogSearch) attributes.get("searchForm");
+            logs = logService.findAll(form);
+            if(logs.isEmpty()) model.addAttribute("notification", Notification.info("Aucun résultat"));
+        } else {
+            logs = logService.findAll(page);
+        }
         model.addAttribute("logs", logs.toList());
         model.addAttribute("totalPages", logs.getTotalPages());
-        model.addAttribute("currentPage", p);
+        model.addAttribute("currentPage", logs.getPageable().getPageNumber());
+        model.addAttribute("searchForm", form);
+        model.addAttribute("search", search);
         return "admin/log/list";
     }
 

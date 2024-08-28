@@ -63,7 +63,7 @@ function initPagination(){
                     $('#current-page').val(pagination.pageNumber);
                     $('#search-button-id').click();
                 }else{
-                    fetch(ctx + '/' + paginator.attr('aria-label') + '?p=' + pagination.pageNumber);
+                    fetch(ctx + '/' + paginator.attr('aria-label') + '?page=' + pagination.pageNumber);
                 }
             }
         })
