@@ -4,11 +4,10 @@ import lombok.Getter;
 
 @Getter
 public enum Status {
-    PENDING("En attente"),
-    CANCELLED("Annulée"),
+    INITIATED("Initié"),
+    SUBMITTED("Soumis"),
     CONFIRMED("Confirmé"),
-    APPROVED("Approuvée"),
-    REJECTED("Rejetée");
+    CANCELLED("Annulé");
 
     private final String name;
 

@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -37,7 +38,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public Page<Payment> findAll(PaymentSearch form) {
-        return paymentRepository.findAll(form.toSpecification(), PageRequest.of(form.getPage()  - 1, 500));
+        return paymentRepository.findAll(form.toSpecification(), PageRequest.of(form.getPage()  - 1, 500, Sort.by(Sort.Direction.DESC, "creationDate")));
     }
 
     @Override
@@ -49,7 +50,7 @@ public class PaymentServiceImpl implements PaymentService {
     public RedirectView deleteById(long id, RedirectAttributes attributes){
         Notification notification = Notification.info();
         try {
-            paymentRepository.deleteAllByIdAndStatus(id, Status.REJECTED);
+            paymentRepository.deleteAllByIdAndStatus(id, Status.CANCELLED);
         }catch (Exception e){
             notification = Notification.error("Erreur lors de la suppression des recharges.");
             logRepository.save(Log.error(notification.getMessage(), ExceptionUtils.getStackTrace(e)));

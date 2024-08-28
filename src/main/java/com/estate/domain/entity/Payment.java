@@ -34,7 +34,7 @@ public class Payment extends Auditable {
     private Housing desiderata;
     private String proof;
 
-    private Status status = Status.PENDING;
+    private Status status = Status.INITIATED;
 
 
     public PaymentForm toForm(){

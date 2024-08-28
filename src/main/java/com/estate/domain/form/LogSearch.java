@@ -15,6 +15,7 @@ import java.util.List;
 
 @Data
 public class LogSearch {
+    private Integer page = 1;
     private Level level;
     private String message;
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)

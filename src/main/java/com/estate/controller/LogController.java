@@ -1,6 +1,7 @@
 package com.estate.controller;
 
 import com.estate.domain.entity.Log;
+import com.estate.domain.entity.Notification;
 import com.estate.domain.form.LogSearch;
 import com.estate.domain.service.face.LogService;
 import lombok.RequiredArgsConstructor;
@@ -8,12 +9,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.ArrayList;
-import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -22,7 +21,7 @@ public class LogController {
     private final LogService logService;
 
     @GetMapping(value="list")
-    public String getAll(@RequestParam(required = false, defaultValue = "1") int p, Model model){
+    public String findAll(@RequestParam(required = false, defaultValue = "1") int p, Model model){
         Page<Log> logs = logService.findAll(p);
         model.addAttribute("logs", logs.toList());
         model.addAttribute("totalPages", logs.getTotalPages());
@@ -31,22 +30,20 @@ public class LogController {
     }
 
     @GetMapping(value="view/{id}")
-    public ModelAndView viewLog(@PathVariable long id){
-        ModelAndView view = new ModelAndView("redirect:/error/404");
-        Optional<Log> log = logService.findById(id);
-        log.ifPresent(value -> {
-            view.getModel().put("log", value);
-            view.setViewName("admin/log/view");
-        });
-        return view;
+    public String findById(@PathVariable long id, Model model, RedirectAttributes attributes){
+        Log log = logService.findById(id).orElse(null);
+        if(log == null){
+            attributes.addFlashAttribute("notification", Notification.error("Évènement introuvable"));
+            return "redirect:/log/list";
+        }
+        model.addAttribute("log", log);
+        return "admin/log/view";
     }
 
-    @PostMapping(value="search")
-    public String search(LogSearch form, Model model){
-        model.addAttribute("logs", logService.search(form));
-        model.addAttribute("totalPages", 1);
-        model.addAttribute("currentPage", 0);
-        return "admin/log/list";
+    @PostMapping("search")
+    public String search(LogSearch form, RedirectAttributes attributes){
+        attributes.addFlashAttribute("searchForm", form);
+        return "redirect:/log/list";
     }
 
     @RequestMapping(value="delete")
