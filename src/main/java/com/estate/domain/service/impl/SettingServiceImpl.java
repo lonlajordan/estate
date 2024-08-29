@@ -9,9 +9,8 @@ import com.estate.repository.SettingRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.servlet.view.RedirectView;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,19 +31,19 @@ public class SettingServiceImpl implements SettingService {
     }
 
     @Override
-    public RedirectView update(Setting setting, RedirectAttributes attributes) {
-        Notification notification = Notification.info();
-        Setting setting$ = settingRepository.findById(setting.getId()).orElse(null);
-        if(setting$ != null){
-            setting$.setValue(setting.getValue());
-            try {
-                settingRepository.save(setting$);
-            } catch (Exception e){
-                notification = Notification.error("Erreur lors de la modification du paramètre");
-                logRepository.save(Log.error(notification.getMessage(), ExceptionUtils.getStackTrace(e)));
-            }
+    public Notification update(Setting form, Principal principal) {
+        Notification notification;
+        Setting setting = settingRepository.findById(form.getId()).orElse(null);
+        if(setting == null) return Notification.error("Paramètre introuvable");
+        setting.setValue(form.getValue());
+        try {
+            settingRepository.save(setting);
+            notification = Notification.info("Le paramètre <b>« " + setting.getCode().getName() + " »</b> a été modifié.");
+            logRepository.save(Log.info(notification.getMessage()).author(Optional.ofNullable(principal).map(Principal::getName).orElse("")));
+        } catch (Exception e){
+            notification = Notification.error("Erreur lors de la modification du paramètre <b>« " + setting.getCode().getName() + " »</b> ");
+            logRepository.save(Log.error(notification.getMessage(), ExceptionUtils.getStackTrace(e)).author(Optional.ofNullable(principal).map(Principal::getName).orElse("")));
         }
-        attributes.addFlashAttribute("notification", notification);
-        return new RedirectView("/setting/list", true);
+        return notification;
     }
 }

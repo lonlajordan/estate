@@ -5,6 +5,7 @@ import com.estate.domain.entity.Standing;
 import com.estate.domain.form.StandingForm;
 
 import javax.servlet.http.HttpServletRequest;
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,7 +16,7 @@ public interface StandingService {
 
     Notification deleteById(long id, boolean force, HttpServletRequest request);
 
-    Notification save(StandingForm form);
+    Notification save(StandingForm form, Principal principal);
 
-    Notification toggleById(long id);
+    Notification toggleById(long id, Principal principal);
 }

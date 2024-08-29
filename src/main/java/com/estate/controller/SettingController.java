@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.servlet.view.RedirectView;
 
 import javax.validation.Valid;
+import java.security.Principal;
 
 @Controller
 @RequiredArgsConstructor
@@ -33,7 +33,8 @@ public class SettingController {
     }
 
     @PostMapping(value="save")
-    public RedirectView save(@Valid Setting setting, RedirectAttributes attributes){
-        return settingService.update(setting, attributes);
+    public String save(@Valid Setting setting, RedirectAttributes attributes, Principal principal){
+        attributes.addFlashAttribute("notification", settingService.update(setting, principal));
+        return "redirect:/setting/list";
     }
 }

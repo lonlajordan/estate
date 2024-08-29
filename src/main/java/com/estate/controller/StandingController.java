@@ -13,6 +13,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.security.Principal;
 
 @Controller
 @RequiredArgsConstructor
@@ -51,15 +52,15 @@ public class StandingController {
     }
 
     @RequestMapping(value="toggle/{id}")
-    public String toggle(@PathVariable long id, RedirectAttributes attributes){
-        attributes.addFlashAttribute("notification", standingService.toggleById(id));
+    public String toggle(@PathVariable long id, RedirectAttributes attributes, Principal principal){
+        attributes.addFlashAttribute("notification", standingService.toggleById(id, principal));
         return "redirect:/standing/list";
     }
 
     @PostMapping(value="save")
-    public String save(@Valid @ModelAttribute("standing") StandingForm standing, BindingResult result, @RequestParam(required = false, defaultValue = "false") boolean multiple, Model model, RedirectAttributes attributes){
+    public String save(@Valid @ModelAttribute("standing") StandingForm standing, BindingResult result, @RequestParam(required = false, defaultValue = "false") boolean multiple, Model model, RedirectAttributes attributes, Principal principal){
         if(result.hasErrors()) return "admin/standing/save";
-        Notification notification =  standingService.save(standing);
+        Notification notification =  standingService.save(standing, principal);
         if(multiple || notification.hasError()){
             model.addAttribute("notification", notification);
             model.addAttribute("standing", notification.hasError() ? standing : new StandingForm());
@@ -70,7 +71,7 @@ public class StandingController {
     }
 
     @RequestMapping(value="delete")
-    public String deleteById(@RequestParam long id, @RequestParam(defaultValue = "false") boolean force, RedirectAttributes attributes, HttpServletRequest request){
+    public String deleteById(@RequestParam long id, @RequestParam(required = false, defaultValue = "false") boolean force, RedirectAttributes attributes, HttpServletRequest request){
         Notification notification =  standingService.deleteById(id, force, request);
         attributes.addFlashAttribute("notification", notification);
         return "redirect:/standing/list";

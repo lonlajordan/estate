@@ -13,7 +13,6 @@
         </div>
         <div class="row">
             <div class="col">
-                <!--/*@thymesVar id="notification" type="com.estate.domain.entity.Notification"*/-->
                 <div th:replace="base.html :: alert(${notification})"></div>
             </div>
         </div>
@@ -23,34 +22,35 @@
                     <div class="panel-heading">
                         <b>Formulaire</b>
                     </div>
-                    <!--/*@thymesVar id="user" type="com.estate.domain.entity.User"*/-->
-                    <form onsubmit="submitForm(event)" th:action="@{/user/profile}" autocomplete="off" method="post">
+                    <form th:object="${user}" onsubmit="submitForm(event)" th:action="@{/user/profile}" autocomplete="off" method="post">
                         <div class="panel-body">
                             <div class="row">
-                                <input name="id" th:value="${user?.id}" type="hidden">
-                                <div class="form-group col-lg-6">
+                                <input th:field="*{id}" type="hidden">
+                                <div class="form-group col-lg-6" th:classappend="${#fields.hasErrors('firstName') ? 'has-error' : ''}">
                                     <label for="firstName" class="control-label">Nom <span class="required-field">*</span></label>
-                                    <input id="firstName" name="firstName" th:value="${user?.firstName}" class="form-control" autocomplete="off" required>
+                                    <input id="firstName" th:field="*{firstName}" class="form-control" autocomplete="off" required>
+                                    <p th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}" class="help-block"></p>
                                 </div>
                                 <div class="form-group col-lg-6">
                                     <label for="lastName" class="control-label">Prénom <span class="required-field">*</span></label>
-                                    <input id="lastName" name="lastName" th:value="${user?.lastName}" class="form-control" autocomplete="off" required>
+                                    <input id="lastName" th:field="*{lastName}" class="form-control" autocomplete="off">
                                 </div>
-                                <div class="form-group col-lg-6">
-                                    <label for="phoneNumber" class="control-label">Numéro de téléphone <span class="required-field">*</span></label>
-                                    <input id="phoneNumber" name="phoneNumber" th:value="${user?.phoneNumber}" autocomplete="off" class="form-control" required>
+                                <div class="form-group col-lg-6" th:classappend="${#fields.hasErrors('phone') ? 'has-error' : ''}">
+                                    <label for="phone" class="control-label">Numéro de téléphone <span class="required-field">*</span></label>
+                                    <input id="phone" th:field="*{phone}" autocomplete="off" class="form-control" required>
+                                    <p th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}" class="help-block"></p>
                                 </div>
-                                <div class="form-group col-lg-6">
+                                <div class="form-group col-lg-6" th:classappend="${#fields.hasErrors('email') ? 'has-error' : ''}">
                                     <label for="email" class="control-label">Adresse email <span class="required-field">*</span></label>
-                                    <input id="email" name="email" th:value="${user?.email}" type="email" autocomplete="off" class="form-control" required>
+                                    <input id="email" th:field="*{email}" type="email" autocomplete="off" class="form-control" required>
+                                    <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="help-block"></p>
                                 </div>
-                                <div class="form-group col-lg-12">
-                                    <label for="sex">Sexe <span class="required-field">*</span></label>
-                                    <select id="sex" name="sex" class="form-control" required>
-                                        <option value="" th:selected="${user?.sex == null}">-</option>
-                                        <option value="M" th:selected="${#strings.equals(user?.sex, 'M')}">Masculin</option>
-                                        <option value="F" th:selected="${#strings.equals(user?.sex, 'F')}">Féminin</option>
+                                <div class="form-group col-lg-6" th:classappend="${#fields.hasErrors('gender') ? 'has-error' : ''}">
+                                    <label for="gender" class="control-label">Sexe <span class="required-field">*</span></label>
+                                    <select id="gender" th:field="*{gender}" class="form-control" required>
+                                        <option th:each="gender: ${T(com.estate.domain.enumaration.Gender).values()}" th:value="${gender}" th:text="${gender.name}"></option>
                                     </select>
+                                    <p th:if="${#fields.hasErrors('gender')}" th:errors="*{gender}" class="help-block"></p>
                                 </div>
                             </div>
                         </div>

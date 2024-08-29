@@ -22,4 +22,9 @@ public interface PaymentRepository extends JpaRepository<Payment, Long>, JpaSpec
     @Modifying(clearAutomatically = true)
     void deleteAllByStandingId(long standingId);
 
+    @Transactional
+    @Modifying(clearAutomatically = true)
+    @Query("UPDATE Payment p SET p.validator = null WHERE p.validator.id = ?1")
+    void setValidatorToNullByUserId(long userId);
+
 }

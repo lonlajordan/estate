@@ -11,6 +11,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -23,8 +24,14 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 public class Scheduler {
     private final EmailHelper emailHelper;
+    private final LogRepository logRepository;
     private final StudentRepository studentRepository;
     private final LeaseRepository leaseRepository;
+
+    @Scheduled(cron = "@monthly")
+    private void deleteLogs(){
+        logRepository.deleteAllByCreationDateBefore(LocalDateTime.now().minusDays(90));
+    }
 
     @Scheduled(cron = "0 0 8 * * ?", zone = "GMT+1")
     public void rememberBirthday(){

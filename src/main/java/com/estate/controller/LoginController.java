@@ -53,7 +53,7 @@ public class LoginController {
         }else{
             String token = TextUtils.generateType1UUID().toString();
             user.setToken(token);
-            user.setTokenExpireAt(LocalDateTime.now().plusMinutes(5));
+            user.setTokenExpirationDate(LocalDateTime.now().plusMinutes(5));
             userRepository.save(user);
             notification = Notification.warn("Vérifiez votre boîte de réception");
             HashMap<String, Object> model = new HashMap<>();
@@ -69,7 +69,7 @@ public class LoginController {
     public String passwordReset(@PathVariable String token, RedirectAttributes attributes, Model model){
         User user = userRepository.findByToken(token).orElse(null);
         if(user != null){
-            if(LocalDateTime.now().isBefore(user.getTokenExpireAt())){
+            if(LocalDateTime.now().isBefore(user.getTokenExpirationDate())){
                 model.addAttribute("token", token);
                 return "reset";
             }
@@ -85,7 +85,7 @@ public class LoginController {
         User user = userRepository.findByToken(token).orElse(null);
         Notification notification;
         if(user != null){
-            if(LocalDateTime.now().isBefore(user.getTokenExpireAt())){
+            if(LocalDateTime.now().isBefore(user.getTokenExpirationDate())){
                 user.setPassword(passwordEncoder.encode(password));
                 userRepository.save(user);
                 notification = Notification.info("votre mot de passe a été modifié.");

@@ -2,8 +2,11 @@ package com.estate.domain.entity;
 
 import com.estate.configuration.ModeListConverter;
 import com.estate.configuration.RoleListConverter;
+import com.estate.domain.enumaration.Gender;
 import com.estate.domain.enumaration.Mode;
 import com.estate.domain.enumaration.Role;
+import com.estate.domain.form.ProfilForm;
+import com.estate.domain.form.UserForm;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,13 +14,10 @@ import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -32,38 +32,31 @@ public class User extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotBlank(message = "champs requis")
     @Column(nullable = false)
     private String firstName = "";
-    @NotBlank(message = "champs requis")
-    @Column(nullable = false)
-    private String lastName = "";
-    @Email(message = "adresse e-mail invalide")
-    @NotBlank(message = "champs requis")
+    private String lastName;
     @Column(nullable = false, unique = true)
     private String email = "";
-    @NotBlank(message = "champs requis")
     @Column(nullable = false)
     private String password = "";
-    @NotBlank(message = "champs requis")
     @Column(nullable = false)
-    private String phoneNumber = "";
+    private String phone = "";
     private String token;
-    private LocalDateTime tokenExpireAt = LocalDateTime.now();
-    private char sex = 'M';
-    private boolean enabled = true;
-    @Column(nullable = false)
-    private LocalDateTime createdAt = LocalDateTime.now();
+    private LocalDateTime tokenExpirationDate = LocalDateTime.now();
+    private Gender gender = Gender.MALE;
+    private boolean active = true;
     private LocalDateTime lastLogin;
     @Convert(converter = ModeListConverter.class)
     private List<Mode> modes = new ArrayList<>();
     @Convert(converter = RoleListConverter.class)
     @Column(columnDefinition = "TEXT")
     private List<Role> roles = new ArrayList<>();
-    private Boolean deleted = Boolean.FALSE;
+
+    @OneToMany(mappedBy = "validator")
+    private List<Payment> payments = new ArrayList<>();
 
     public String getName(){
-        return Stream.of(firstName, lastName).filter(Objects::nonNull).collect(Collectors.joining(" "));
+        return Stream.of(firstName, lastName).filter(StringUtils::isNotBlank).collect(Collectors.joining(" "));
     }
 
     @PrePersist
@@ -72,6 +65,30 @@ public class User extends Auditable {
         if(this.firstName != null) this.firstName = this.firstName.trim().toUpperCase();
         if(this.lastName != null) this.lastName = Arrays.stream(this.lastName.trim().toLowerCase().split("\\s+")).map(StringUtils::capitalize).collect(Collectors.joining(" "));
         if(this.email != null) this.email = this.email.trim();
-        if(this.phoneNumber != null) this.phoneNumber = this.phoneNumber.trim();
+        if(this.phone != null) this.phone = this.phone.trim();
+    }
+
+    public UserForm toForm(){
+        UserForm form = new UserForm();
+        form.setId(id);
+        form.setFirstName(firstName);
+        form.setLastName(lastName);
+        form.setGender(gender);
+        form.setPhone(phone);
+        form.setEmail(email);
+        form.setModes(modes);
+        form.setRoles(roles);
+        return form;
+    }
+
+    public ProfilForm toProfilForm(){
+        ProfilForm form = new ProfilForm();
+        form.setId(id);
+        form.setFirstName(firstName);
+        form.setLastName(lastName);
+        form.setGender(gender);
+        form.setPhone(phone);
+        form.setEmail(email);
+        return form;
     }
 }

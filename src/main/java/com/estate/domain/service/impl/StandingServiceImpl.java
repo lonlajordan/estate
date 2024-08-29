@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import javax.servlet.http.HttpServletRequest;
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,7 +42,9 @@ public class StandingServiceImpl implements StandingService {
 
     @Override
     public Notification deleteById(long id, boolean force, HttpServletRequest request){
-        Notification notification = Notification.info();
+        Notification notification;
+        Standing standing = standingRepository.findById(id).orElse(null);
+        if(standing == null) return Notification.error("Standing introuvable");
         try {
             if(force){
                 leaseRepository.deleteAllByPaymentStandingId(id);
@@ -49,18 +52,18 @@ public class StandingServiceImpl implements StandingService {
                 housingRepository.deleteAllByStandingId(id);
             }
             standingRepository.deleteById(id);
+            notification = Notification.info("Le <b>" + standing.getName() + "</b> standing a été supprimé");
+            logRepository.save(Log.info(notification.getMessage()).author(Optional.ofNullable(request.getUserPrincipal()).map(Principal::getName).orElse("")));
         }catch (Throwable e){
-            notification = Notification.error("Erreur lors de la suppression du standing.");
+            notification = Notification.error("Erreur lors de la suppression du <b>" + standing.getName() + "</b> standing.");
             if(!force){
-                Standing standing = standingRepository.findById(id).orElse(null);
-                if(standing == null) return Notification.error("Standing introuvable");
                 String actions = "";
                 if(standing.isActive()) actions = "<a class='lazy-link' href='" + request.getContextPath() + "/standing/toggle/" + id + "'><b>Désactiver</b></a> ou ";
                 actions += "<a class='lazy-link text-danger' href='" + request.getRequestURI() + "?id=" + id + "&force=true" + "'><b>Forcer la suppression</b></a> (cette action supprimera tout logement, paiement ou contrat de bail associé).";
                 notification = Notification.warn("Ce standing est utilisé dans certains enregistrements. " + actions);
-                logRepository.save(Log.warn(notification.getMessage()));
+                logRepository.save(Log.warn(notification.getMessage()).author(Optional.ofNullable(request.getUserPrincipal()).map(Principal::getName).orElse("")));
             } else {
-                logRepository.save(Log.error(notification.getMessage(), ExceptionUtils.getStackTrace(e)));
+                logRepository.save(Log.error(notification.getMessage(), ExceptionUtils.getStackTrace(e)).author(Optional.ofNullable(request.getUserPrincipal()).map(Principal::getName).orElse("")));
             }
         }
         return notification;
@@ -68,7 +71,7 @@ public class StandingServiceImpl implements StandingService {
 
     @Override
     @Transactional
-    public Notification save(StandingForm form) {
+    public Notification save(StandingForm form, Principal principal) {
         boolean creation = form.getId() == null;
         Notification notification = Notification.info();
         Standing standing = creation ? new Standing() : standingRepository.findById(form.getId()).orElse(null);
@@ -82,6 +85,7 @@ public class StandingServiceImpl implements StandingService {
             standingRepository.saveAndFlush(standing);
             notification.setMessage("Un standing a été " + (creation ? "ajouté." : "modifié."));
             log.info(notification.getMessage());
+            logRepository.save(Log.info(notification.getMessage()).author(Optional.ofNullable(principal).map(Principal::getName).orElse("")));
         } catch (Throwable e){
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             String message = ExceptionUtils.getRootCauseMessage(e);
@@ -92,25 +96,25 @@ public class StandingServiceImpl implements StandingService {
                 notification.setMessage("Erreur lors de la " + (creation ? "création" : "modification") + " du standing.");
             }
             log.error(notification.getMessage(), e);
-            logRepository.save(Log.error(notification.getMessage(), ExceptionUtils.getStackTrace(e)));
+            logRepository.save(Log.error(notification.getMessage(), ExceptionUtils.getStackTrace(e)).author(Optional.ofNullable(principal).map(Principal::getName).orElse("")));
         }
 
         return notification;
     }
 
     @Override
-    public Notification toggleById(long id) {
+    public Notification toggleById(long id, Principal principal) {
         Notification notification = new Notification();
+        Standing standing = standingRepository.findById(id).orElse(null);
+        if(standing == null) return Notification.error("Standing introuvable");
         try {
-            Standing standing = standingRepository.findById(id).orElse(null);
-            if(standing == null) return Notification.error("Standing introuvable");
             standing.setActive(!standing.isActive());
             standingRepository.save(standing);
             notification.setMessage("Le <b>" + standing.getName() + "</b> standing a été " + (standing.isActive() ? "activé" : "désactivé") + " avec succès.");
-            logRepository.save(Log.info(notification.getMessage()));
-        }catch (Exception e){
-            notification = Notification.error("Erreur lors du changement de statut du standing d'identifiant <b>" + id + "</b>.");
-            logRepository.save(Log.error(notification.getMessage(), ExceptionUtils.getStackTrace(e)));
+            logRepository.save(Log.info(notification.getMessage()).author(Optional.ofNullable(principal).map(Principal::getName).orElse("")));
+        } catch (Throwable e){
+            notification = Notification.error("Erreur lors du changement de statut du <b>" + standing.getName() + "</b> standing.");
+            logRepository.save(Log.error(notification.getMessage(), ExceptionUtils.getStackTrace(e)).author(Optional.ofNullable(principal).map(Principal::getName).orElse("")));
         }
         return notification;
     }

@@ -90,7 +90,7 @@ public class BasicSecurityConfiguration {
             User user = userRepository.findByEmail(email).orElse(null);
             if (user == null || !user.getEmail().equals(email)) throw new BadCredentialsException(MessageCode.INCORRECT_EMAIL);
             if(!passwordEncoder.matches(password, user.getPassword())) throw new BadCredentialsException(MessageCode.INCORRECT_PASSWORD);
-            if(!user.isEnabled()) throw new BadCredentialsException(MessageCode.ACCOUNT_DISABLED);
+            if(!user.isActive()) throw new BadCredentialsException(MessageCode.ACCOUNT_DISABLED);
             user.setLastLogin(LocalDateTime.now());
             user = userRepository.save(user);
             ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();

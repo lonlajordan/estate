@@ -4,11 +4,13 @@ import com.estate.domain.entity.Notification;
 import com.estate.domain.entity.Log;
 import com.estate.domain.entity.User;
 import com.estate.domain.enumaration.Level;
-import com.estate.domain.enumaration.Mode;
-import com.estate.domain.enumaration.Role;
+import com.estate.domain.form.PasswordForm;
+import com.estate.domain.form.ProfilForm;
+import com.estate.domain.form.UserForm;
 import com.estate.domain.mail.EmailHelper;
 import com.estate.domain.service.face.UserService;
 import com.estate.repository.LogRepository;
+import com.estate.repository.PaymentRepository;
 import com.estate.repository.UserRepository;
 import com.estate.utils.TextUtils;
 import lombok.RequiredArgsConstructor;
@@ -19,10 +21,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.servlet.view.RedirectView;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.security.Principal;
 import java.util.Locale;
@@ -34,188 +34,149 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final LogRepository logRepository;
+    private final PaymentRepository paymentRepository;
     private final PasswordEncoder passwordEncoder;
     private final EmailHelper emailHelper;
 
     @Override
     public long count(){
-        return userRepository.countAllByDeletedFalse();
+        return userRepository.count();
     }
 
     @Override
     public List<User> findAll() {
-        return userRepository.findAllByDeletedFalseOrderByLastLoginDesc();
+        return userRepository.findAllByOrderByLastLoginDesc();
     }
 
     @Override
-    public ModelAndView getById(long id) {
-        User user = userRepository.findById(id).orElse(new User());
-        ModelAndView view = new ModelAndView("admin/user/save");
-        view.getModel().put("user", user);
-        view.getModel().put("creation", user.getId() == null);
-        return view;
-    }
-
-    @Override
-    public RedirectView deleteAllByIds(ArrayList<Long> ids, RedirectAttributes attributes){
-        Notification notification = Notification.info();
-        int n = 0;
-        for(Long id: ids){
-            User user = userRepository.findById(id).orElse(null);
-            if(user != null){
-                try {
-                    userRepository.delete(user);
-                }catch (Exception e){
-                    user.setDeleted(true);
-                    userRepository.save(user);
-                    logRepository.save(Log.error("Erreur lors de la suppression de l'utilisateur <b>" + user.getName() + "</b>.", ExceptionUtils.getStackTrace(e)));
-                }
-                n++;
-            }
-        }
-        String plural = n > 1 ? "s" : "";
-        notification.setMessage( n + " utilisateur" + plural + " supprimée" + plural +".");
-        attributes.addFlashAttribute("notification", notification);
-        return new RedirectView("/user/list", true);
-    }
-
-    @Override
-    public Notification toggleById(long id, Principal principal){
-        Notification notification = new Notification();
+    public Notification deleteById(long id, boolean force, HttpServletRequest request){
+        Notification notification;
+        User user = userRepository.findById(id).orElse(null);
+        if(user == null) return Notification.error("Utilisateur introuvable");
         try {
-            User user = userRepository.findById(id).orElse(null);
-            if(user != null){
-                user.setEnabled(!user.isEnabled());
-                userRepository.save(user);
-                notification.setMessage("<b>" + user.getName() + "</b> a été " + (user.isEnabled() ? "activé" : "désactivé") + " avec succès.");
-                logRepository.save(Log.info(notification.getMessage() + " Par <b>" + principal.getName() + "</b>."));
+            if(force) paymentRepository.setValidatorToNullByUserId(id);
+            userRepository.deleteById(id);
+            notification = Notification.info("L'utilisateur <b>" + user.getName() + "</b> a été supprimé");
+            logRepository.save(Log.info(notification.getMessage()).author(Optional.ofNullable(request.getUserPrincipal()).map(Principal::getName).orElse("")));
+        }catch (Throwable e){
+            notification = Notification.error("Erreur lors de la suppression de l'utilisateur <b>" + user.getName() + "</b>.");
+            if(!force){
+                String actions = "";
+                if(user.isActive()) actions = "<a class='lazy-link' href='" + request.getContextPath() + "/user/toggle/" + id + "'><b>Désactiver</b></a> ou ";
+                actions += "<a class='lazy-link text-danger' href='" + request.getRequestURI() + "?id=" + id + "&force=true" + "'><b>Forcer la suppression</b></a>.";
+                notification = Notification.warn("Cet utilisateur est impliqué dans certains enregistrements. " + actions);
+                logRepository.save(Log.warn(notification.getMessage()).author(Optional.ofNullable(request.getUserPrincipal()).map(Principal::getName).orElse("")));
+            } else {
+                logRepository.save(Log.error(notification.getMessage(), ExceptionUtils.getStackTrace(e)).author(Optional.ofNullable(request.getUserPrincipal()).map(Principal::getName).orElse("")));
             }
-        }catch (Exception e){
-            notification = Notification.error("Erreur lors du changement de statut de l'utilisateur d'identifiant <b>" + id + "</b>.");
-            logRepository.save(Log.error(notification.getMessage(), ExceptionUtils.getStackTrace(e)));
         }
         return notification;
     }
 
     @Override
-    public ModelAndView createOrUpdate(User user, List<String> authorities, List<String> responsibilities, Boolean multiple, HttpSession session, RedirectAttributes attributes) {
-        User user$ = user;
-        boolean creation = true;
-        if(user.getId() != null){
-            Optional<User> _user = userRepository.findById(user.getId());
-            if(_user.isPresent()){
-                user$ = _user.get();
-                user$.setFirstName(user.getFirstName());
-                user$.setLastName(user.getLastName());
-                user$.setPhoneNumber(user.getPhoneNumber());
-                user$.setEmail(user.getEmail());
-                user$.setSex(user.getSex());
-                creation = false;
-            }
-        }
+    public Notification toggleById(long id, Principal principal) {
         Notification notification = new Notification();
-        user$.setRoles(authorities.stream().map(Role::valueOf).collect(Collectors.toList()));
-        user$.setModes(responsibilities.stream().map(Mode::valueOf).collect(Collectors.toList()));
+        User user = userRepository.findById(id).orElse(null);
+        if(user == null) return Notification.error("Utilisateur introuvable");
+        try {
+            user.setActive(!user.isActive());
+            userRepository.save(user);
+            notification.setMessage("L'utilisateur <b>" + user.getName() + "</b> a été " + (user.isActive() ? "activé" : "désactivé") + " avec succès.");
+            logRepository.save(Log.info(notification.getMessage()).author(Optional.ofNullable(principal).map(Principal::getName).orElse("")));
+        } catch (Throwable e){
+            notification = Notification.error("Erreur lors du changement de statut de l'utilisateur <b>" + user.getName() + "</b>.");
+            logRepository.save(Log.error(notification.getMessage(), ExceptionUtils.getStackTrace(e)).author(Optional.ofNullable(principal).map(Principal::getName).orElse("")));
+        }
+        return notification;
+    }
+
+    @Override
+    public Notification save(UserForm form, HttpSession session, Principal principal) {
+        boolean creation = form.getId() == null;
+        Notification notification = Notification.info();
+        User user = creation ? new User() : userRepository.findById(form.getId()).orElse(null);
+        if(user == null) return Notification.error("Utilisateur introuvable");
+        user.setFirstName(form.getFirstName());
+        user.setLastName(form.getLastName());
+        user.setPhone(form.getPhone());
+        user.setEmail(form.getEmail());
+        user.setGender(form.getGender());
+        user.setModes(form.getModes());
+        user.setRoles(form.getRoles());
         try {
             if(creation){
                 HashMap<String, Object> context = new HashMap<>();
                 String password = TextUtils.generatePassword();
-                user$.setPassword(passwordEncoder.encode(password));
-                context.put("name", user$.getName());
+                user.setPassword(passwordEncoder.encode(password));
+                context.put("name", user.getName());
                 context.put("password", password);
-                emailHelper.sendMail(user$.getEmail(),"", "Nouveau compte TRAFFIC", "new_account.ftl", Locale.FRENCH, context, Collections.emptyList());
+                emailHelper.sendMail(user.getEmail(),"", "Nouveau compte TRAFFIC", "new_account.ftl", Locale.FRENCH, context, Collections.emptyList());
             }
-            user$ = userRepository.save(user$);
-            notification.setMessage("<b>" + user$.getName() +"</b> a été " + (creation ? "ajouté." : "modifié."));
-            logRepository.save(Log.info(notification.getMessage()));
+            user = userRepository.save(user);
+            notification.setMessage("L'utilisateur <b>" + user.getName() +"</b> a été " + (creation ? "ajouté." : "modifié."));
+            logRepository.save(Log.info(notification.getMessage()).author(Optional.ofNullable(principal).map(Principal::getName).orElse("")));
             if(!creation){
-                user = (User) session.getAttribute("user");
-                if(user != null && user.getId().equals(user$.getId())){
-                    user$ = userRepository.findByEmail(user$.getEmail()).orElse(null);
-                    if(user$ != null){
-                        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-                        Collection<SimpleGrantedAuthority> authorities$ = user$.getRoles().stream().map(Enum::name).map(SimpleGrantedAuthority::new).collect(Collectors.toList());
-                        auth = new UsernamePasswordAuthenticationToken(auth.getPrincipal(), auth.getCredentials(), authorities$);
-                        SecurityContextHolder.getContext().setAuthentication(auth);
-                        session.setAttribute("user", user$);
-                    }
+                User client = (User) session.getAttribute("user");
+                if(client != null && client.getId().equals(user.getId())){
+                    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+                    Collection<SimpleGrantedAuthority> authorities = user.getRoles().stream().map(Enum::name).map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+                    auth = new UsernamePasswordAuthenticationToken(user.getEmail(), auth.getCredentials(), authorities);
+                    SecurityContextHolder.getContext().setAuthentication(auth);
+                    session.setAttribute("user", user);
                 }
             }
-            creation = true;
-            user$ = new User();
-        } catch (Exception e){
-            assert user$ != null;
+        } catch (Throwable e){
             notification.setType(Level.ERROR);
-            notification.setMessage("Erreur lors de la " + (creation ? "création" : "modification") + " de l'utilisateur <b>" + user$.getName() + "</b>.");
-            logRepository.save(Log.error(notification.getMessage(), ExceptionUtils.getStackTrace(e)));
+            notification.setMessage("Erreur lors de la " + (creation ? "création" : "modification") + " de l'utilisateur <b>" + user.getName() + "</b>.");
+            logRepository.save(Log.error(notification.getMessage(), ExceptionUtils.getStackTrace(e)).author(Optional.ofNullable(principal).map(Principal::getName).orElse("")));
         }
-        ModelAndView view = new ModelAndView();
-        if(multiple || Level.ERROR.equals(notification.getType())){
-            view.getModel().put("user", user$);
-            view.getModel().put("creation", creation);
-            view.getModel().put("notification", notification);
-            view.setViewName("admin/user/save");
-        }else{
-            attributes.addFlashAttribute("notification", notification);
-            view.setViewName("redirect:/user/list");
-        }
-        return view;
+        return notification;
     }
 
     @Override
-    public void updateProfile(User user, long cityId, HttpSession session, Principal principal, RedirectAttributes attributes) {
-        User user$ = userRepository.findById(user.getId()).orElse(new User());
-        user$.setFirstName(user.getFirstName());
-        user$.setLastName(user.getLastName());
-        user$.setPhoneNumber(user.getPhoneNumber());
-        user$.setEmail(user.getEmail());
-        user$.setSex(user.getSex());
-        Notification notification = new Notification();
+    public Notification updateProfile(ProfilForm form, HttpSession session) {
+        Notification notification = Notification.info();
+        User user = userRepository.findById(form.getId()).orElse(null);
+        if(user == null) return Notification.error("Utilisateur introuvable");
+        user.setFirstName(form.getFirstName());
+        user.setLastName(form.getLastName());
+        user.setPhone(form.getPhone());
+        user.setEmail(form.getEmail());
+        user.setGender(form.getGender());
         try {
-            user$ = userRepository.save(user$);
-            notification.setMessage("<b>" + user$.getName() +"</b> a été modifié.");
-            logRepository.save(Log.info(notification.getMessage() + " Par <b>" + principal.getName() + "</b>."));
+            user = userRepository.save(user);
+            notification.setMessage("L'utilisateur <b>" + user.getName() +"</b> a été modifié.");
+            logRepository.save(Log.info(notification.getMessage()).author(user.getEmail()));
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-            Collection<SimpleGrantedAuthority> authorities = user$.getRoles().stream().map(Enum::name).map(SimpleGrantedAuthority::new).collect(Collectors.toList());
-            auth = new UsernamePasswordAuthenticationToken(user$.getEmail(), auth.getCredentials(), authorities);
+            Collection<SimpleGrantedAuthority> authorities = user.getRoles().stream().map(Enum::name).map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+            auth = new UsernamePasswordAuthenticationToken(user.getEmail(), auth.getCredentials(), authorities);
             SecurityContextHolder.getContext().setAuthentication(auth);
-            session.setAttribute("user", user$);
-        } catch (Exception e){
-            notification.setMessage("Erreur lors de la modification de l'utilisateur <b>[ " + user$.getName() + " ]</b>.");
-            logRepository.save(Log.error(notification.getMessage(), ExceptionUtils.getStackTrace(e)));
+            session.setAttribute("user", user);
+        } catch (Throwable e){
+            notification.setType(Level.ERROR);
+            notification.setMessage("Erreur lors de la modification de l'utilisateur <b>" + user.getName() + "</b>.");
+            logRepository.save(Log.error(notification.getMessage(), ExceptionUtils.getStackTrace(e)).author(user.getEmail()));
         }
-        attributes.addFlashAttribute("notification", notification);
+        return notification;
     }
 
     @Override
-    public User findById(long id) {
-        return userRepository.findById(id).orElse(null);
-    }
-
-
-    @Override
-    public ModelAndView getProfile(String email) {
-        Optional<User> user = userRepository.findByEmail(email);
-        ModelAndView view = new ModelAndView("redirect:/error/404");
-        user.ifPresent((value) -> {
-            view.setViewName("admin/user/profile");
-            view.getModel().put("user", value);
-        });
-        return view;
+    public Optional<User> findById(long id) {
+        return userRepository.findById(id);
     }
 
     @Override
-    public void changePassword(String oldPassword, String newPassword, Principal principal, RedirectAttributes attributes) {
-        Notification notification = new Notification();
-        User user = userRepository.findByEmail(principal.getName()).orElse(new User());
-        if(!passwordEncoder.matches(oldPassword, user.getPassword())){
-            notification.setMessage("Mot de passe actuel incorrect");
-            attributes.addFlashAttribute("oldPassword", oldPassword);
-            attributes.addFlashAttribute("newPassword", newPassword);
-        }else{
-            user.setPassword(passwordEncoder.encode(newPassword));
+    public Notification changePassword(PasswordForm form, Principal principal) {
+        Notification notification = Notification.info();
+        User user = userRepository.findByEmail(Optional.ofNullable(principal).map(Principal::getName).orElse("")).orElse(null);
+        if(user == null) return Notification.error("Utilisateur introuvable");
+        if(!passwordEncoder.matches(form.getBefore(), user.getPassword())){
+            notification = Notification.error("Mot de passe actuel incorrect");
+        } else {
+            user.setPassword(passwordEncoder.encode(form.getAfter()));
             userRepository.save(user);
+            logRepository.save(Log.info("L'utilisateur <b>" + user.getName() + "</b> a modifié son mot de passe.").author(user.getEmail()));
         }
-        attributes.addFlashAttribute("notification", notification);
+        return notification;
     }
 }

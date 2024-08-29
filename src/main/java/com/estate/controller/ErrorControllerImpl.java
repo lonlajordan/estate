@@ -17,11 +17,10 @@ import java.security.Principal;
 @Controller
 @RequiredArgsConstructor
 public class ErrorControllerImpl {
-    private LogService logService;
+    private final LogService logService;
 
     @RequestMapping("/error/{status}")
-    public String handleError(@PathVariable(required = false) Integer status, HttpSession session, Model model, Principal principal, Exception exception) {
-        if(status == null) status = 500;
+    public String handleError(@PathVariable Integer status, HttpSession session, Model model, Principal principal, Exception exception) {
         logService.handleError(status, session, model, principal, exception);
         return "error";
     }

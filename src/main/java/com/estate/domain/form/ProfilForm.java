@@ -1,0 +1,24 @@
+package com.estate.domain.form;
+
+import com.estate.domain.enumaration.Gender;
+import lombok.Data;
+
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
+@Data
+public class ProfilForm {
+    @NotNull
+    private Long id;
+    @NotBlank
+    private String firstName;
+    private String lastName;
+    @NotNull
+    private Gender gender;
+    @NotBlank
+    @Email
+    private String email;
+    @NotBlank
+    private String phone;
+}

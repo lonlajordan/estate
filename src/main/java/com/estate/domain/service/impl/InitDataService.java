@@ -31,7 +31,7 @@ public class InitDataService implements CommandLineRunner {
             user.setEmail("admin@gmail.com");
             user.setFirstName("LONLA");
             user.setLastName("Gatien Jordan");
-            user.setPhoneNumber("695463868");
+            user.setPhone("695463868");
             user.setPassword(new BCryptPasswordEncoder().encode("admin"));
             userRepository.save(user);
         }

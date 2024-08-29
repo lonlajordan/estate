@@ -2,34 +2,31 @@ package com.estate.domain.service.face;
 
 import com.estate.domain.entity.Notification;
 import com.estate.domain.entity.User;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.servlet.view.RedirectView;
+import com.estate.domain.form.PasswordForm;
+import com.estate.domain.form.ProfilForm;
+import com.estate.domain.form.UserForm;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public interface UserService {
 
+    long count();
+
     List<User> findAll();
 
-    ModelAndView getProfile(String name);
+    Optional<User> findById(long id);
 
-    void updateProfile(User user, long cityId, HttpSession session, Principal principal, RedirectAttributes attributes);
+    Notification save(UserForm form, HttpSession session, Principal principal);
 
-    void changePassword(String oldPassword, String newPassword, Principal principal, RedirectAttributes attributes);
-
-    User findById(long id);
+    Notification updateProfile(ProfilForm form, HttpSession session);
 
     Notification toggleById(long id, Principal principal);
 
-    long count();
+    Notification changePassword(PasswordForm form, Principal principal);
 
-    ModelAndView createOrUpdate(User user, List<String> authorities, List<String> responsibilities, Boolean multiple, HttpSession session, RedirectAttributes attributes);
-
-    RedirectView deleteAllByIds(ArrayList<Long> ids, RedirectAttributes attributes);
-
-    ModelAndView getById(long id);
+    Notification deleteById(long id, boolean force, HttpServletRequest request);
 }

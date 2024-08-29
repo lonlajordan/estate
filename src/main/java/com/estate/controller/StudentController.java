@@ -65,7 +65,7 @@ public class StudentController {
 
     @PostMapping("save")
     public String save(@Valid @ModelAttribute("student") StudentForm student, BindingResult result, @RequestParam(required = false, defaultValue = "false") boolean multiple, Model model, RedirectAttributes attributes){
-        if(student.getId() == null){
+        if(student.getId() == null) {
             String notNullMessage = "javax.validation.constraints.NotNull.message";
             String defaultMessage = "ne doit pas être nul";
             if(student.getCniRectoFile() == null || student.getCniRectoFile().isEmpty()) result.rejectValue("cniRectoFile", notNullMessage, defaultMessage);

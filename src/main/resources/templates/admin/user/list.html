@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
-<!--/*@thymesVar id="notification" type="com.estate.domain.entity.Notification"*/-->
-<!--/*@thymesVar id="users" type="java.util.List<com.estate.domain.entity.User>"*/-->
-<head th:replace="base.html :: head('Liste des utilisateurs')"></head>
+<head th:replace="base.html :: head('Utilisateurs')"></head>
 
 <body>
 <div id="wrapper">
@@ -11,7 +9,7 @@
         <div class="row mt-6">
             <ol class="breadcrumb">
                 <li><i class="fa fa-home"></i> <a class="lazy-link" th:href="@{/home}">Accueil</a></li>
-                <li>Liste des utilisateurs</li>
+                <li>Utilisateurs</li>
             </ol>
         </div>
         <div class="row">
@@ -33,7 +31,8 @@
                             <th>Adresse e-mail</th>
                             <th class="fit-cell-content">Statut</th>
                             <th class="fit-cell-content">Rôles</th>
-                            <th class="fit-cell-content">Dernière connexion (GMT)</th>
+                            <th class="fit-cell-content">Responsabilités</th>
+                            <th class="fit-cell-content">Dernière connexion</th>
                             <th class="action fit-cell-content">Actions</th>
                         </tr>
                     </thead>
@@ -43,13 +42,18 @@
                             <td>
                                 <a class="lazy-link" th:href="@{'/user/view/' + ${user.id}}" th:text="${user.name}"></a>
                             </td>
-                            <td th:text="${user.sex}"></td>
-                            <td th:text="${user.phoneNumber}"></td>
+                            <td th:text="${user.gender?.name}"></td>
+                            <td th:text="${user.phone}"></td>
                             <td th:text="${user.email}"></td>
-                            <td th:text="${user.enabled ? 'ACTIF' : 'DÉSACTIVÉ'}"></td>
+                            <td th:text="${user.active ? 'ACTIF' : 'DÉSACTIVÉ'}"></td>
                             <td>
                                 <span th:each="role: ${user.roles}">
                                     <span th:text="${role.name}"></span><br>
+                                </span>
+                            </td>
+                            <td>
+                                <span th:each="mode: ${user.modes}">
+                                    <span th:text="${mode.name}"></span><br>
                                 </span>
                             </td>
                             <td th:text="${#temporals.format(user.lastLogin, 'dd-MM-yyyy  HH:mm')}"></td>
@@ -59,7 +63,7 @@
                                 </a>
                                 <div th:id="${'popover-content-' + user.id}" class="list-group" style="display: none">
                                     <a class="list-group-item lazy-link text-decoration-none text-left" th:href="@{'/user/toggle/' + ${user.id}}">
-                                        <i class="fa fa-fw" th:classappend="${user.enabled ? 'fa-toggle-off' : 'fa-toggle-on'}"></i> <span th:text="${user.enabled ? 'Désactiver' : 'Activer'}"></span>
+                                        <i class="fa fa-fw" th:classappend="${user.active ? 'fa-toggle-off' : 'fa-toggle-on'}"></i> <span th:text="${user.active ? 'Désactiver' : 'Activer'}"></span>
                                     </a>
                                     <a class="list-group-item lazy-link text-decoration-none text-left" th:href="@{'/user/save?id=' + ${user.id}}">
                                         <i class="fa fa-pencil-square-o fa-fw"></i> Modifier
