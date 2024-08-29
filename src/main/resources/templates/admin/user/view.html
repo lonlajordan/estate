@@ -43,16 +43,28 @@
                             <span class="pull-right"><em th:text="*{email}"></em></span>
                         </a>
                         <a href="#" class="list-group-item">
+                            <b>Statut du compte</b>
+                            <span class="pull-right"><em th:text="${#bools.isTrue(user?.active) ? 'ACTIF' : 'DÉSACTIVÉ'}"></em></span>
+                        </a>
+                        <a href="#" class="list-group-item">
+                            <b>Rôles</b>
+                            <span class="pull-right">
+                                <span th:each="role, iter: ${user.roles}" th:text="${role.name + (iter.last ? '' : ',')}"></span>
+                            </span>
+                        </a>
+                        <a href="#" class="list-group-item">
+                            <b>Responsabilités</b>
+                            <span class="pull-right">
+                                <span th:each="mode, iter: ${user.modes}" th:text="${mode.name + (iter.last ? '' : ', ')}"></span>
+                            </span>
+                        </a>
+                        <a href="#" class="list-group-item">
                             <b>Date d'enregistrement</b>
                             <span class="pull-right"><em th:text="*{#temporals.format(creationDate, 'dd-MM-yyyy  HH:mm')}"></em></span>
                         </a>
                         <a href="#" class="list-group-item">
                             <b>Date de modification</b>
                             <span class="pull-right"><em th:text="*{#temporals.format(lastModifiedDate, 'dd-MM-yyyy  HH:mm')}"></em></span>
-                        </a>
-                        <a href="#" class="list-group-item">
-                            <b>Statut du compte</b>
-                            <span class="pull-right"><em th:text="${#bools.isTrue(user?.active) ? 'ACTIF' : 'DÉSACTIVÉ'}"></em></span>
                         </a>
                         <a href="#" class="list-group-item">
                             <b>Date de la dernière connexion</b>

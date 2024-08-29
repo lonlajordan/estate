@@ -6,9 +6,10 @@ import com.estate.domain.enumaration.Status;
 import com.estate.domain.form.PaymentForm;
 import com.estate.domain.form.PaymentSearch;
 import org.springframework.data.domain.Page;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.servlet.view.RedirectView;
 
+import javax.servlet.http.HttpSession;
+import java.security.Principal;
+import java.util.List;
 import java.util.Optional;
 
 public interface PaymentService {
@@ -19,11 +20,13 @@ public interface PaymentService {
 
     Optional<Payment> findById(long id);
 
-    RedirectView deleteById(long id, RedirectAttributes attributes);
-
     Notification toggle(long id, Status status);
 
     long countByStatus(Status status);
 
     Notification save(PaymentForm form);
+
+    List<Payment> findAllByStatusAndYear(Status status, Integer year);
+
+    Notification validate(long id, HttpSession session);
 }

@@ -6,12 +6,11 @@
 <body>
 <div id="wrapper">
     <div th:replace="header.html"></div>
-    <!--/*@thymesVar id="payment" type="com.estate.domain.entity.Payment"*/-->
     <div id="page-wrapper" th:object="${payment}">
         <div class="row mt-6">
             <ol class="breadcrumb">
                 <li><i class="fa fa-home"></i> <a class="lazy-link" th:href="@{/home}">Accueil</a></li>
-                <li><a class="lazy-link" th:href="@{/payment/list}">Liste des paiements</a></li>
+                <li><a class="lazy-link" th:href="@{/payment/list}">Paiements</a></li>
                 <li th:utext="*{'Détails du paiement <b>[ ' + id + ' ]</b>'}"></li>
             </ol>
         </div>
@@ -24,7 +23,7 @@
                     </div>
                     <div class="list-group">
                         <a href="#" class="list-group-item">
-                            <b>Etudiant</b>
+                            <b>Étudiant</b>
                             <span class="pull-right"><em th:text="*{student?.name}"></em></span>
                         </a>
                         <a href="#" class="list-group-item">
@@ -33,8 +32,18 @@
                         </a>
                         <a href="#" class="list-group-item">
                             <b>Montant</b>
-                            <span class="pull-right"><em th:text="*{rent}"></em></span>
+                            <span class="pull-right"><em th:text="*{amount}"></em></span>
                         </a>
+                        <a href="#" class="list-group-item">
+                            <b>Statut</b>
+                            <span class="pull-right"><em th:text="*{status?.name}"></em></span>
+                        </a>
+                        <div class="list-group-item">
+                            <b>Preuve de paiement</b>
+                            <span class="pull-right">
+                                <em><a target="_blank" th:href="@{'/explorer/' + ${payment.proof}}">Voir</a></em>
+                            </span>
+                        </div>
                         <a href="#" class="list-group-item">
                             <b>Date de paiement</b>
                             <span class="pull-right"><em th:text="*{#temporals.format(creationDate, 'dd-MM-yyyy  HH:mm')}"></em></span>
@@ -43,22 +52,16 @@
                             <b>Date de modification</b>
                             <span class="pull-right"><em th:text="*{#temporals.format(creationDate, 'dd-MM-yyyy  HH:mm')}"></em></span>
                         </a>
-                        <a href="#" class="list-group-item">
-                            <b>Statut</b>
-                            <span class="pull-right"><em th:text="*{status?.name}"></em></span>
-                        </a>
                     </div>
-                </div>
-                <div th:if="${!#strings.isEmpty(payment?.message)}" class="panel-group" id="accordion">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h4 class="panel-title">
-                                <button data-toggle="collapse" data-parent="#accordion" href="#collapseBox" class="collapsed btn btn-primary">
-                                    <i class="fa fa-list"></i>
-                                    &nbsp; Plus de détails
-                                </button>
-                            </h4>
-                        </div>
+                    <div class="panel-footer">
+                        <a role="button" th:href="@{'/payment/validate/' + ${payment.id}}" class="btn btn-success lazy-link mr-3">
+                            <i class="fa fa-check"></i>
+                            &nbsp; Valider
+                        </a>
+                        <a role="button" th:href="@{'/payment/cancel/' + ${payment.id}}" class="btn btn-primary lazy-link">
+                            <i class="fa fa-close"></i>
+                            &nbsp; Rejéter
+                        </a>
                     </div>
                 </div>
             </div>

@@ -18,11 +18,15 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.support.RequestContextUtils;
-import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.security.Principal;
+import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Slf4j
 @Controller
@@ -53,6 +57,19 @@ public class PaymentController {
         model.addAttribute("searchForm", form);
         model.addAttribute("search", search);
         return "admin/payment/list";
+    }
+
+    @GetMapping(value="accounting")
+    public String accounting(@RequestParam(required = false) Integer year, Model model){
+        int currentYear = LocalDate.now().getYear();
+        List<Integer> years = IntStream.range(currentYear - 4, currentYear + 1).boxed().collect(Collectors.toList());
+        if(year == null || !years.contains(year)) year = currentYear;
+        List<Payment> payments = paymentService.findAllByStatusAndYear(Status.CONFIRMED, year);
+        model.addAttribute("payments", payments);
+        model.addAttribute("years", years);
+        model.addAttribute("exercise", year);
+        model.addAttribute("total", payments.stream().mapToLong(Payment::getAmount).reduce(Long::sum).orElse(0));
+        return "admin/payment/accounting";
     }
 
     @GetMapping("save")
@@ -102,7 +119,7 @@ public class PaymentController {
         }
 
         if(payment.getStanding() != null){
-            housings = housingService.findAllByStandingId(payment.getStanding().getId());
+            housings = housingService.findAllByStandingIdAndActiveTrue(payment.getStanding().getId());
             if(payment.getDesiderata() == null && !housings.isEmpty()){
                 payment.setDesiderata(housings.get(0));
             }
@@ -125,11 +142,11 @@ public class PaymentController {
             model.addAttribute("payment", payment);
             model.addAttribute("student", studentService.findById(payment.getStudentId()).orElse(null));
             model.addAttribute("standings", standings);
-            model.addAttribute("housings", housingService.findAllByStandingId(payment.getStandingId()));
+            model.addAttribute("housings", housingService.findAllByStandingIdAndActiveTrue(payment.getStandingId()));
             return "admin/payment/save";
         }
         attributes.addFlashAttribute("notification", notification);
-        return "redirect:/housing/list";
+        return "redirect:/payment/list";
     }
 
     @GetMapping(value="view/{id}")
@@ -144,8 +161,14 @@ public class PaymentController {
     }
 
     @GetMapping(value="toggle/{id}")
-    public String toggle(@PathVariable long id, @RequestParam Status status, RedirectAttributes attributes){
+    public String toggleById(@PathVariable long id, @RequestParam Status status, RedirectAttributes attributes){
         attributes.addFlashAttribute("notification", paymentService.toggle(id, status));
+        return "redirect:/payment/list";
+    }
+
+    @GetMapping(value="validate/{id}")
+    public String validateById(@PathVariable long id, RedirectAttributes attributes, HttpSession session){
+        attributes.addFlashAttribute("notification", paymentService.validate(id, session));
         return "redirect:/payment/list";
     }
 
@@ -153,10 +176,5 @@ public class PaymentController {
     public String search(HousingSearch form, RedirectAttributes attributes){
         attributes.addFlashAttribute("searchForm", form);
         return "redirect:/payment/list";
-    }
-
-    @RequestMapping(value="delete")
-    public RedirectView deleteById(@RequestParam long id, RedirectAttributes attributes){
-        return paymentService.deleteById(id, attributes);
     }
 }

@@ -11,6 +11,7 @@ import java.util.List;
 public interface HousingRepository extends JpaRepository<Housing, Long>, JpaSpecificationExecutor<Housing> {
     List<Housing> findAllByOrderByNameAsc();
     List<Housing> findAllByStandingIdOrderByNameAsc(long standingId);
+    List<Housing> findAllByStandingIdAndActiveTrueOrderByNameAsc(long standingId);
 
     @Transactional
     @Modifying(clearAutomatically = true)

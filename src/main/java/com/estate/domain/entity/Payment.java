@@ -36,6 +36,11 @@ public class Payment extends Auditable {
 
     private Status status = Status.INITIATED;
 
+    @Transient
+    public int getAmount(){
+        return rent * months + caution + repair;
+    }
+
 
     public PaymentForm toForm(){
         PaymentForm form = new PaymentForm();

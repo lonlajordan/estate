@@ -80,6 +80,7 @@
                             <th class="fit-cell-content">Statut</th>
                             <th>Résident</th>
                             <th class="fit-cell-content">Période de location</th>
+                            <th class="fit-cell-content">Actif</th>
                             <th class="action fit-cell-content">Date de création</th>
                             <th class="action fit-cell-content">Date de modification</th>
                             <th class="action fit-cell-content">Actions</th>
@@ -96,6 +97,7 @@
                             <td>
                                 <span th:text="${#temporals.format(housing.resident?.currentLease?.startDate, 'dd/MM/yyyy')}"></span> - <span th:text="${#temporals.format(housing.resident?.currentLease?.endDate, 'dd/MM/yyyy')}"></span>
                             </td>
+                            <td th:text="${#bools.isTrue(housing.active) ? 'OUI' : 'NON'}"></td>
                             <td th:text="${#temporals.format(housing.creationDate, 'dd-MM-yyyy HH:mm')}"></td>
                             <td th:text="${#temporals.format(housing.lastModifiedDate, 'dd-MM-yyyy HH:mm')}"></td>
                             <td class="text-center fit-cell-content">
@@ -103,6 +105,9 @@
                                     <i class="fa fa-ellipsis-h"></i>
                                 </a>
                                 <div th:id="${'popover-content-' + housing.id}" class="list-group" style="display: none">
+                                    <a class="list-group-item lazy-link text-decoration-none text-left" style="cursor: pointer" th:data-housing-id="${housing.id}" href="#" onclick="toggleItem(this.getAttribute('data-housing-id'), 'housing/toggle')">
+                                        <i class="fa fa-fw" th:classappend="${housing.active ? 'fa-toggle-off' : 'fa-toggle-on'}"></i> <span th:text="${housing.active ? 'Désactiver' : 'Activer'}"></span>
+                                    </a>
                                     <a class="list-group-item lazy-link text-decoration-none text-left" th:href="@{'/housing/view/' + ${housing.id}}">
                                         <i class="fa fa-eye fa-fw"></i> Détails
                                     </a>
@@ -121,7 +126,7 @@
         </div>
     </div>
 </div>
-<<th:block th:insert="base.html :: scripts"></th:block>
+<th:block th:insert="base.html :: scripts"></th:block>
 
 </body>
 

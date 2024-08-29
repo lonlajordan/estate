@@ -16,9 +16,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.servlet.view.RedirectView;
 
+import javax.servlet.http.HttpSession;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.Month;
 import java.util.*;
 
 @Slf4j
@@ -30,6 +33,7 @@ public class PaymentServiceImpl implements PaymentService {
     private final PaymentRepository paymentRepository;
     private final HousingRepository housingRepository;
     private final LogRepository logRepository;
+    private final LeaseRepository leaseRepository;
 
     @Override
     public Page<Payment> findAll(int page){
@@ -44,19 +48,6 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     public Optional<Payment> findById(long id) {
         return paymentRepository.findById(id);
-    }
-
-    @Override
-    public RedirectView deleteById(long id, RedirectAttributes attributes){
-        Notification notification = Notification.info();
-        try {
-            paymentRepository.deleteAllByIdAndStatus(id, Status.CANCELLED);
-        }catch (Exception e){
-            notification = Notification.error("Erreur lors de la suppression des recharges.");
-            logRepository.save(Log.error(notification.getMessage(), ExceptionUtils.getStackTrace(e)));
-        }
-        attributes.addFlashAttribute("notification", notification);
-        return new RedirectView("/recharge/list", true);
     }
 
     @Override
@@ -108,6 +99,28 @@ public class PaymentServiceImpl implements PaymentService {
             logRepository.save(Log.error(notification.getMessage(), ExceptionUtils.getStackTrace(e)));
         }
 
+        return notification;
+    }
+
+    @Override
+    public List<Payment> findAllByStatusAndYear(Status status, Integer year) {
+        LocalDateTime startDate = LocalDate.of(year, Month.JANUARY, 1).atStartOfDay();
+        LocalDateTime endDate = LocalDate.of(year, Month.DECEMBER, 31).atTime(LocalTime.MAX);
+        return paymentRepository.findAllByStatusAndCreationDateBetweenOrderByCreationDateDesc(status, startDate, endDate);
+    }
+
+    @Override
+    public Notification validate(long id, HttpSession session) {
+        Notification notification = Notification.info();
+        Payment payment = paymentRepository.findById(id).orElse(null);
+        if(payment == null) return Notification.error("Paiement introuvable");
+        payment.setStatus(Status.CONFIRMED);
+        User validator = (User) session.getAttribute("user");
+        payment.setValidator(validator);
+        payment = paymentRepository.save(payment);
+        Lease lease = new Lease();
+        lease.setPayment(payment);
+        leaseRepository.save(lease);
         return notification;
     }
 }

@@ -32,16 +32,14 @@
                                     </div>
                                     <div class="form-group" th:classappend="${#fields.hasErrors('standingId') ? 'has-error' : ''}">
                                         <label for="standingId" class="control-label">Standing <span class="required-field">*</span></label>
-                                        <select id="standingId" th:field="*{standingId}" class="form-control searchable-select-box" required>
-                                            <option value="">Choisir un standing</option>
+                                        <select id="standingId" th:field="*{standingId}" class="form-control" required>
                                             <option th:each="standing: ${standings}" th:value="${standing.id}" th:text="${standing.name}"></option>
                                         </select>
                                         <p th:if="${#fields.hasErrors('standingId')}" th:errors="*{standingId}" class="help-block"></p>
                                     </div>
                                     <div class="form-group">
                                         <label for="status" class="control-label">Statut <span class="required-field">*</span></label>
-                                        <select id="status" th:field="*{status}" class="form-control searchable-select-box" required>
-                                            <option value="">Choisir un statut</option>
+                                        <select id="status" th:field="*{status}" class="form-control" required>
                                             <option th:each="status: ${T(com.estate.domain.enumaration.Availability).values()}" th:value="${status}" th:text="${status.name}"></option>
                                         </select>
                                     </div>

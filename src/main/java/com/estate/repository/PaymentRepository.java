@@ -10,6 +10,9 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 public interface PaymentRepository extends JpaRepository<Payment, Long>, JpaSpecificationExecutor<Payment> {
     @Query("SELECT COALESCE(SUM(p.rent * p.months + p.caution + p.repair),0) FROM Payment p WHERE p.status = ?1")
     long sumAllAmount(Status status);
@@ -17,6 +20,8 @@ public interface PaymentRepository extends JpaRepository<Payment, Long>, JpaSpec
     @Modifying(clearAutomatically = true)
     void deleteAllByIdAndStatus(long id, Status status);
     long countAllByStatus(Status status);
+
+    List<Payment> findAllByStatusAndCreationDateBetweenOrderByCreationDateDesc(Status status, LocalDateTime startDate, LocalDateTime endDate);
 
     @Transactional
     @Modifying(clearAutomatically = true)
@@ -26,5 +31,10 @@ public interface PaymentRepository extends JpaRepository<Payment, Long>, JpaSpec
     @Modifying(clearAutomatically = true)
     @Query("UPDATE Payment p SET p.validator = null WHERE p.validator.id = ?1")
     void setValidatorToNullByUserId(long userId);
+
+    @Transactional
+    @Modifying(clearAutomatically = true)
+    @Query("UPDATE Payment p SET p.desiderata = null WHERE p.desiderata.id = ?1")
+    void setDesiderataToNullByHousingId(long housingId);
 
 }

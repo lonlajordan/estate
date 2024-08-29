@@ -16,6 +16,7 @@ import org.springframework.web.servlet.support.RequestContextUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.List;
 import java.util.Map;
 
@@ -39,7 +40,7 @@ public class HousingController {
         } else {
             housings = housingService.findAll();
         }
-        model.addAttribute("standings", standingService.findAll());
+        model.addAttribute("standings", standingService.findAllByActiveTrue());
         model.addAttribute("housings", housings);
         model.addAttribute("searchForm", form);
         return "admin/housing/list";
@@ -54,18 +55,21 @@ public class HousingController {
             return "redirect:/logement/list";
         }
         model.addAttribute("housing", housing.toForm());
-        model.addAttribute("standings", standingService.findAll());
+        model.addAttribute("standings", standingService.findAllByActiveTrue());
         return "admin/housing/save";
     }
 
     @PostMapping("save")
-    public String save(@Valid @ModelAttribute("housing") HousingForm housing, BindingResult result, @RequestParam(required = false, defaultValue = "false") boolean multiple, Model model, RedirectAttributes attributes){
-        if(result.hasErrors()) return "admin/housing/save";
-        Notification notification =  housingService.save(housing);
+    public String save(@Valid @ModelAttribute("housing") HousingForm housing, BindingResult result, @RequestParam(required = false, defaultValue = "false") boolean multiple, Model model, RedirectAttributes attributes, Principal principal){
+        if(result.hasErrors()){
+            model.addAttribute("standings", standingService.findAllByActiveTrue());
+            return "admin/housing/save";
+        }
+        Notification notification =  housingService.save(housing, principal);
         if(multiple || notification.hasError()){
             model.addAttribute("notification", notification);
             model.addAttribute("housing", notification.hasError() ? housing : new HousingForm());
-            model.addAttribute("standings", standingService.findAll());
+            model.addAttribute("standings", standingService.findAllByActiveTrue());
             return "admin/housing/save";
         }
         attributes.addFlashAttribute("notification", notification);
@@ -86,6 +90,19 @@ public class HousingController {
     @PostMapping("search")
     public String search(HousingSearch form, RedirectAttributes attributes){
         attributes.addFlashAttribute("searchForm", form);
+        return "redirect:/housing/list";
+    }
+
+    @RequestMapping(value="toggle/{id}")
+    public String toggle(@PathVariable long id, RedirectAttributes attributes, Principal principal){
+        attributes.addFlashAttribute("notification", housingService.toggleById(id, principal));
+        return "redirect:/housing/list";
+    }
+
+    @RequestMapping(value="delete")
+    public String deleteById(@RequestParam long id, @RequestParam(required = false, defaultValue = "false") boolean force, RedirectAttributes attributes, HttpServletRequest request){
+        Notification notification =  housingService.deleteById(id, force, request);
+        attributes.addFlashAttribute("notification", notification);
         return "redirect:/housing/list";
     }
 }

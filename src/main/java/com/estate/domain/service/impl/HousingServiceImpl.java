@@ -7,9 +7,7 @@ import com.estate.domain.enumaration.Level;
 import com.estate.domain.form.HousingForm;
 import com.estate.domain.form.HousingSearch;
 import com.estate.domain.service.face.HousingService;
-import com.estate.repository.HousingRepository;
-import com.estate.repository.LogRepository;
-import com.estate.repository.StandingRepository;
+import com.estate.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -18,10 +16,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.servlet.view.RedirectView;
 
-import java.util.ArrayList;
+import javax.servlet.http.HttpServletRequest;
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,6 +28,8 @@ import java.util.Optional;
 public class HousingServiceImpl implements HousingService {
     private final HousingRepository housingRepository;
     private final StandingRepository standingRepository;
+    private final PaymentRepository paymentRepository;
+    private final LeaseRepository leaseRepository;
     private final LogRepository logRepository;
 
     @Override
@@ -41,6 +40,11 @@ public class HousingServiceImpl implements HousingService {
     @Override
     public List<Housing> findAllByStandingId(long standingId) {
         return housingRepository.findAllByStandingIdOrderByNameAsc(standingId);
+    }
+
+    @Override
+    public List<Housing> findAllByStandingIdAndActiveTrue(long standingId) {
+        return housingRepository.findAllByStandingIdAndActiveTrueOrderByNameAsc(standingId);
     }
 
     @Override
@@ -60,7 +64,7 @@ public class HousingServiceImpl implements HousingService {
 
     @Override
     @Transactional
-    public Notification save(HousingForm form) {
+    public Notification save(HousingForm form, Principal principal) {
         boolean creation = form.getId() == null;
         Notification notification = Notification.info();
         Housing housing = creation ? new Housing() : housingRepository.findById(form.getId()).orElse(null);
@@ -73,6 +77,7 @@ public class HousingServiceImpl implements HousingService {
             housingRepository.saveAndFlush(housing);
             notification.setMessage("Un logement a été " + (creation ? "ajouté." : "modifié."));
             log.info(notification.getMessage());
+            logRepository.save(Log.info(notification.getMessage()).author(Optional.ofNullable(principal).map(Principal::getName).orElse("")));
         } catch (Throwable e){
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             String message = ExceptionUtils.getRootCauseMessage(e);
@@ -83,14 +88,54 @@ public class HousingServiceImpl implements HousingService {
                 notification.setMessage("Erreur lors de la " + (creation ? "création" : "modification") + " du logement.");
             }
             log.error(notification.getMessage(), e);
-            logRepository.save(Log.error(notification.getMessage(), ExceptionUtils.getStackTrace(e)));
+            logRepository.save(Log.error(notification.getMessage(), ExceptionUtils.getStackTrace(e)).author(Optional.ofNullable(principal).map(Principal::getName).orElse("")));
         }
 
         return notification;
     }
 
     @Override
-    public RedirectView deleteAllByIds(ArrayList<Long> ids, RedirectAttributes attributes) {
-        return null;
+    public Notification deleteById(long id, boolean force, HttpServletRequest request) {
+        Notification notification;
+        Housing housing = housingRepository.findById(id).orElse(null);
+        if(housing == null) return Notification.error("Logement introuvable");
+        try {
+            if(force){
+                leaseRepository.setHousingToNullByHousingId(id);
+                paymentRepository.setDesiderataToNullByHousingId(id);
+            }
+            housingRepository.deleteById(id);
+            notification = Notification.info("Le logement <b>" + housing.getName() + "</b> a été supprimé");
+            logRepository.save(Log.info(notification.getMessage()).author(Optional.ofNullable(request.getUserPrincipal()).map(Principal::getName).orElse("")));
+        }catch (Throwable e){
+            notification = Notification.error("Erreur lors de la suppression du logement <b>" + housing.getName() + "</b>.");
+            if(!force){
+                String actions = "";
+                if(housing.isActive()) actions = "<a class='lazy-link' href='" + request.getContextPath() + "/housing/toggle/" + id + "'><b>Désactiver</b></a> ou ";
+                actions += "<a class='lazy-link text-danger' href='" + request.getRequestURI() + "?id=" + id + "&force=true" + "'><b>Forcer la suppression</b></a>.";
+                notification = Notification.warn("Ce logement est utilisé dans certains enregistrements. " + actions);
+                logRepository.save(Log.warn(notification.getMessage()).author(Optional.ofNullable(request.getUserPrincipal()).map(Principal::getName).orElse("")));
+            } else {
+                logRepository.save(Log.error(notification.getMessage(), ExceptionUtils.getStackTrace(e)).author(Optional.ofNullable(request.getUserPrincipal()).map(Principal::getName).orElse("")));
+            }
+        }
+        return notification;
+    }
+
+    @Override
+    public Notification toggleById(long id, Principal principal) {
+        Notification notification = new Notification();
+        Housing housing = housingRepository.findById(id).orElse(null);
+        if(housing == null) return Notification.error("Logement introuvable");
+        try {
+            housing.setActive(!housing.isActive());
+            housingRepository.save(housing);
+            notification.setMessage("Le logement <b>" + housing.getName() + "</b> a été " + (housing.isActive() ? "activé" : "désactivé") + " avec succès.");
+            logRepository.save(Log.info(notification.getMessage()).author(Optional.ofNullable(principal).map(Principal::getName).orElse("")));
+        } catch (Throwable e){
+            notification = Notification.error("Erreur lors de la modification du logement <b>" + housing.getName() + "</b>.");
+            logRepository.save(Log.error(notification.getMessage(), ExceptionUtils.getStackTrace(e)).author(Optional.ofNullable(principal).map(Principal::getName).orElse("")));
+        }
+        return notification;
     }
 }

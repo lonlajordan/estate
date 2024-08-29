@@ -36,6 +36,12 @@ public class StandingServiceImpl implements StandingService {
     }
 
     @Override
+    public List<Standing> findAllByActiveTrue() {
+        return standingRepository.findAllByActiveTrueOrderByNameAsc();
+    }
+
+
+    @Override
     public Optional<Standing> findById(long id) {
         return standingRepository.findById(id);
     }

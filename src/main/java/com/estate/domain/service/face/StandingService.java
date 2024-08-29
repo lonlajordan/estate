@@ -14,6 +14,8 @@ public interface StandingService {
 
     List<Standing> findAll();
 
+    List<Standing> findAllByActiveTrue();
+
     Notification deleteById(long id, boolean force, HttpServletRequest request);
 
     Notification save(StandingForm form, Principal principal);

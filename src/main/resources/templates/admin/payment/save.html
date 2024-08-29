@@ -1,7 +1,5 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
-<!--/*@thymesVar id="student" type="com.estate.domain.entity.Student"*/-->
-<!--/*@thymesVar id="notification" type="com.estate.domain.entity.Notification"*/-->
 <head th:insert="base.html :: head(${payment.id == null ? 'Noueau paiement' : 'Modification du paiement'})"></head>
 
 <body>
@@ -11,7 +9,7 @@
         <div class="row mt-6">
             <ol class="breadcrumb">
                 <li><i class="fa fa-home"></i> <a class="lazy-link" th:href="@{/home}">Accueil</a></li>
-                <li><a class="lazy-link" th:href="@{/payment/list}">Liste des paiements</a></li>
+                <li><a class="lazy-link" th:href="@{/payment/list}">Paiements</a></li>
                 <li th:text="${payment.id == null ? 'Nouveau paiement' : 'Modification du paiement'}"></li>
             </ol>
         </div>

@@ -62,8 +62,11 @@
                                     <i class="fa fa-ellipsis-h"></i>
                                 </a>
                                 <div th:id="${'popover-content-' + user.id}" class="list-group" style="display: none">
-                                    <a class="list-group-item lazy-link text-decoration-none text-left" th:href="@{'/user/toggle/' + ${user.id}}">
+                                    <a class="list-group-item lazy-link text-decoration-none text-left" style="cursor: pointer" th:data-user-id="${user.id}" href="#" onclick="toggleItem(this.getAttribute('data-user-id'), 'user/toggle')">
                                         <i class="fa fa-fw" th:classappend="${user.active ? 'fa-toggle-off' : 'fa-toggle-on'}"></i> <span th:text="${user.active ? 'Désactiver' : 'Activer'}"></span>
+                                    </a>
+                                    <a class="list-group-item lazy-link text-decoration-none text-left" th:href="@{'/user/view/' + ${user.id}}">
+                                        <i class="fa fa-eye fa-fw"></i> Détails
                                     </a>
                                     <a class="list-group-item lazy-link text-decoration-none text-left" th:href="@{'/user/save?id=' + ${user.id}}">
                                         <i class="fa fa-pencil-square-o fa-fw"></i> Modifier
