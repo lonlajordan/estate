@@ -10,7 +10,7 @@ function setDefaultVal(value, defaultVal) {
 
 function deleteItem(id, url){
     if(confirm("Voulez vous vraiment supprimer cet élément ?")){
-        fetch(ctx + '/' + url + '?ids=' + id, false);
+        fetch(ctx + '/' + url + '?id=' + id, false);
     }
 }
 

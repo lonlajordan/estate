@@ -24,6 +24,7 @@ public class Standing extends Auditable {
     private int caution;
     @Column(nullable = false)
     private int repair;
+    private boolean active = true;
 
     public StandingForm toForm(){
         StandingForm form = new StandingForm();

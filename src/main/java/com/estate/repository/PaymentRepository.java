@@ -14,8 +14,12 @@ public interface PaymentRepository extends JpaRepository<Payment, Long>, JpaSpec
     @Query("SELECT COALESCE(SUM(p.rent * p.months + p.caution + p.repair),0) FROM Payment p WHERE p.status = ?1")
     long sumAllAmount(Status status);
     Page<Payment> findAllByOrderByCreationDateDesc(Pageable pageable);
-    @Transactional
     @Modifying(clearAutomatically = true)
     void deleteAllByIdAndStatus(long id, Status status);
     long countAllByStatus(Status status);
+
+    @Transactional
+    @Modifying(clearAutomatically = true)
+    void deleteAllByStandingId(long standingId);
+
 }

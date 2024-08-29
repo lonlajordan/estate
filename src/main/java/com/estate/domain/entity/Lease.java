@@ -21,7 +21,7 @@ public class Lease {
     private LocalDate endDate;
     @Enumerated(EnumType.STRING)
     private Status status;
-    @OneToOne
+    @OneToOne(optional = false)
     private Payment payment;
     @ManyToOne
     private Housing housing;

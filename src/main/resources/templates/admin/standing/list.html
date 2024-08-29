@@ -30,6 +30,7 @@
                             <th>Loyer par mois (FCFA)</th>
                             <th>Caution (FCFA)</th>
                             <th>Frais de réhabilitation (FCFA)</th>
+                            <th class="fit-cell-content">Statut</th>
                             <th class="action fit-cell-content">Date de création</th>
                             <th class="action fit-cell-content">Date de modification</th>
                             <th class="action fit-cell-content">Actions</th>
@@ -43,6 +44,7 @@
                             <td th:text="${#numbers.formatInteger(standing.rent, 1, 'WHITESPACE')}"></td>
                             <td th:text="${#numbers.formatInteger(standing.caution, 1, 'WHITESPACE')}"></td>
                             <td th:text="${#numbers.formatInteger(standing.repair, 1, 'WHITESPACE')}"></td>
+                            <td th:text="${#bools.isTrue(standing.active) ? 'ACTIF' : 'DÉSACTIVÉ'}"></td>
                             <td th:text="${#temporals.format(standing.creationDate, 'dd-MM-yyyy hh:mm')}"></td>
                             <td th:text="${#temporals.format(standing.lastModifiedDate, 'dd-MM-yyyy hh:mm')}"></td>
                             <td class="text-center fit-cell-content">
@@ -50,6 +52,9 @@
                                     <i class="fa fa-ellipsis-h"></i>
                                 </a>
                                 <div th:id="${'popover-content-' + standing.id}" class="list-group" style="display: none">
+                                    <a class="list-group-item lazy-link text-decoration-none text-left" style="cursor: pointer" th:data-standing-id="${standing.id}" href="#" onclick="toggleItem(this.getAttribute('data-standing-id'), 'standing/toggle')">
+                                        <i class="fa fa-fw" th:classappend="${standing.active ? 'fa-toggle-off' : 'fa-toggle-on'}"></i> <span th:text="${standing.active ? 'Désactiver' : 'Activer'}"></span>
+                                    </a>
                                     <a class="list-group-item lazy-link text-decoration-none text-left" th:href="@{'/standing/view/' + ${standing.id}}">
                                         <i class="fa fa-eye fa-fw"></i> Détails
                                     </a>

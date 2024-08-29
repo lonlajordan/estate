@@ -10,8 +10,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.servlet.view.RedirectView;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 @Controller
@@ -50,6 +50,12 @@ public class StandingController {
         return "admin/standing/view";
     }
 
+    @RequestMapping(value="toggle/{id}")
+    public String toggle(@PathVariable long id, RedirectAttributes attributes){
+        attributes.addFlashAttribute("notification", standingService.toggleById(id));
+        return "redirect:/standing/list";
+    }
+
     @PostMapping(value="save")
     public String save(@Valid @ModelAttribute("standing") StandingForm standing, BindingResult result, @RequestParam(required = false, defaultValue = "false") boolean multiple, Model model, RedirectAttributes attributes){
         if(result.hasErrors()) return "admin/standing/save";
@@ -64,7 +70,9 @@ public class StandingController {
     }
 
     @RequestMapping(value="delete")
-    public RedirectView deleteById(@RequestParam long id, RedirectAttributes attributes){
-        return standingService.deleteById(id, attributes);
+    public String deleteById(@RequestParam long id, @RequestParam(defaultValue = "false") boolean force, RedirectAttributes attributes, HttpServletRequest request){
+        Notification notification =  standingService.deleteById(id, force, request);
+        attributes.addFlashAttribute("notification", notification);
+        return "redirect:/standing/list";
     }
 }

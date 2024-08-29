@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.Date;
 
 @Getter
 @Setter
@@ -19,6 +18,7 @@ public class Log extends Auditable {
     private Long id;
     @Enumerated(EnumType.STRING)
     private Level level = Level.INFO;
+    @Column(columnDefinition = "TEXT")
     private String message = "";
     @Column(columnDefinition = "TEXT")
     private String details = "";

@@ -91,7 +91,7 @@
                             </td>
                             <td th:text="${log.level.name}"></td>
                             <td th:utext="${log.message}"></td>
-                            <td th:text="${#calendars.format(log.date, 'dd-MM-yyyy  HH:mm')}"></td>
+                            <td th:text="${#temporals.format(log.creationDate, 'dd-MM-yyyy  HH:mm')}"></td>
                             <td class="text-center">
                                 <a class="dropdown-toggle" tabindex="0" data-toggle="popover" data-placement="auto" data-trigger="focus" th:data-target="${'popover-content-' + log.id}" href="#">
                                     <i class="fa fa-ellipsis-h"></i>

@@ -34,7 +34,7 @@ public class HomeController {
         model.addAttribute("users", userService.count());
         model.addAttribute("students", studentService.count());
         model.addAttribute("housings", housingService.count());
-        model.addAttribute("payments", paymentService.countByStatus(Status.PENDING));
+        model.addAttribute("payments", paymentService.countByStatus(Status.INITIATED));
         return "index";
     }
 
