@@ -18,7 +18,6 @@ public class Log extends Auditable {
     private Long id;
     @Enumerated(EnumType.STRING)
     private Level level = Level.INFO;
-    @Column(columnDefinition = "TEXT")
     private String message = "";
     @Column(columnDefinition = "TEXT")
     private String details = "";

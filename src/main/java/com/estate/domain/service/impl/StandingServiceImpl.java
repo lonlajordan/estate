@@ -58,8 +58,10 @@ public class StandingServiceImpl implements StandingService {
                 if(standing.isActive()) actions = "<a class='lazy-link' href='" + request.getContextPath() + "/standing/toggle/" + id + "'><b>Désactiver</b></a> ou ";
                 actions += "<a class='lazy-link text-danger' href='" + request.getRequestURI() + "?id=" + id + "&force=true" + "'><b>Forcer la suppression</b></a> (cette action supprimera tout logement, paiement ou contrat de bail associé).";
                 notification = Notification.warn("Ce standing est utilisé dans certains enregistrements. " + actions);
+                logRepository.save(Log.warn(notification.getMessage()));
+            } else {
+                logRepository.save(Log.error(notification.getMessage(), ExceptionUtils.getStackTrace(e)));
             }
-            logRepository.save(Log.error(notification.getMessage(), ExceptionUtils.getStackTrace(e)));
         }
         return notification;
     }
