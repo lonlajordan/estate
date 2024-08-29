@@ -33,6 +33,7 @@ public class Payment extends Auditable {
     @ManyToOne
     private Housing desiderata;
     private String proof;
+    private String reason;
 
     private Status status = Status.INITIATED;
 

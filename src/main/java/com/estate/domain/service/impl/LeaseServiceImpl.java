@@ -3,6 +3,7 @@ package com.estate.domain.service.impl;
 import com.estate.domain.entity.Lease;
 import com.estate.domain.entity.Log;
 import com.estate.domain.entity.Notification;
+import com.estate.domain.entity.Student;
 import com.estate.domain.form.LeaseSearch;
 import com.estate.domain.service.face.LeaseService;
 import com.estate.repository.*;
@@ -23,7 +24,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class LeaseServiceImpl implements LeaseService {
     private final HousingRepository housingRepository;
-    private final StandingRepository standingRepository;
+    private final StudentRepository studentRepository;
     private final PaymentRepository paymentRepository;
     private final LeaseRepository leaseRepository;
     private final LogRepository logRepository;
@@ -60,7 +61,13 @@ public class LeaseServiceImpl implements LeaseService {
                 lease.setEndDate(now.plusMonths(lease.getPayment().getMonths()));
                 lease.setHousing(lease.getPayment().getDesiderata());
             }
-            leaseRepository.save(lease);
+            lease = leaseRepository.save(lease);
+            Student student = lease.getPayment().getStudent();
+            Lease currentLease  = student.getCurrentLease();
+            if(currentLease != null){
+                currentLease.setNextLease(lease);
+                leaseRepository.save(currentLease);
+            }
             notification.setMessage("Le contract de bail de l'étudiant <b>" + lease.getPayment().getStudent().getName() + "</b> a été activé avec succès.");
             logRepository.save(Log.info(notification.getMessage()).author(Optional.ofNullable(principal).map(Principal::getName).orElse("")));
         } catch (Throwable e){

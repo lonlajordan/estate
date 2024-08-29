@@ -90,8 +90,6 @@ public class Student extends Auditable {
     private LocalDateTime otpExpiredAt = LocalDateTime.now();
     @Column(nullable = false)
     private Boolean enabled = false;
-    @Column(nullable = false)
-    private Boolean deleted = false;
     @OneToMany(mappedBy = "student", cascade = CascadeType.REMOVE, orphanRemoval = true)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Payment> payments = new ArrayList<>();
@@ -146,7 +144,4 @@ public class Student extends Auditable {
         if(this.phone != null) this.phone = this.phone.trim();
     }
 
-    @PreRemove
-    public void beforeDelete(){
-    }
 }

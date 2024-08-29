@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import javax.servlet.http.HttpSession;
+import java.security.Principal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -117,10 +118,36 @@ public class PaymentServiceImpl implements PaymentService {
         payment.setStatus(Status.CONFIRMED);
         User validator = (User) session.getAttribute("user");
         payment.setValidator(validator);
+        if(validator == null || !validator.getModes().contains(payment.getMode())) return Notification.error("Vous n'êtes pas chargé de la vérification des paiement par <b>" + payment.getMode().name() + "</b>.");
         payment = paymentRepository.save(payment);
         Lease lease = new Lease();
         lease.setPayment(payment);
         leaseRepository.save(lease);
+        return notification;
+    }
+
+    public Notification cancelById(long id, String reason, HttpSession session) {
+        Notification notification = Notification.info();
+        Payment payment = paymentRepository.findById(id).orElse(null);
+        if(payment == null) return Notification.error("Paiement introuvable");
+        payment.setStatus(Status.CANCELLED);
+        payment.setReason(reason);
+        User validator = (User) session.getAttribute("user");
+        payment.setValidator(validator);
+        if(validator == null || !validator.getModes().contains(payment.getMode())) return Notification.error("Vous n'êtes pas chargé de la vérification des paiement par <b>" + payment.getMode().name() + "</b>.");
+        payment = paymentRepository.save(payment);
+        Lease lease = new Lease();
+        lease.setPayment(payment);
+        leaseRepository.save(lease);
+        return notification;
+    }
+
+    public Notification submitById(long id, Principal principal) {
+        Notification notification = Notification.info();
+        Payment payment = paymentRepository.findById(id).orElse(null);
+        if(payment == null) return Notification.error("Paiement introuvable");
+        payment.setStatus(Status.SUBMITTED);
+        paymentRepository.save(payment);
         return notification;
     }
 }
