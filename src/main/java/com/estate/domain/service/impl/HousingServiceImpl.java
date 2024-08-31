@@ -3,6 +3,7 @@ package com.estate.domain.service.impl;
 import com.estate.domain.entity.Housing;
 import com.estate.domain.entity.Log;
 import com.estate.domain.entity.Notification;
+import com.estate.domain.enumaration.Availability;
 import com.estate.domain.enumaration.Level;
 import com.estate.domain.form.HousingForm;
 import com.estate.domain.form.HousingSearch;
@@ -14,8 +15,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
@@ -63,7 +62,6 @@ public class HousingServiceImpl implements HousingService {
     }
 
     @Override
-    @Transactional
     public Notification save(HousingForm form, Principal principal) {
         boolean creation = form.getId() == null;
         Notification notification = Notification.info();
@@ -72,6 +70,7 @@ public class HousingServiceImpl implements HousingService {
         housing.setName(form.getName());
         housing.setStanding(standingRepository.getReferenceById(form.getStandingId()));
         housing.setStatus(form.getStatus());
+        if(!Availability.OCCUPIED.equals(housing.getStatus()) && housing.getResident() != null) return Notification.error("Ce logement est occupé par <b>" + housing.getResident().getName() + "</b>");
 
         try {
             housingRepository.saveAndFlush(housing);
@@ -79,7 +78,6 @@ public class HousingServiceImpl implements HousingService {
             log.info(notification.getMessage());
             logRepository.save(Log.info(notification.getMessage()).author(Optional.ofNullable(principal).map(Principal::getName).orElse("")));
         } catch (Throwable e){
-            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             String message = ExceptionUtils.getRootCauseMessage(e);
             notification.setType(Level.ERROR);
             if(StringUtils.containsIgnoreCase(message, "UK_NAME")){

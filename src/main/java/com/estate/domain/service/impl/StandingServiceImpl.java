@@ -12,8 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
@@ -76,7 +74,6 @@ public class StandingServiceImpl implements StandingService {
     }
 
     @Override
-    @Transactional
     public Notification save(StandingForm form, Principal principal) {
         boolean creation = form.getId() == null;
         Notification notification = Notification.info();
@@ -93,7 +90,6 @@ public class StandingServiceImpl implements StandingService {
             log.info(notification.getMessage());
             logRepository.save(Log.info(notification.getMessage()).author(Optional.ofNullable(principal).map(Principal::getName).orElse("")));
         } catch (Throwable e){
-            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             String message = ExceptionUtils.getRootCauseMessage(e);
             notification.setType(Level.ERROR);
             if(StringUtils.containsIgnoreCase(message, "UK_NAME")){

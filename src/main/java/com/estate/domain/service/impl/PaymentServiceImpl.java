@@ -19,7 +19,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import javax.servlet.http.HttpSession;
@@ -129,65 +128,72 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    @Transactional
     public Notification validate(long id, HttpSession session) {
         Notification notification = Notification.info();
-        Payment payment = paymentRepository.findById(id).orElse(null);
-        if(payment == null) return Notification.error("Paiement introuvable");
-        if(!Status.SUBMITTED.equals(payment.getStatus())) return Notification.warn("Le paiement ne peut être validé dans son statut actuel");
-        payment.setStatus(Status.CONFIRMED);
-        User validator = (User) session.getAttribute("user");
-        payment.setValidator(validator);
-        if(validator == null || !validator.getModes().contains(payment.getMode())) return Notification.error("Vous n'êtes pas chargé de la vérification des paiement par <b>" + payment.getMode().name() + "</b>.");
-        Student student = payment.getStudent();
-        Housing housing = payment.getDesiderata();
-        Lease lease = new Lease();
-        lease.setPayment(payment);
-        if(housing == null) return Notification.error("Logement introuvable");
-        if(student.getCurrentLease() == null){
-            if(!housing.isActive()) return Notification.error("Le logement <b>" + housing.getName() + "</b> sollicité est désactivé");
-            if(Availability.OCCUPIED.equals(housing.getStatus())){
-                return Notification.warn("Le logement <b>" + housing.getName() + "</b> est occupé par <b>" + housing.getResident().getName() + "</b>.");
-            } else if(Availability.FREE.equals(housing.getStatus())){
-                lease.setHousing(housing);
-                lease.setStartDate(LocalDate.now());
-                lease.setEndDate(lease.getStartDate().plusMonths(payment.getMonths()));
-                student.setHousing(housing);
-                lease = leaseRepository.save(lease);
-                student.setCurrentLease(lease);
-                housing.setResident(student);
-                housing.setStatus(Availability.OCCUPIED);
-                notification = Notification.info("Le paiement a été confirmé. Le contrat de bail a été enregistré et activé avec succès.");
-            } else if(Availability.LIBERATION.equals(housing.getStatus())){
-                lease.setHousing(housing);
-                if(housing.getReservedBy() != null) return Notification.warn("Le logement <b>" + housing.getName() + "</b> a été réservé par <b>" + housing.getResident().getName() + "</b>.");
-                housing.setReservedBy(student);
-                lease = leaseRepository.save(lease);
-                student.setHousing(housing);
-                student.setCurrentLease(lease);
-                notification = Notification.info("Le paiement a été confirmé. Le contrat de bail a été enregistré et en attente d'activation.");
+        try {
+            Payment payment = paymentRepository.findById(id).orElse(null);
+            if(payment == null) return Notification.error("Paiement introuvable");
+            if(!Status.SUBMITTED.equals(payment.getStatus())) return Notification.warn("Le paiement ne peut être validé dans son statut actuel");
+            payment.setStatus(Status.CONFIRMED);
+            User validator = (User) session.getAttribute("user");
+            payment.setValidator(validator);
+            if(validator == null || !validator.getModes().contains(payment.getMode())) return Notification.error("Vous n'êtes pas chargé de la vérification des paiement par <b>" + payment.getMode().name() + "</b>.");
+            Student student = payment.getStudent();
+            Housing housing = payment.getDesiderata();
+            Lease lease = new Lease();
+            lease.setPayment(payment);
+            if(housing == null){
+                notification = Notification.error("Logement introuvable");
+                throw new IllegalAccessException(notification.getMessage());
             }
-            studentRepository.save(student);
-            housingRepository.save(housing);
-        } else {
-            Lease currentLease = student.getCurrentLease();
-            boolean currentLeaseExpired = false;
-            if(LocalDate.now().isAfter(currentLease.getEndDate())){
-                lease.setStartDate(currentLease.getEndDate().plusDays(1));
-            } else {
-                lease.setStartDate(LocalDate.now());
-                currentLeaseExpired = true;
-            }
-            lease.setEndDate(lease.getStartDate().plusMonths(payment.getMonths()));
-            lease.setHousing(currentLease.getHousing());
-            lease = leaseRepository.save(lease);
-            if(currentLeaseExpired){
-                student.setCurrentLease(lease);
+            if(student.getCurrentLease() == null){
+                if(!housing.isActive()) return Notification.error("Le logement <b>" + housing.getName() + "</b> sollicité est désactivé");
+                if(Availability.OCCUPIED.equals(housing.getStatus())){
+                    return Notification.warn("Le logement <b>" + housing.getName() + "</b> est occupé par <b>" + housing.getResident().getName() + "</b>.");
+                } else if(Availability.FREE.equals(housing.getStatus())){
+                    lease.setHousing(housing);
+                    lease.setStartDate(LocalDate.now());
+                    lease.setEndDate(lease.getStartDate().plusMonths(payment.getMonths()));
+                    student.setHousing(housing);
+                    lease = leaseRepository.save(lease);
+                    student.setCurrentLease(lease);
+                    housing.setResident(student);
+                    housing.setStatus(Availability.OCCUPIED);
+                    notification = Notification.info("Le paiement a été confirmé. Le contrat de bail a été enregistré et activé avec succès.");
+                } else if(Availability.LIBERATION.equals(housing.getStatus())){
+                    lease.setHousing(housing);
+                    if(housing.getReservedBy() != null) return Notification.warn("Le logement <b>" + housing.getName() + "</b> a été réservé par <b>" + housing.getResident().getName() + "</b>.");
+                    housing.setReservedBy(student);
+                    lease = leaseRepository.save(lease);
+                    student.setHousing(housing);
+                    student.setCurrentLease(lease);
+                    notification = Notification.info("Le paiement a été confirmé. Le contrat de bail a été enregistré et en attente d'activation.");
+                }
                 studentRepository.save(student);
+                housingRepository.save(housing);
+            } else {
+                Lease currentLease = student.getCurrentLease();
+                boolean currentLeaseExpired = false;
+                if(LocalDate.now().isAfter(currentLease.getEndDate())){
+                    lease.setStartDate(currentLease.getEndDate().plusDays(1));
+                } else {
+                    lease.setStartDate(LocalDate.now());
+                    currentLeaseExpired = true;
+                }
+                lease.setEndDate(lease.getStartDate().plusMonths(payment.getMonths()));
+                lease.setHousing(currentLease.getHousing());
+                lease = leaseRepository.save(lease);
+                if(currentLeaseExpired){
+                    student.setCurrentLease(lease);
+                    studentRepository.save(student);
+                }
+                currentLease.setNextLease(lease);
+                leaseRepository.save(currentLease);
+                notification = Notification.info("Le paiement a été confirmé. Le contrat de bail a été renouvelé avec succès.");
             }
-            currentLease.setNextLease(lease);
-            leaseRepository.save(currentLease);
-            notification = Notification.info("Le paiement a été confirmé. Le contrat de bail a été renouvelé avec succès.");
+            paymentRepository.save(payment);
+        } catch (Exception e){
+            log.error("Error on payment validation", e);
         }
         return notification;
     }
