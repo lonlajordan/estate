@@ -147,32 +147,6 @@ jQuery.ajaxSetup({
     }
 });
 
-function select_chain(el) {
-    let selected = $(el).find(':selected').data('id'); // get parent selected options' data-id attribute
-
-    // get next combo (data-next attribute on parent select)
-    let next_combo = $(el).data('next');
-
-    // now if this 2nd combo doesn't have the old options list stored in it, make it happen
-    if(!$(next_combo).data('store')) $(next_combo).data('store', $(next_combo).find('option')); // store data
-
-    // now include data stored in attribute for use...
-    let options2 = $(next_combo).data('store');
-
-    // update combo box with filtered results
-    $(next_combo).empty().append(
-        options2.filter(function(){
-            return $(this).data('option') === selected;
-        })
-    );
-
-    // now enable in case disabled...
-    $(next_combo).prop('disabled', false);
-
-    // now if this combo box has a child combo box, run this function again (recursive until an end is reached)
-    if($(next_combo).data('next') !== undefined ) select_chain(next_combo); // now next_combo is the defining combo
-}
-
 function initPopover(){
     $('#data-list').tooltip({
         selector: "[data-toggle=tooltip]",
@@ -362,7 +336,6 @@ function bindLazyLink(parent = ''){
         })
     });
     initPopover();
-    linkedSelection();
     fancyBoxBinding();
 }
 
@@ -382,18 +355,6 @@ function fancyBoxBinding(){
         Thumbs: {
             type: "classic",
             showOnStart: false,
-        }
-    });
-}
-
-function linkedSelection(){
-    // find all divs with a data-next attribute
-    $('[data-next]').each(function(i, obj) {
-        $(this).change(function (){
-            select_chain(this);
-        });
-        if($(this).find(':selected').val()){
-            select_chain(this);
         }
     });
 }

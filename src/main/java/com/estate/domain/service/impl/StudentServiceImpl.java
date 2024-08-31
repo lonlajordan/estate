@@ -55,7 +55,7 @@ public class StudentServiceImpl implements StudentService {
         boolean creation = form.getId() == null;
         Notification notification = Notification.info();
         Student student = creation ? new Student() : studentRepository.findById(form.getId()).orElse(null);
-        if(student == null) return Notification.error("Visiteur introuvable");
+        if(student == null) return Notification.error("Étudiant introuvable");
         student.setFirstName(form.getFirstName());
         student.setLastName(form.getLastName());
         student.setDateOfBirth(form.getDateOfBirth());

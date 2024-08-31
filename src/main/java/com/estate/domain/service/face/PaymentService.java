@@ -20,13 +20,13 @@ public interface PaymentService {
 
     Optional<Payment> findById(long id);
 
-    Notification toggle(long id, Status status);
-
     long countByStatus(Status status);
 
-    Notification save(PaymentForm form);
+    Notification save(PaymentForm form, Principal principal);
 
     List<Payment> findAllByStatusAndYear(Status status, Integer year);
 
     Notification validate(long id, HttpSession session);
+
+    Notification submit(long id);
 }

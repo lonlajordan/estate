@@ -72,16 +72,16 @@
                 <div th:replace="base.html :: alert(${notification})"></div>
                 <table id="data-list" data-pdf-title="LISTE DES CONTRATS DE BAIL" data-pdf-name="Liste des contrats de bail" data-columns-left="2" data-columns-right="2" class="table table-striped table-bordered table-hover paging searching dataTable">
                     <thead>
-                    <tr>
-                        <th class="action fit-cell-content">ID</th>
-                        <th>Résident</th>
-                        <th class="fit-cell-content">Logement</th>
-                        <th class="fit-cell-content">Standing</th>
-                        <th class="fit-cell-content">Période de location</th>
-                        <th class="action fit-cell-content">Date de création</th>
-                        <th class="action fit-cell-content">Date de modification</th>
-                        <th class="action fit-cell-content">Actions</th>
-                    </tr>
+                        <tr>
+                            <th class="action fit-cell-content">ID</th>
+                            <th>Résident</th>
+                            <th class="fit-cell-content">Logement</th>
+                            <th class="fit-cell-content">Standing</th>
+                            <th class="fit-cell-content">Période de location</th>
+                            <th class="action fit-cell-content">Date de création</th>
+                            <th class="action fit-cell-content">Date de modification</th>
+                            <th class="action fit-cell-content">Actions</th>
+                        </tr>
                     </thead>
                     <tbody>
                     <tr th:each="lease,iter: ${leases}" th:data-id="${lease.id}">
@@ -92,7 +92,7 @@
                         <td>
                             <span th:text="${#temporals.format(lease.startDate, 'dd/MM/yyyy')}"></span> - <span th:text="${#temporals.format(lease.endDate, 'dd/MM/yyyy')}"></span>
                         </td>
-                        <td th:text="${#bools.isTrue(lease.active) ? 'OUI' : 'NON'}"></td>
+                        <td th:text="${#temporals.format(lease.creationDate, 'dd-MM-yyyy HH:mm')}"></td>
                         <td th:text="${#temporals.format(lease.lastModifiedDate, 'dd-MM-yyyy HH:mm')}"></td>
                         <td class="text-center fit-cell-content">
                             <a class="dropdown-toggle" tabindex="0" data-toggle="popover" data-placement="auto" data-trigger="focus" th:data-target="${'popover-content-' + lease.id}" href="#">

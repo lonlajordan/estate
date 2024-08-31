@@ -23,6 +23,8 @@ public class Housing extends Auditable {
     private Standing standing;
     @OneToOne
     private Student resident;
+    @OneToOne
+    private Student reservedBy;
     @Enumerated(EnumType.STRING)
     private Availability status = Availability.FREE;
     private boolean active = true;

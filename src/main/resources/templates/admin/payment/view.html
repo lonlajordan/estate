@@ -32,7 +32,7 @@
                         </a>
                         <a href="#" class="list-group-item">
                             <b>Montant</b>
-                            <span class="pull-right"><em th:text="*{amount}"></em></span>
+                            <span class="pull-right"><em th:text="${#numbers.formatInteger(payment.amount, 1, 'WHITESPACE')}"></em></span>
                         </a>
                         <a href="#" class="list-group-item">
                             <b>Statut</b>
@@ -53,12 +53,22 @@
                             <span class="pull-right"><em th:text="*{#temporals.format(creationDate, 'dd-MM-yyyy  HH:mm')}"></em></span>
                         </a>
                     </div>
-                    <div class="panel-footer">
+                    <div th:if="${T(com.estate.domain.enumaration.Status).INITIATED.equals(payment.status)}" class="panel-footer">
+                        <a role="button" th:href="@{'/payment/submit/' + ${payment.id}}" class="btn btn-success lazy-link mr-3">
+                            <i class="fa fa-send-o"></i>
+                            &nbsp; Soumettre
+                        </a>
+                        <a role="button" th:href="@{'/payment/save?id=' + ${payment.id}}" class="btn btn-default lazy-link">
+                            <i class="fa fa-edit"></i>
+                            &nbsp; Modifier
+                        </a>
+                    </div>
+                    <div th:if="${T(com.estate.domain.enumaration.Status).SUBMITTED.equals(payment.status)}" class="panel-footer">
                         <a role="button" th:href="@{'/payment/validate/' + ${payment.id}}" class="btn btn-success lazy-link mr-3">
                             <i class="fa fa-check"></i>
                             &nbsp; Valider
                         </a>
-                        <a role="button" th:href="@{'/payment/cancel/' + ${payment.id}}" class="btn btn-primary lazy-link">
+                        <a role="button" th:href="@{'/payment/cancel/' + ${payment.id}}" class="btn btn-danger lazy-link">
                             <i class="fa fa-close"></i>
                             &nbsp; Rejéter
                         </a>

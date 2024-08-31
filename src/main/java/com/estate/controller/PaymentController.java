@@ -133,10 +133,15 @@ public class PaymentController {
     }
 
     @PostMapping("save")
-    public String save(@Valid @ModelAttribute("payment") PaymentForm payment, BindingResult result, Model model, RedirectAttributes attributes){
-        if(result.hasErrors()) return "admin/payment/save";
-        Notification notification =  paymentService.save(payment);
-        if(notification.hasError()){
+    public String save(@Valid @ModelAttribute("payment") PaymentForm payment, BindingResult result, Model model, RedirectAttributes attributes, Principal principal){
+        if(payment.getId() == null) {
+            String notNullMessage = "javax.validation.constraints.NotNull.message";
+            String defaultMessage = "ne doit pas être nul";
+            if(payment.getProofFile() == null || payment.getProofFile().isEmpty()) result.rejectValue("proofFile", notNullMessage, defaultMessage);
+        }
+        Notification notification = null;
+        if(!result.hasErrors()) notification =  paymentService.save(payment, principal);
+        if(result.hasErrors() || (notification != null && notification.hasError())){
             List<Standing> standings = standingService.findAll();
             model.addAttribute("notification", notification);
             model.addAttribute("payment", payment);
@@ -160,9 +165,9 @@ public class PaymentController {
         return "admin/payment/view";
     }
 
-    @GetMapping(value="toggle/{id}")
-    public String toggleById(@PathVariable long id, @RequestParam Status status, RedirectAttributes attributes){
-        attributes.addFlashAttribute("notification", paymentService.toggle(id, status));
+    @GetMapping(value="submit/{id}")
+    public String submitById(@PathVariable long id, RedirectAttributes attributes){
+        attributes.addFlashAttribute("notification", paymentService.submit(id));
         return "redirect:/payment/list";
     }
 
