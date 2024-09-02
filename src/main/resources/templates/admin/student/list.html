@@ -110,7 +110,7 @@
                             <td th:text="${student.email}"></td>
                             <td th:text="${student.phone}"></td>
                             <td th:text="${student.housing?.name}"></td>
-                            <td th:text="${student.enabled ? 'ACTIF' : 'DÉSACTIVÉ'}"></td>
+                            <td th:text="${student.active ? 'ACTIF' : 'DÉSACTIVÉ'}"></td>
                             <td th:text="${#temporals.format(student.creationDate, 'dd-MM-yyyy HH:mm')}"></td>
                             <td th:text="${#temporals.format(student.lastModifiedDate, 'dd-MM-yyyy HH:mm')}"></td>
                             <td class="fit-cell-content text-center">

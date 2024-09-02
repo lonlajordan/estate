@@ -1,11 +1,13 @@
 package com.estate.domain.service.impl;
 
+import com.estate.domain.entity.Log;
 import com.estate.domain.entity.Notification;
 import com.estate.domain.entity.Student;
 import com.estate.domain.enumaration.Level;
 import com.estate.domain.form.StudentForm;
 import com.estate.domain.form.StudentSearch;
 import com.estate.domain.service.face.StudentService;
+import com.estate.repository.LogRepository;
 import com.estate.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +23,7 @@ import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.io.File;
 import java.io.IOException;
+import java.security.Principal;
 import java.util.Optional;
 
 @Slf4j
@@ -28,6 +31,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class StudentServiceImpl implements StudentService {
     private final StudentRepository studentRepository;
+    private final LogRepository logRepository;
 
     @Override
     public long count() {
@@ -158,7 +162,7 @@ public class StudentServiceImpl implements StudentService {
 
         try {
             if(creation){
-                student.setEnabled(false);
+                student.setActive(false);
                 // Send mail
             }
             studentRepository.saveAndFlush(student);
@@ -176,6 +180,23 @@ public class StudentServiceImpl implements StudentService {
             log.error(notification.getMessage(), e);
         }
 
+        return notification;
+    }
+
+    @Override
+    public Notification toggleById(long id, Principal principal) {
+        Notification notification = new Notification();
+        Student student = studentRepository.findById(id).orElse(null);
+        if(student == null) return Notification.error("Étudiant introuvable");
+        try {
+            student.setActive(!student.isActive());
+            studentRepository.save(student);
+            notification.setMessage("L'étudiant <b>" + student.getName() + "</b> a été " + (student.isActive() ? "activé" : "désactivé") + " avec succès.");
+            logRepository.save(Log.info(notification.getMessage()).author(Optional.ofNullable(principal).map(Principal::getName).orElse("")));
+        } catch (Throwable e){
+            notification = Notification.error("Erreur lors de la modification de l'étudiant <b>" + student.getName() + "</b>.");
+            logRepository.save(Log.error(notification.getMessage(), ExceptionUtils.getStackTrace(e)).author(Optional.ofNullable(principal).map(Principal::getName).orElse("")));
+        }
         return notification;
     }
 }
