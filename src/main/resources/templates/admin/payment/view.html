@@ -38,6 +38,14 @@
                             <b>Statut</b>
                             <span class="pull-right"><em th:text="*{status?.name}"></em></span>
                         </a>
+                        <a href="#" class="list-group-item">
+                            <b>Commentaire</b>
+                            <span class="pull-right"><em th:text="*{comment}"></em></span>
+                        </a>
+                        <a href="#" class="list-group-item">
+                            <b>Vérifié par</b>
+                            <span class="pull-right"><em th:text="${payment.validator?.name}"></em></span>
+                        </a>
                         <div class="list-group-item">
                             <b>Preuve de paiement</b>
                             <span class="pull-right">
@@ -68,11 +76,39 @@
                             <i class="fa fa-check"></i>
                             &nbsp; Valider
                         </a>
-                        <a role="button" th:href="@{'/payment/cancel/' + ${payment.id}}" class="btn btn-danger lazy-link">
-                            <i class="fa fa-close"></i>
-                            &nbsp; Rejéter
-                        </a>
                     </div>
+                </div>
+            </div>
+        </div>
+        <div th:if="${T(com.estate.domain.enumaration.Status).SUBMITTED.equals(payment.status)}" class="row">
+            <div class="col">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <i class="fa fa-bars fa-fw"></i>
+                        <b>Intention de rejet</b>
+                    </div>
+                    <form th:object="${reject}" onsubmit="return submitForm(event)" th:action="@{/payment/cancel}" autocomplete="off" method="post">
+                        <div class="panel-body">
+                            <div class="row">
+                                <input th:field="*{id}" type="hidden">
+                                <div class="form-group col-lg-12" th:classappend="${#fields.hasErrors('comment') ? 'has-error' : ''}">
+                                    <label class="control-label" for="comment">Motif du rejet <span class="required-field">*</span></label>
+                                    <textarea id="comment" th:field="*{comment}" class="form-control" autocomplete="off" required></textarea>
+                                    <p th:if="${#fields.hasErrors('comment')}" th:errors="*{comment}" class="help-block"></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-footer">
+                            <button type="submit" class="btn btn-danger mr-3">
+                                <i class="fa fa-close"></i>
+                                &nbsp; Rejéter
+                            </button>
+                            <button type="reset" class="btn btn-default">
+                                <i class="fa fa-refresh"></i>
+                                &nbsp; Réinitialiser
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>

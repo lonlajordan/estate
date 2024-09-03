@@ -4,6 +4,7 @@ import com.estate.domain.entity.*;
 import com.estate.domain.enumaration.Status;
 import com.estate.domain.form.HousingSearch;
 import com.estate.domain.form.PaymentForm;
+import com.estate.domain.form.PaymentReject;
 import com.estate.domain.form.PaymentSearch;
 import com.estate.domain.service.face.HousingService;
 import com.estate.domain.service.face.PaymentService;
@@ -161,7 +162,11 @@ public class PaymentController {
             attributes.addFlashAttribute("notification", Notification.error("Paiement introuvable"));
             return "redirect:/payment/list";
         }
+        PaymentReject reject = new PaymentReject();
+        reject.setId(payment.getId());
+        reject.setComment(payment.getComment());
         model.addAttribute("payment", payment);
+        model.addAttribute("reject", reject);
         return "admin/payment/view";
     }
 
@@ -174,6 +179,21 @@ public class PaymentController {
     @GetMapping(value="validate/{id}")
     public String validateById(@PathVariable long id, RedirectAttributes attributes, HttpSession session){
         attributes.addFlashAttribute("notification", paymentService.validate(id, session));
+        return "redirect:/payment/list";
+    }
+
+    @PostMapping(value="cancel")
+    public String cancelById(@Valid @ModelAttribute("reject") PaymentReject reject, BindingResult result, Model model, RedirectAttributes attributes, HttpSession session){
+        if(result.hasErrors()){
+            Payment payment = paymentService.findById(reject.getId()).orElse(null);
+            if(payment == null){
+                attributes.addFlashAttribute("notification", Notification.error("Paiement introuvable"));
+                return "redirect:/payment/list";
+            }
+            model.addAttribute("payment", payment);
+            return "admin/payment/view";
+        }
+        attributes.addFlashAttribute("notification", paymentService.cancel(reject, session));
         return "redirect:/payment/list";
     }
 

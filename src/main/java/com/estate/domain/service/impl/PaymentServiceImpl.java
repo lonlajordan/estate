@@ -6,6 +6,7 @@ import com.estate.domain.enumaration.Availability;
 import com.estate.domain.enumaration.Level;
 import com.estate.domain.enumaration.Status;
 import com.estate.domain.form.PaymentForm;
+import com.estate.domain.form.PaymentReject;
 import com.estate.domain.form.PaymentSearch;
 import com.estate.domain.service.face.PaymentService;
 import com.estate.repository.*;
@@ -73,6 +74,7 @@ public class PaymentServiceImpl implements PaymentService {
         Student student = studentRepository.findById(form.getStudentId()).orElse(null);
         if(student == null) return Notification.error("Étudiant introuvable");
         payment.setStudent(student);
+        if(student.getCurrentLease() != null && student.getCurrentLease().getNextLease() != null) return Notification.warn("Cet étudiant possède déjà un contrat de bail en attente d'activation");
         Standing standing = standingRepository.findById(form.getStandingId()).orElse(null);
         if(standing == null) return Notification.error("Standing introuvable");
         payment.setStanding(standing);
@@ -218,19 +220,18 @@ public class PaymentServiceImpl implements PaymentService {
         return notification;
     }
 
-    public Notification cancelById(long id, String reason, HttpSession session) {
+    @Override
+    public Notification cancel(PaymentReject form, HttpSession session) {
         Notification notification = Notification.info();
-        Payment payment = paymentRepository.findById(id).orElse(null);
+        Payment payment = paymentRepository.findById(form.getId()).orElse(null);
         if(payment == null) return Notification.error("Paiement introuvable");
         payment.setStatus(Status.CANCELLED);
-        payment.setReason(reason);
+        payment.setComment(StringUtils.trim(form.getComment()));
         User validator = (User) session.getAttribute("user");
         payment.setValidator(validator);
         if(validator == null || !validator.getModes().contains(payment.getMode())) return Notification.error("Vous n'êtes pas chargé de la vérification des paiement par <b>" + payment.getMode().name() + "</b>.");
-        payment = paymentRepository.save(payment);
-        Lease lease = new Lease();
-        lease.setPayment(payment);
-        leaseRepository.save(lease);
+        paymentRepository.save(payment);
+        // Send mail here to the student
         return notification;
     }
 }

@@ -13,7 +13,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface LeaseRepository extends JpaRepository<Lease, Long>, JpaSpecificationExecutor<Lease> {
-    List<Lease> findAllByEndDate(LocalDate endDate);
+    List<Lease> findAllByEndDateBeforeAndLastRememberDateNull(LocalDate date);
 
     @Transactional
     @Modifying(clearAutomatically = true)

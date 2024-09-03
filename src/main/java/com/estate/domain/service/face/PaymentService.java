@@ -4,6 +4,7 @@ import com.estate.domain.entity.Notification;
 import com.estate.domain.entity.Payment;
 import com.estate.domain.enumaration.Status;
 import com.estate.domain.form.PaymentForm;
+import com.estate.domain.form.PaymentReject;
 import com.estate.domain.form.PaymentSearch;
 import org.springframework.data.domain.Page;
 
@@ -29,4 +30,6 @@ public interface PaymentService {
     Notification validate(long id, HttpSession session);
 
     Notification submit(long id);
+
+    Notification cancel(PaymentReject form, HttpSession session);
 }

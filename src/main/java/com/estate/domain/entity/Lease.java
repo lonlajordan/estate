@@ -1,6 +1,5 @@
 package com.estate.domain.entity;
 
-import com.estate.domain.enumaration.Status;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -20,10 +19,17 @@ public class Lease extends Auditable {
     private Long id;
     private LocalDate startDate;
     private LocalDate endDate;
+    private LocalDate lastRememberDate;
     @OneToOne(optional = false)
     private Payment payment;
     @ManyToOne
     private Housing housing;
+    @ManyToOne
+    private Housing mutationHousing;
+    private Integer mutationAmount;
+    private LocalDate mutationDate;
+    @ManyToOne
+    private User mutedBy;
     @OneToOne
     private Lease nextLease;
 

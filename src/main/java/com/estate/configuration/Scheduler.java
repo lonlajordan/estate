@@ -28,7 +28,18 @@ public class Scheduler {
     private final StudentRepository studentRepository;
     private final LeaseRepository leaseRepository;
 
-    @Scheduled(cron = "@monthly")
+    @Scheduled(cron = "@daily", zone = "GMT+1")
+    public void updateStudentCurrentLease(){
+        List<Student> students = studentRepository.findAllByHavingPendingLease(LocalDate.now());
+        for (Student student : students) {
+            if(student.getCurrentLease() != null && student.getCurrentLease().getNextLease() != null) {
+                student.setCurrentLease(student.getCurrentLease().getNextLease());
+                studentRepository.save(student);
+            }
+        }
+    }
+
+    @Scheduled(cron = "@monthly", zone = "GMT+1")
     private void deleteLogs(){
         logRepository.deleteAllByCreationDateBefore(LocalDateTime.now().minusDays(90));
     }
@@ -46,14 +57,20 @@ public class Scheduler {
             emailHelper.sendMail(to, cc, "JOYEUX ANNIVERSAIRE", "birthday.ftl", Locale.FRENCH, context, Collections.emptyList());
         }
 
-        List<Lease> leases = leaseRepository.findAllByEndDate(LocalDate.now().plusDays(30));
+        List<Lease> leases = leaseRepository.findAllByEndDateBeforeAndLastRememberDateNull(LocalDate.now().plusDays(30));
         for (Lease lease : leases) {
+            if(lease.getNextLease() != null){
+                lease.setLastRememberDate(LocalDate.now());
+                leaseRepository.save(lease);
+                continue;
+            }
             Student student = lease.getPayment().getStudent();
             name = student.getOneName();
             HashMap<String, Object> context = new HashMap<>();
             context.put("name", name);
-            emailHelper.sendMail(student.getEmail(), "", "RAPPEL DE PAIEMENT DU LOYER", "birthday.ftl", Locale.FRENCH, context, Collections.emptyList());
-            emailHelper.sendMail(Stream.of(student.getFirstParentEmail(), student.getSecondParentEmail()).distinct().filter(StringUtils::isNotBlank).collect(Collectors.joining(",")), "", "RAPPEL DE PAIEMENT DU LOYER", "birthday.ftl", Locale.FRENCH, context, Collections.emptyList());
+            emailHelper.sendMail(Stream.of(student.getFirstParentEmail(), student.getSecondParentEmail()).distinct().filter(StringUtils::isNotBlank).collect(Collectors.joining(",")), student.getEmail(), "RAPPEL DE PAIEMENT DU LOYER", "birthday.ftl", Locale.FRENCH, context, Collections.emptyList());
+            lease.setLastRememberDate(LocalDate.now());
+            leaseRepository.save(lease);
         }
     }
 }
