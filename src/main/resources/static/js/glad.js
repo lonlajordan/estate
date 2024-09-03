@@ -246,6 +246,15 @@ function initDataList() {
             extend: 'colvis',
         },
     ];
+    if(list.hasClass("can-report")) buttons = [
+        {
+            text: '<i class="fa fa-money"></i> Caisse',
+            action: function () {
+                $('#report-items').click();
+            }
+        },
+        ...buttons
+    ]
     if(list.hasClass("can-delete")) buttons = [
         {
             text: '<i class="fa fa-trash"></i> Supprimer',

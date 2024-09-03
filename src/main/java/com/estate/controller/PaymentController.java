@@ -106,7 +106,7 @@ public class PaymentController {
                 if(standing != null){
                     payment.setStanding(standing);
                     payment.setRent(standing.getRent());
-                    if(student.getHousing() == null || !Objects.equals(standing.getId(), student.getHousing().getStanding().getId())){
+                    if(student.getHousing() == null){
                         payment.setCaution(standing.getCaution());
                         payment.setRepair(standing.getRepair());
                     }

@@ -36,8 +36,8 @@
                                     <div class="row">
                                         <div class="col-lg-6">
                                             <div class="form-group">
-                                                <label class="control-label" for="standing">Logement</label>
-                                                <select id="standing" th:field="*{housingId}" class="form-control">
+                                                <label class="control-label" for="housing">Logement</label>
+                                                <select id="housing" th:field="*{housingId}" class="form-control searchable-select-box">
                                                     <option value="">Tous les logements...</option>
                                                     <option th:each="housing: ${housings}" th:value="${housing.id}" th:text="${housing.name}"></option>
                                                 </select>
@@ -46,7 +46,7 @@
                                         <div class="col-lg-6">
                                             <div class="form-group">
                                                 <label class="control-label" for="state">Statut</label>
-                                                <select id="state" th:field="*{state}" class="form-control">
+                                                <select id="state" th:field="*{state}" class="form-control searchable-select-box">
                                                     <option value="">Tous les statuts...</option>
                                                     <option th:each="state: ${T(com.estate.domain.enumaration.State).values()}" th:value="${state}" th:text="${state.name}"></option>
                                                 </select>
@@ -77,7 +77,7 @@
                             <th>Résident</th>
                             <th class="fit-cell-content">Logement</th>
                             <th class="fit-cell-content">Standing</th>
-                            <th class="fit-cell-content">Période de location</th>
+                            <th class="fit-cell-content">Période de validité</th>
                             <th class="action fit-cell-content">Date de création</th>
                             <th class="action fit-cell-content">Date de modification</th>
                             <th class="action fit-cell-content">Actions</th>

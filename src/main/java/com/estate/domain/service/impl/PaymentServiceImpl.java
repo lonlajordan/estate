@@ -81,8 +81,10 @@ public class PaymentServiceImpl implements PaymentService {
         payment.setDesiderata(desiderata);
         payment.setMonths(form.getMonths());
         payment.setRent(standing.getRent());
-        payment.setCaution(standing.getCaution());
-        payment.setRepair(standing.getRepair());
+        if(student.getHousing() == null){
+            payment.setCaution(standing.getCaution());
+            payment.setRepair(standing.getRepair());
+        }
         payment.setMode(form.getMode());
         if(form.getProofFile() != null && !form.getProofFile().isEmpty()){
             File root = new File("documents");
@@ -101,7 +103,7 @@ public class PaymentServiceImpl implements PaymentService {
                 payment.setProof(root.getName() + File.separator + proof.getName());
             } catch (IOException e) {
                 log.error("unable to write payment proof file", e);
-                return Notification.error("Impossible d'enregistrer la preuve de versement.");
+                return Notification.error("Impossible d'enregistrer la preuve de paiement.");
             }
         }
         try {
@@ -173,8 +175,9 @@ public class PaymentServiceImpl implements PaymentService {
                 housingRepository.save(housing);
             } else {
                 Lease currentLease = student.getCurrentLease();
+                LocalDate today = LocalDate.now();
                 boolean currentLeaseExpired = false;
-                if(LocalDate.now().isAfter(currentLease.getEndDate())){
+                if(today.isBefore(currentLease.getEndDate())){
                     lease.setStartDate(currentLease.getEndDate().plusDays(1));
                 } else {
                     lease.setStartDate(LocalDate.now());

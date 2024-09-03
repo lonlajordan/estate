@@ -127,6 +127,7 @@ public class HousingServiceImpl implements HousingService {
         if(housing == null) return Notification.error("Logement introuvable");
         try {
             housing.setActive(!housing.isActive());
+            if(!housing.isActive() && housing.getResident() != null) return Notification.warn("Ce logement est encore occupé");
             housingRepository.save(housing);
             notification.setMessage("Le logement <b>" + housing.getName() + "</b> a été " + (housing.isActive() ? "activé" : "désactivé") + " avec succès.");
             logRepository.save(Log.info(notification.getMessage()).author(Optional.ofNullable(principal).map(Principal::getName).orElse("")));

@@ -46,8 +46,4 @@ public class Housing extends Auditable {
     public void beforeSave(){
         if(this.name != null) this.name = this.name.replaceAll(" ", "").toUpperCase();
     }
-
-    @PreRemove
-    public void beforeDelete(){
-    }
 }

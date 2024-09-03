@@ -4,8 +4,8 @@ import lombok.Getter;
 
 @Getter
 public enum State {
-    INITIATED("Initié"),
-    ACTIVATED("Activé"),
+    INITIATED("En attente"),
+    ACTIVATED("En cours"),
     EXPIRED("Expiré");
 
     private final String name;

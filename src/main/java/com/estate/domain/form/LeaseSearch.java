@@ -22,17 +22,19 @@ public class LeaseSearch {
             if (housingId != null) {
                 predicates.add(cb.equal(root.get("housing").get("id"), housingId));
             }
+
             if (state != null) {
+                LocalDate today = LocalDate.now();
                 switch (state){
                     case INITIATED:
                         predicates.add(cb.isNull(root.get("startDate")));
                         break;
                     case ACTIVATED:
-                        predicates.add(cb.lessThanOrEqualTo(root.get("startDate"), LocalDate.now()));
-                        predicates.add(cb.greaterThanOrEqualTo(root.get("endDate"), LocalDate.now()));
+                        predicates.add(cb.lessThanOrEqualTo(root.get("startDate"), today));
+                        predicates.add(cb.greaterThanOrEqualTo(root.get("endDate"), today));
                         break;
                     case EXPIRED:
-                        predicates.add(cb.greaterThan(root.get("endDate"), LocalDate.now()));
+                        predicates.add(cb.lessThan(root.get("endDate"), today));
                         break;
                 }
             }

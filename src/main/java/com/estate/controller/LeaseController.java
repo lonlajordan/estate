@@ -3,8 +3,8 @@ package com.estate.controller;
 import com.estate.domain.entity.Lease;
 import com.estate.domain.entity.Notification;
 import com.estate.domain.form.LeaseSearch;
+import com.estate.domain.service.face.HousingService;
 import com.estate.domain.service.face.LeaseService;
-import com.estate.domain.service.face.StandingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -22,7 +22,7 @@ import java.util.Map;
 @RequestMapping("/lease")
 public class LeaseController {
     private final LeaseService leaseService;
-    private final StandingService housingService;
+    private final HousingService housingService;
 
     @GetMapping("list")
     public String findAll(Model model, @RequestParam(required = false, defaultValue = "1") int page, HttpServletRequest request){

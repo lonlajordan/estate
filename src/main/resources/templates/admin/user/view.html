@@ -49,7 +49,7 @@
                         <a href="#" class="list-group-item">
                             <b>Rôles</b>
                             <span class="pull-right">
-                                <span th:each="role, iter: ${user.roles}" th:text="${role.name + (iter.last ? '' : ',')}"></span>
+                                <span th:each="role, iter: ${user.roles}" th:text="${role.name + (iter.last ? '' : ', ')}"></span>
                             </span>
                         </a>
                         <a href="#" class="list-group-item">

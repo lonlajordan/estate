@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 
-<head th:insert="base.html :: head(${'Détails de le paiement'})"></head>
+<head th:insert="base.html :: head(${'Détails du paiement'})"></head>
 
 <body>
 <div id="wrapper">
@@ -10,7 +10,7 @@
         <div class="row mt-6">
             <ol class="breadcrumb">
                 <li><i class="fa fa-home"></i> <a class="lazy-link" th:href="@{/home}">Accueil</a></li>
-                <li><a class="lazy-link" th:href="@{/payment/list}">Paiements</a></li>
+                <li><a class="lazy-link" th:href="@{/payment/list}">Comptabilité</a></li>
                 <li th:utext="*{'Détails du paiement <b>[ ' + id + ' ]</b>'}"></li>
             </ol>
         </div>

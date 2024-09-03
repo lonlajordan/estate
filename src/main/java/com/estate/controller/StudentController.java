@@ -4,6 +4,7 @@ import com.estate.domain.entity.Notification;
 import com.estate.domain.entity.Student;
 import com.estate.domain.form.StudentForm;
 import com.estate.domain.form.StudentSearch;
+import com.estate.domain.service.face.HousingService;
 import com.estate.domain.service.face.StudentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -23,6 +24,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 @RequestMapping("/student")
 public class StudentController {
+    private final HousingService housingService;
     private final StudentService studentService;
     
     @GetMapping("list")
@@ -38,6 +40,7 @@ public class StudentController {
         } else {
             students = studentService.findAll(page);
         }
+        model.addAttribute("housings", housingService.findAll());
         model.addAttribute("students", students.toList());
         model.addAttribute("totalPages", students.getTotalPages());
         model.addAttribute("currentPage", students.getNumber() + 1);
