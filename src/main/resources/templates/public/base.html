@@ -24,8 +24,8 @@
 
 </head>
 <body>
-	<div th:replace="components/preloader"></div>
-	<div th:replace="components/header"></div>
+	<div th:replace="public/components/preloader"></div>
+	<div th:replace="public/components/header"></div>
 	<div layout:fragment="content">
 		<!-- Start Hero Area -->
 		<section class="section-bg">
@@ -962,7 +962,7 @@
 		</div>
 		<!-- End Instagram Feed -->
 	</div>
-	<div th:replace="components/footer"></div>
+	<div th:replace="public/components/footer"></div>
     <!-- Js File -->
     <script th:src="@{/assets/js/modernizr.min.js}"></script>
     <script th:src="@{/assets/js/jquery-3.6.0.min.js}"></script>
