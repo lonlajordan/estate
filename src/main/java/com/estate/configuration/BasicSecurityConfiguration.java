@@ -60,20 +60,20 @@ public class BasicSecurityConfiguration {
             .and()
                 .formLogin()
                     .usernameParameter("email")
-                    .loginPage("/")
-                    .loginProcessingUrl("/")
-                    .defaultSuccessUrl("/home", true)
+                    .loginPage("/237in")
+                    .loginProcessingUrl("/237in")
+                    .defaultSuccessUrl("/dashboard", true)
                     .failureHandler(new AuthenticationFailureHandler())
             .and()
                 .logout()
                     .deleteCookies("JSESSIONID")
                     .logoutUrl("/logout")
                     .logoutSuccessHandler(new AuthenticationLogoutSuccessHandler())
-                    .logoutSuccessUrl("/")
+                    .logoutSuccessUrl("/237in")
                     .invalidateHttpSession(true)
             .and()
                 .authorizeRequests()
-                    .antMatchers("/", "/error", "/error/**", "/password/reset/**").permitAll()
+                    .antMatchers("/237in", "/error", "/error/**", "/password/reset/**").permitAll()
                     .anyRequest().permitAll();
         return http.build();
     }
@@ -110,15 +110,15 @@ public class BasicSecurityConfiguration {
     private static class AuthenticationFailureHandler extends SimpleUrlAuthenticationFailureHandler {
         @Override
         public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
-            String url = "/";
+            String url = "/237in";
             if(exception != null) {
                 String message = exception.getMessage();
                 if(MessageCode.INCORRECT_EMAIL.equals(message)){
-                    url = "/?error=1";
+                    url = "/237in?error=1";
                 }else if(MessageCode.INCORRECT_PASSWORD.equals(message)){
-                    url = "/?error=2";
+                    url = "/237in?error=2";
                 }else if(MessageCode.ACCOUNT_DISABLED.equals(message)){
-                    url = "/?error=3";
+                    url = "/237in?error=3";
                 }
             }
             RequestDispatcher dispatcher = request.getRequestDispatcher(url);
@@ -129,7 +129,7 @@ public class BasicSecurityConfiguration {
     private static class AuthenticationLogoutSuccessHandler extends SimpleUrlLogoutSuccessHandler {
         @Override
         public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
-            response.sendRedirect(request.getContextPath() + "/");
+            response.sendRedirect(request.getContextPath() + "/237in");
         }
     }
 }

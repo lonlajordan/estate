@@ -9,7 +9,7 @@
     <div id="page-wrapper" th:object="${user}">
         <div class="row mt-6">
             <ol class="breadcrumb">
-                <li><i class="fa fa-home"></i> <a class="lazy-link" th:href="@{/home}">Accueil</a></li>
+                <li><i class="fa fa-home"></i> <a class="lazy-link" th:href="@{/dashboard}">Accueil</a></li>
                 <li><a class="lazy-link" th:href="@{/user/list}">Utilisateurs</a></li>
                 <li th:utext="*{'Détails de l''utilisateur <b>[ ' + name + ' ]</b>'}"></li>
             </ol>

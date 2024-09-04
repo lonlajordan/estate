@@ -1,51 +1,47 @@
 <!DOCTYPE html>
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{public/base}" class="no-js" lang="en">
 <head>
-	<title>BHouse - Real Estate HTML5 Template</title>
+	<title>Concorde - Connexion</title>
 </head>
 <body>
-	<!-- Start Login Regsiter Form -->
-	<section class="pt-50 pb-50 section-bg-23">
-		<div class="container">
-			<div class="row">
-				<div class="col-lg-12">
-					<div class="login-form-bhouse">
-	        			<div class="login-register-form-head">
-	        				<h2>Sign In</h2>
-	        				<ul>
-	        					<li class="google"><a href="#"><i class="fab fa-google"></i> <span>Google</span></a></li>
-	        					<li class="facebook"><a href="#"><i class="fab fa-facebook-f"></i></a></li>
-	        					<li class="twitter"><a href="#"><i class="fab fa-twitter"></i></a></li>
-	        				</ul>
-	        			</div>
-	        			<div class="login-register-form-middle">
-	        				<form action="#">
-	        					<div class="single-input">
-	        						<label for="username">Mail or UserName</label>
-	        						<input type="text" name="username" id="username">
-	        					</div>
-	        					<div class="single-input">
-	        						<label for="password">Password</label>
-	        						<input type="password" name="password" id="password">
-	        					</div>
-	        					<div class="single-input checkbox">
-	        						<input type="checkbox" name="rememberme" id="rememberme">
-	        						<label class="rememberme" for="rememberme">Remember me </label>
-	        					</div>
-	        					<div class="single-input">
-	        						<button type="submit" class="button-1">Log In</button>
-	        					</div>
-	        				</form>
-	        			</div>
-	        			<div class="login-register-from-btom text-center">
-	        				<p class="mb-2"><a href="forget-password.html">Forget Password</a></p>
-	        				<p class="text-dark mb-0">Don't have account?<a href="register.html" class="text-primary ml-1">Sign UP</a></p>
-	        			</div>
-	        		</div>
+	<div layout:fragment="content">
+		<!-- Start Login Regsiter Form -->
+		<section class="pt-50 pb-50 section-bg-23">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="login-form-bhouse">
+							<div class="login-register-form-head">
+								<h2>CONNEXION</h2>
+							</div>
+							<div class="login-register-form-middle">
+								<form th:action="@{/login}">
+									<div class="single-input">
+										<label for="email">Adresse e-mail</label>
+										<input type="text" name="email" id="email">
+									</div>
+									<div class="single-input">
+										<label for="password">Mot de passe</label>
+										<input type="password" name="password" id="password">
+									</div>
+									<div class="single-input checkbox">
+										<input type="checkbox" name="rememberme" id="rememberme">
+										<label class="rememberme" for="rememberme">Remember me </label>
+									</div>
+									<div class="single-input">
+										<button type="submit" class="button-1">Se connecter</button>
+									</div>
+								</form>
+							</div>
+							<div class="login-register-from-btom text-center">
+								<p class="mb-2"><a href="forget-password.html">Mot de passe oublié ?</a></p>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
-		</div>
-	</section>
-	<!-- End Login Regsiter Form -->
+		</section>
+		<!-- End Login Regsiter Form -->
+	</div>
 </body>
 </html>

@@ -9,7 +9,7 @@
     <div id="page-wrapper" th:object="${payment}">
         <div class="row mt-6">
             <ol class="breadcrumb">
-                <li><i class="fa fa-home"></i> <a class="lazy-link" th:href="@{/home}">Accueil</a></li>
+                <li><i class="fa fa-home"></i> <a class="lazy-link" th:href="@{/dashboard}">Accueil</a></li>
                 <li><a class="lazy-link" th:href="@{/payment/list}">Comptabilité</a></li>
                 <li th:utext="*{'Détails du paiement <b>[ ' + id + ' ]</b>'}"></li>
             </ol>

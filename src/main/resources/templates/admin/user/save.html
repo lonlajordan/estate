@@ -8,7 +8,7 @@
     <div id="page-wrapper">
         <div class="row mt-6">
             <ol class="breadcrumb">
-                <li><i class="fa fa-home"></i> <a class="lazy-link" th:href="@{/home}">Accueil</a></li>
+                <li><i class="fa fa-home"></i> <a class="lazy-link" th:href="@{/dashboard}">Accueil</a></li>
                 <li><a class="lazy-link" th:href="@{/user/list}">Utilisateurs</a></li>
                 <li th:text="${user.id == null ? 'Nouvel utilisateur' : 'Modification de l''utilisateur'}"></li>
             </ol>

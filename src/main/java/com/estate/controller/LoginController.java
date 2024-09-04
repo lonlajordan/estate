@@ -34,7 +34,7 @@ public class LoginController {
     private final EmailHelper emailHelper;
     private final PasswordEncoder passwordEncoder;
 
-    @GetMapping("/")
+    @GetMapping("/237in")
     public String login() {
         return  isAuthenticated() ? "redirect:home" : "login" ;
     }
@@ -62,7 +62,7 @@ public class LoginController {
             emailHelper.sendMail(email, "", "Réinitialiser votre mot de passe", "admin_reset_password.ftl", Locale.FRENCH, model, Collections.emptyList());
         }
         attributes.addFlashAttribute("notification", notification);
-        return "redirect:/";
+        return "redirect:/237in";
     }
 
     @GetMapping("/password/reset/{token}")
@@ -77,7 +77,7 @@ public class LoginController {
         }else{
             attributes.addFlashAttribute("notification", Notification.error("utilisateur introuvable"));
         }
-        return "redirect:/";
+        return "redirect:/237in";
     }
 
     @PostMapping("/password/reset/{token}")
@@ -96,10 +96,10 @@ public class LoginController {
             notification = Notification.error("utilisateur introuvable");
         }
         attributes.addFlashAttribute("notification", notification);
-        return "redirect:/";
+        return "redirect:/237in";
     }
 
-    @PostMapping("/")
+    @PostMapping("/237in")
     public String login(
             @RequestParam(required = false, defaultValue = "") String error,
             @RequestParam String email,

@@ -6,11 +6,10 @@
 <body>
 <div id="wrapper">
     <div th:replace="header.html"></div>
-    <!--/*@thymesVar id="student" type="com.estate.domain.entity.Student"*/-->
     <div id="page-wrapper" th:object="${student}">
         <div class="row mt-6">
             <ol class="breadcrumb">
-                <li><i class="fa fa-home"></i> <a class="lazy-link" th:href="@{/home}">Accueil</a></li>
+                <li><i class="fa fa-home"></i> <a class="lazy-link" th:href="@{/dashboard}">Accueil</a></li>
                 <li><a class="lazy-link" th:href="@{/student/list}">Étudiants</a></li>
                 <li th:utext="*{'Détails de l''étudiant <b>[ ' + id + ' ]</b>'}"></li>
             </ol>
