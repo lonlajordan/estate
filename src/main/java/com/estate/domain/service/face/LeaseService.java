@@ -4,6 +4,7 @@ import com.estate.domain.entity.Lease;
 import com.estate.domain.entity.Notification;
 import com.estate.domain.form.LeaseSearch;
 import org.springframework.data.domain.Page;
+import org.springframework.ui.Model;
 
 import java.security.Principal;
 import java.util.Optional;
@@ -17,5 +18,5 @@ public interface LeaseService {
 
     long count();
 
-    Notification toggleById(long id, Principal principal);
+    Notification activate(long id, Long housingId, Model model, Principal principal);
 }

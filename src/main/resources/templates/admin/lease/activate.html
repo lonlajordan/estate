@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:insert="base.html :: head('Activation du contrat de bail')"></head>
+
+<body>
+<div id="wrapper">
+    <div th:replace="header.html"></div>
+    <div id="page-wrapper">
+        <div class="row mt-6">
+            <ol class="breadcrumb">
+                <li><i class="fa fa-home"></i> <a class="lazy-link" th:href="@{/dashboard}">Accueil</a></li>
+                <li><a class="lazy-link" th:href="@{/lease/list}">Contrats de bail</a></li>
+                <li>Activation</li>
+            </ol>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div th:replace="base.html :: alert(${notification})"></div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <b>Formulaire</b>
+                    </div>
+                    <form th:object="${lease}" onsubmit="return submitForm(event)" th:action="@{'/lease/activate/' + ${lease.id}}" enctype="multipart/form-data" autocomplete="off" method="post">
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="form-group col-lg-6">
+                                    <label class="control-label" for="student">Étudiant <span class="required-field">*</span></label>
+                                    <input id="student" class="form-control" th:value="*{payment?.student?.name}" autocomplete="off" readonly required>
+                                </div>
+                                <div class="form-group col-lg-6">
+                                    <label for="housingId" class="control-label">Logement <span class="required-field">*</span></label>
+                                    <select id="housingId" name="housingId" class="form-control searchable-select-box" required>
+                                        <option th:each="housing: ${housings}" th:value="${housing.id}" th:text="${housing.name}"></option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-footer">
+                            <button type="submit" class="btn btn-success mr-2">
+                                <i class="fa fa-save"></i>
+                                &nbsp; Enregistrer
+                            </button>
+                            <button type="reset" class="btn btn-default">
+                                <i class="fa fa-refresh"></i>
+                                &nbsp; Réinitialiser
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<th:block th:insert="base.html :: scripts"></th:block>
+
+</body>
+
+</html>

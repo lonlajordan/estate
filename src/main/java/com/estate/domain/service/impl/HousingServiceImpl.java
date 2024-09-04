@@ -3,6 +3,7 @@ package com.estate.domain.service.impl;
 import com.estate.domain.entity.Housing;
 import com.estate.domain.entity.Log;
 import com.estate.domain.entity.Notification;
+import com.estate.domain.entity.Student;
 import com.estate.domain.enumaration.Availability;
 import com.estate.domain.enumaration.Level;
 import com.estate.domain.form.HousingForm;
@@ -18,6 +19,8 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,6 +37,11 @@ public class HousingServiceImpl implements HousingService {
     @Override
     public List<Housing> findAll() {
         return housingRepository.findAllByOrderByNameAsc();
+    }
+
+    @Override
+    public List<Housing> findAllByStandingIdAndStatusAndActiveTrue(long standingId, Availability status) {
+        return housingRepository.findAllByStandingIdAndStatusAndActiveTrueOrderByNameAsc(standingId, status);
     }
 
     @Override
@@ -133,6 +141,29 @@ public class HousingServiceImpl implements HousingService {
             logRepository.save(Log.info(notification.getMessage()).author(Optional.ofNullable(principal).map(Principal::getName).orElse("")));
         } catch (Throwable e){
             notification = Notification.error("Erreur lors de la modification du logement <b>" + housing.getName() + "</b>.");
+            logRepository.save(Log.error(notification.getMessage(), ExceptionUtils.getStackTrace(e)).author(Optional.ofNullable(principal).map(Principal::getName).orElse("")));
+        }
+        return notification;
+    }
+
+    @Override
+    public Notification liberate(long id, Principal principal) {
+        Notification notification = new Notification();
+        Housing housing = housingRepository.findById(id).orElse(null);
+        if(housing == null) return Notification.error("Logement introuvable");
+        try {
+            Student student = housing.getResident();
+            if(student != null && student.getCurrentLease() != null) {
+                String name = student.getName();
+                LocalDate expiration = student.getCurrentLease().getRealEndDate();
+                if(LocalDate.now().isBefore(student.getCurrentLease().getRealEndDate())) return Notification.warn("Ce logement est encore occupé par <b>" + name + "</b> dont le contrat de bail expire le <b>" + (new SimpleDateFormat("dd/MM/yyyy").format(expiration)) + "</b>.");
+            }
+            housing.setStatus(Availability.FREE);
+            housingRepository.save(housing);
+            notification.setMessage("Le logement <b>" + housing.getName() + "</b> a été libéré avec succès.");
+            logRepository.save(Log.info(notification.getMessage()).author(Optional.ofNullable(principal).map(Principal::getName).orElse("")));
+        } catch (Throwable e){
+            notification = Notification.error("Erreur lors de la libération du logement <b>" + housing.getName() + "</b>.");
             logRepository.save(Log.error(notification.getMessage(), ExceptionUtils.getStackTrace(e)).author(Optional.ofNullable(principal).map(Principal::getName).orElse("")));
         }
         return notification;

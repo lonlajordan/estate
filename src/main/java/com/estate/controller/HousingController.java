@@ -99,6 +99,12 @@ public class HousingController {
         return "redirect:/housing/list";
     }
 
+    @RequestMapping(value="liberate/{id}")
+    public String liberate(@PathVariable long id, RedirectAttributes attributes, Principal principal){
+        attributes.addFlashAttribute("notification", housingService.liberate(id, principal));
+        return "redirect:/housing/list";
+    }
+
     @RequestMapping(value="delete")
     public String deleteById(@RequestParam long id, @RequestParam(required = false, defaultValue = "false") boolean force, RedirectAttributes attributes, HttpServletRequest request){
         Notification notification =  housingService.deleteById(id, force, request);

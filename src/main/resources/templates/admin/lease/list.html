@@ -84,7 +84,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="lease,iter: ${leases}" th:data-id="${lease.id}">
+                        <tr th:each="lease,iter: ${leases}" th:data-id="${lease.id}">
                         <td th:text="${lease.id}"></td>
                         <td th:text="${lease.payment?.student?.name}"></td>
                         <td th:text="${lease.housing?.name}"></td>
@@ -99,8 +99,11 @@
                                 <i class="fa fa-ellipsis-h"></i>
                             </a>
                             <div th:id="${'popover-content-' + lease.id}" class="list-group" style="display: none">
-                                <a class="list-group-item lazy-link text-decoration-none text-left" style="cursor: pointer" th:data-lease-id="${lease.id}" href="#" onclick="toggleItem(this.getAttribute('data-lease-id'), 'lease/toggle')">
+                                <a th:if="${lease.startDate == null}" class="list-group-item lazy-link text-decoration-none text-left" th:href="@{'/lease/activate/' + ${lease.id}}">
                                     <i class="fa fa-fw fa-toggle-on"></i> Activer
+                                </a>
+                                <a class="list-group-item lazy-link text-decoration-none text-left" th:href="@{'/lease/save?id=' + ${lease.id}}">
+                                    <i class="fa fa-fw fa-pencil"></i> Modifier
                                 </a>
                                 <a class="list-group-item lazy-link text-decoration-none text-left" th:href="@{'/lease/view/' + ${lease.id}}">
                                     <i class="fa fa-eye fa-fw"></i> Détails

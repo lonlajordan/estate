@@ -2,6 +2,7 @@ package com.estate.domain.service.face;
 
 import com.estate.domain.entity.Housing;
 import com.estate.domain.entity.Notification;
+import com.estate.domain.enumaration.Availability;
 import com.estate.domain.form.HousingForm;
 import com.estate.domain.form.HousingSearch;
 
@@ -14,9 +15,11 @@ public interface HousingService {
 
     List<Housing> findAll();
 
-    List<Housing> findAllByStandingId(long standingId);
+    List<Housing> findAllByStandingIdAndStatusAndActiveTrue(long standingId, Availability status);
 
     List<Housing> findAllByStandingIdAndActiveTrue(long standingId);
+
+    List<Housing> findAllByStandingId(long standingId);
 
     List<Housing> findAll(HousingSearch form);
 
@@ -29,4 +32,6 @@ public interface HousingService {
     Notification save(HousingForm form, Principal principal);
 
     Notification toggleById(long id, Principal principal);
+
+    Notification liberate(long id, Principal principal);
 }

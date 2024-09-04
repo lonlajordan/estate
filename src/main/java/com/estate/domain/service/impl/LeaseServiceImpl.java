@@ -1,9 +1,7 @@
 package com.estate.domain.service.impl;
 
-import com.estate.domain.entity.Lease;
-import com.estate.domain.entity.Log;
-import com.estate.domain.entity.Notification;
-import com.estate.domain.entity.Student;
+import com.estate.domain.entity.*;
+import com.estate.domain.enumaration.Availability;
 import com.estate.domain.form.LeaseSearch;
 import com.estate.domain.service.face.LeaseService;
 import com.estate.repository.*;
@@ -14,9 +12,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 
 import java.security.Principal;
 import java.time.LocalDate;
+import java.util.Objects;
 import java.util.Optional;
 
 @Slf4j
@@ -25,7 +25,6 @@ import java.util.Optional;
 public class LeaseServiceImpl implements LeaseService {
     private final HousingRepository housingRepository;
     private final StudentRepository studentRepository;
-    private final PaymentRepository paymentRepository;
     private final LeaseRepository leaseRepository;
     private final LogRepository logRepository;
 
@@ -50,24 +49,44 @@ public class LeaseServiceImpl implements LeaseService {
     }
 
     @Override
-    public Notification toggleById(long id, Principal principal) {
+    public Notification activate(long id, Long housingId, Model model, Principal principal) {
         Notification notification = new Notification();
         Lease lease = leaseRepository.findById(id).orElse(null);
         if(lease == null) return Notification.error("Contrat de bail introuvable");
+        if(lease.getStartDate() != null) return Notification.warn("Ce contrat de bail a déjà été activé");
         try {
-            if(lease.getStartDate() == null){
-                LocalDate now = LocalDate.now();
-                lease.setStartDate(now);
-                lease.setEndDate(now.plusMonths(lease.getPayment().getMonths()));
-                lease.setHousing(lease.getPayment().getDesiderata());
+            LocalDate now = LocalDate.now();
+            lease.setStartDate(now);
+            lease.setEndDate(now.plusMonths(lease.getPayment().getMonths()));
+            Housing housing;
+            if(housingId != null) {
+                housing = housingRepository.findById(housingId).orElse(null);
+            } else {
+                housing = lease.getPayment().getDesiderata();;
             }
+            if(housing == null || !housing.isActive() || !Availability.FREE.equals(housing.getStatus())){
+                model.addAttribute("lease", lease);
+                return Notification.error("Le logement sollicité n'est pas disponible");
+            }
+            if(!Objects.equals(housing.getStanding().getId(), lease.getPayment().getStanding().getId())){
+                model.addAttribute("lease", lease);
+                return Notification.error("Choisir un logement correspondant au <b>" + lease.getPayment().getStanding().getName() + "<b> standing.");
+            }
+            lease.setHousing(housing);
             lease = leaseRepository.save(lease);
             Student student = lease.getPayment().getStudent();
-            Lease currentLease  = student.getCurrentLease();
-            if(currentLease != null){
-                currentLease.setNextLease(lease);
-                leaseRepository.save(currentLease);
+            student.setCurrentLease(lease);
+            student.setHousing(housing);
+            if(housing.getResident() != null) {
+                Student resident = housing.getResident();
+                resident.setHousing(null);
+                studentRepository.save(resident);
             }
+            housing.setStatus(Availability.OCCUPIED);
+            housing.setResident(student);
+            housing.setReservedBy(null);
+            studentRepository.save(student);
+            housingRepository.save(housing);
             notification.setMessage("Le contract de bail de l'étudiant <b>" + lease.getPayment().getStudent().getName() + "</b> a été activé avec succès.");
             logRepository.save(Log.info(notification.getMessage()).author(Optional.ofNullable(principal).map(Principal::getName).orElse("")));
         } catch (Throwable e){

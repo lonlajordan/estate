@@ -1,6 +1,7 @@
 package com.estate.repository;
 
 import com.estate.domain.entity.Housing;
+import com.estate.domain.enumaration.Availability;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
@@ -12,6 +13,7 @@ public interface HousingRepository extends JpaRepository<Housing, Long>, JpaSpec
     List<Housing> findAllByOrderByNameAsc();
     List<Housing> findAllByStandingIdOrderByNameAsc(long standingId);
     List<Housing> findAllByStandingIdAndActiveTrueOrderByNameAsc(long standingId);
+    List<Housing> findAllByStandingIdAndStatusAndActiveTrueOrderByNameAsc(long standingId, Availability status);
 
     @Transactional
     @Modifying(clearAutomatically = true)

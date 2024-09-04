@@ -1,7 +1,9 @@
 package com.estate.controller;
 
+import com.estate.domain.entity.Housing;
 import com.estate.domain.entity.Lease;
 import com.estate.domain.entity.Notification;
+import com.estate.domain.enumaration.Availability;
 import com.estate.domain.form.LeaseSearch;
 import com.estate.domain.service.face.HousingService;
 import com.estate.domain.service.face.LeaseService;
@@ -15,6 +17,7 @@ import org.springframework.web.servlet.support.RequestContextUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -50,7 +53,7 @@ public class LeaseController {
     public String findById(@PathVariable long id, Model model, RedirectAttributes attributes){
         Lease lease = leaseService.findById(id).orElse(null);
         if(lease == null){
-            attributes.addFlashAttribute("notification", Notification.error("Logement introuvable"));
+            attributes.addFlashAttribute("notification", Notification.error("Contrat de bail introuvable"));
             return "redirect:/lease/list";
         }
         model.addAttribute("lease", lease);
@@ -63,9 +66,17 @@ public class LeaseController {
         return "redirect:/lease/list";
     }
 
-    @RequestMapping(value="toggle/{id}")
-    public String toggle(@PathVariable long id, RedirectAttributes attributes, Principal principal){
-        attributes.addFlashAttribute("notification", leaseService.toggleById(id, principal));
+    @RequestMapping(value="activate/{id}")
+    public String activate(@PathVariable long id, @RequestParam(required = false) Long housingId, RedirectAttributes attributes, Model model, Principal principal){
+        Notification notification = leaseService.activate(id, housingId, model, principal);
+        Lease lease = (Lease) model.getAttribute("lease");
+        if(notification.hasError() && lease != null){
+            List<Housing> housings = housingService.findAllByStandingIdAndStatusAndActiveTrue(lease.getPayment().getStanding().getId(), Availability.FREE);
+            model.addAttribute("housings", housings);
+            model.addAttribute("notification", notification);
+            return "admin/lease/activate";
+        }
+        attributes.addFlashAttribute("notification", notification);
         return "redirect:/lease/list";
     }
 }

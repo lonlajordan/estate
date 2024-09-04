@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 
-<head th:insert="base.html :: head(${'Détails du logement'})"></head>
+<head th:insert="base.html :: head(${'Détails du contrat'})"></head>
 
 <body>
 <div id="wrapper">
     <div th:replace="header.html"></div>
-    <div id="page-wrapper" th:object="${housing}">
+    <div id="page-wrapper" th:object="${lease}">
         <div class="row mt-6">
             <ol class="breadcrumb">
                 <li><i class="fa fa-home"></i> <a class="lazy-link" th:href="@{/dashboard}">Accueil</a></li>
-                <li><a class="lazy-link" th:href="@{/housing/list}">Liste des logements</a></li>
-                <li th:utext="*{'Détails du logement <b>[ ' + name + ' ]</b>'}"></li>
+                <li><a class="lazy-link" th:href="@{/lease/list}">Contrats de bail</a></li>
+                <li th:utext="*{'Détails du contrat <b>[ ' + id + ' ]</b>'}"></li>
             </ol>
         </div>
         <div class="row">
@@ -19,24 +19,44 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <i class="fa fa-info-circle fa-fw"></i>
-                        <b>Informations sur le logement</b>
+                        <b>Informations sur le contrat de bail</b>
                     </div>
                     <div class="list-group">
                         <a href="#" class="list-group-item">
-                            <b>Nom</b>
-                            <span class="pull-right"><em th:text="*{name}"></em></span>
+                            <b>Étudiant</b>
+                            <span class="pull-right"><em th:text="*{payment?.student?.name}"></em></span>
                         </a>
                         <a href="#" class="list-group-item">
-                            <b>Standing</b>
-                            <span class="pull-right"><em th:text="*{standing?.name}"></em></span>
+                            <b>Logement</b>
+                            <span class="pull-right"><em th:text="*{housing?.name}"></em></span>
                         </a>
                         <a href="#" class="list-group-item">
-                            <b>Statut</b>
-                            <span class="pull-right"><em th:text="*{status?.name}"></em></span>
+                            <b>Nombre de mois</b>
+                            <span class="pull-right"><em th:text="*{payment?.months}"></em></span>
                         </a>
                         <a href="#" class="list-group-item">
-                            <b>Actif</b>
-                            <span class="pull-right"><em th:text="${#bools.isTrue(housing.active) ? 'OUI' : 'NON'}"></em></span>
+                            <b>Loyer mensuel (FCFA)</b>
+                            <span class="pull-right"><em th:text="${#numbers.formatInteger(lease.payment?.rent, 1, 'WHITESPACE')}"></em></span>
+                        </a>
+                        <a href="#" class="list-group-item">
+                            <b>Caution (FCFA)</b>
+                            <span class="pull-right"><em th:text="${#numbers.formatInteger(lease.payment?.caution, 1, 'WHITESPACE')}"></em></span>
+                        </a>
+                        <a href="#" class="list-group-item">
+                            <b>Frais de réhabilitation (FCFA)</b>
+                            <span class="pull-right"><em th:text="${#numbers.formatInteger(lease.payment?.repair, 1, 'WHITESPACE')}"></em></span>
+                        </a>
+                        <a href="#" class="list-group-item">
+                            <b>Montant total (FCFA)</b>
+                            <span class="pull-right"><em th:text="${#numbers.formatInteger(lease.payment?.amount, 1, 'WHITESPACE')}"></em></span>
+                        </a>
+                        <a href="#" class="list-group-item">
+                            <b>Date de début</b>
+                            <span class="pull-right"><em th:text="*{#temporals.format(startDate, 'dd-MM-yyyy')}"></em></span>
+                        </a>
+                        <a href="#" class="list-group-item">
+                            <b>Date de fin</b>
+                            <span class="pull-right"><em th:text="*{#temporals.format(endDate, 'dd-MM-yyyy')}"></em></span>
                         </a>
                         <a href="#" class="list-group-item">
                             <b>Date de création</b>
@@ -50,9 +70,9 @@
                     <div class="panel-footer">
                         <a role="button" th:href="@{/housing/save}" class="btn btn-success lazy-link mr-3">
                             <i class="fa fa-plus-circle"></i>
-                            &nbsp; Ajouter
+                            &nbsp; Muter
                         </a>
-                        <a role="button" th:href="@{'/housing/save?id=' + ${housing.id}}" class="btn btn-primary lazy-link">
+                        <a role="button" th:href="@{'/housing/save?id=' + ${lease.id}}" class="btn btn-primary lazy-link">
                             <i class="fa fa-pencil"></i>
                             &nbsp; Éditer
                         </a>

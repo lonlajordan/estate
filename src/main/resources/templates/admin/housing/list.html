@@ -110,6 +110,9 @@
                                     <a class="list-group-item lazy-link text-decoration-none text-left" th:href="@{'/housing/view/' + ${housing.id}}">
                                         <i class="fa fa-eye fa-fw"></i> Détails
                                     </a>
+                                    <a class="list-group-item lazy-link text-decoration-none text-left" th:href="@{'/housing/liberate/' + ${housing.id}}">
+                                        <i class="fa fa-truck fa-fw"></i> Libérer
+                                    </a>
                                     <a class="list-group-item lazy-link text-decoration-none text-left" th:href="@{'/housing/save?id=' + ${housing.id}}">
                                         <i class="fa fa-pencil-square-o fa-fw"></i> Modifier
                                     </a>
