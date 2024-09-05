@@ -171,18 +171,19 @@ function initDataList() {
             title: function () { return list.attr('data-pdf-title'); },
             filename: function () { return list.attr('data-pdf-name'); },
             exportOptions: {
+                stripHtml: true,
                 columns: ':not(.action)',
             }
         },
         {
             text: '<i class="fa fa-file-pdf-o"></i> PDF',
-            extend: 'pdf',
+            extend: 'pdfHtml5',
             title: function () { return list.attr('data-pdf-title'); },
             filename: function () { return list.attr('data-pdf-name'); },
             orientation: list.hasClass("landscape") ? 'landscape' : 'portrait',
             pageSize: list.hasClass("format-a3") ? 'A3' : 'A4',
             exportOptions: {
-                stripHtml: false,
+                stripHtml: true,
                 columns: ':not(.action)',
                 modifier: {
                     alignment: 'center',
@@ -228,14 +229,14 @@ function initDataList() {
                 doc.content[1].layout = objLayout;
             }
         },
-        {
+        /*{
             text: '<i class="fa fa-eye"></i> Visibilité des colonnes',
             extend: 'colvis',
-        },
+        },*/
     ];
     if(list.hasClass("can-report")) buttons = [
         {
-            text: '<i class="fa fa-money"></i> Caisse',
+            text: '<i class="fa fa-calculator"></i> Comptabilité',
             action: function () {
                 $('#report-items').click();
             }

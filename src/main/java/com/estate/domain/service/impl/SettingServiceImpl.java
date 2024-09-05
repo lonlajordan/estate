@@ -7,13 +7,18 @@ import com.estate.domain.service.face.SettingService;
 import com.estate.repository.LogRepository;
 import com.estate.repository.SettingRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class SettingServiceImpl implements SettingService {
@@ -43,6 +48,22 @@ public class SettingServiceImpl implements SettingService {
         } catch (Exception e){
             notification = Notification.error("Erreur lors de la modification du paramètre <b>« " + setting.getCode().getName() + " »</b> ");
             logRepository.save(Log.error(notification.getMessage(), ExceptionUtils.getStackTrace(e)).author(Optional.ofNullable(principal).map(Principal::getName).orElse("")));
+        }
+        return notification;
+    }
+
+    @Override
+    public Notification savePolicy(MultipartFile file) {
+        Notification notification = Notification.info();
+        File root = new File("documents");
+        if (!root.exists() && !root.mkdirs()) return Notification.error("Impossible de créer le dossier de sauvegarde des documents.");
+        File policy;
+        try {
+            policy = new File(root.getAbsolutePath() + File.separator + "policy.pdf");
+            file.transferTo(policy);
+        } catch (IOException e) {
+            log.error("unable to write policy file", e);
+            return Notification.error("Impossible d'enregistrer le règlement intérieur de la cité.");
         }
         return notification;
     }

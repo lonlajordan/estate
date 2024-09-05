@@ -14,10 +14,6 @@
             </ol>
         </div>
         <div class="row">
-            <h4>Liste des logements</h4>
-            <hr>
-        </div>
-        <div class="row">
             <div class="col mb-6">
                 <div class="panel-group" id="accordion">
                     <div class="panel panel-default">
@@ -69,7 +65,6 @@
                     </div>
                 </div>
                 <button id="add-item" role="link" class="lazy-link d-none" th:href="@{/housing/save}"></button>
-                <!--/*@thymesVar id="notification" type="com.estate.domain.entity.Notification"*/-->
                 <div th:replace="base.html :: alert(${notification})"></div>
                 <table id="data-list" data-pdf-title="LISTE DES LOGEMENTS" data-pdf-name="Liste des logements" data-columns-left="2" data-columns-right="2" class="table table-bordered paging searching dataTable can-add">
                     <thead>

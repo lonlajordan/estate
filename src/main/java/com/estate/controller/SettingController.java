@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
@@ -35,6 +36,12 @@ public class SettingController {
     @PostMapping(value="save")
     public String save(@Valid Setting setting, RedirectAttributes attributes, Principal principal){
         attributes.addFlashAttribute("notification", settingService.update(setting, principal));
+        return "redirect:/setting/list";
+    }
+
+    @PostMapping(value="policy")
+    public String policy(@RequestParam MultipartFile file, RedirectAttributes attributes){
+        attributes.addFlashAttribute("notification", settingService.savePolicy(file));
         return "redirect:/setting/list";
     }
 }

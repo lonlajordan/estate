@@ -11,7 +11,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.MimeType;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.URLDecoder;
@@ -38,19 +40,27 @@ public class DashboardController {
         return "index";
     }
 
-    @GetMapping(value = "explorer/**")
     @ResponseBody
-    public ResponseEntity<byte[]> moduleStrings(HttpServletRequest request) {
+    @GetMapping("explorer/**")
+    public ResponseEntity<byte[]> moduleStrings(HttpServletRequest request, @RequestParam(required = false, defaultValue = "false") boolean download) {
         String requestURL = request.getRequestURL().toString();
         String path = requestURL.split("explorer/")[1];
         try {
             Path filePath = Paths.get(URLDecoder.decode(path, String.valueOf(StandardCharsets.UTF_8))).toAbsolutePath().normalize();
             MediaType contentType = MediaType.asMediaType(MimeType.valueOf(Files.probeContentType(filePath)));
             HttpHeaders headers = new HttpHeaders();
-            headers.setContentDisposition(ContentDisposition.inline().filename(filePath.toFile().getName()).build());
+            ContentDisposition.Builder builder = ContentDisposition.inline();
+            if(download) builder = ContentDisposition.attachment();
+            headers.setContentDisposition(builder.filename(filePath.toFile().getName()).build());
             return ResponseEntity.ok().contentType(contentType).headers(headers).body(Files.readAllBytes(filePath));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(null);
         }
+    }
+
+    @GetMapping("policy")
+    public String getPolicy(RedirectAttributes attributes) {
+        attributes.addAttribute("download", true);
+        return "redirect:/explorer/documents/policy.pdf";
     }
 }

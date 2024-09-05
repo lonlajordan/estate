@@ -9,34 +9,42 @@
         <div class="row mt-6">
             <ol class="breadcrumb">
                 <li><i class="fa fa-home"></i> <a class="lazy-link" th:href="@{/dashboard}">Accueil</a></li>
-                <li>Liste des paramètres</li>
+                <li>Paramètres</li>
             </ol>
-        </div>
-        <div class="row">
-            <h4>Liste des paramètres</h4>
-            <hr>
         </div>
         <div class="row">
             <div class="col mb-6">
                 <div th:replace="base.html :: alert(${notification})"></div>
-                <table id="data-list" data-pdf-title="LISTE DES PARAMÈTRES" data-pdf-name="Liste des paramètres" class="table table-striped table-bordered table-hover dataTable exclude-first-sort">
+                <table id="data-list" data-pdf-title="LISTE DES PARAMÈTRES" data-pdf-name="Liste des paramètres" class="table table-striped table-bordered table-hover dataTable">
                     <thead>
                         <tr>
                             <th>Paramètre</th>
-                            <th class="fit-cell-content">Valeur</th>
-                            <th class="action fit-cell-content">Action</th>
+                            <th class="fit-cell-content text-center">Valeur</th>
+                            <th class="action fit-cell-content text-center">Action</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr th:each="setting,iter: ${settings}" th:data-id="${setting.id}">
                             <td th:text="${setting.code?.name}"></td>
                             <td th:text="${setting.value}"></td>
-                            <td class="text-center fit-cell-content">
-                                <a class="lazy-link text-decoration-none" th:href="@{'/setting/save?id=' + ${setting.id}}"> Modifier </a>
+                            <td class="text-center">
+                                <a class="lazy-link text-decoration-none" th:href="@{'/setting/save?id=' + ${setting.id}}"> <i class="fa fa-pencil-square-o"></i> </a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Règlement intérieur de la cité</td>
+                            <td class="text-center">
+                                <a class="text-decoration-none" th:href="@{/policy}"> <i class="fa fa-file-pdf-o"></i></a>
+                            </td>
+                            <td class="text-center">
+                                <a class="text-decoration-none" href="#" onclick="document.getElementById('policy').click()"><i class="fa fa-pencil-square-o"></i></a>
                             </td>
                         </tr>
                     </tbody>
                 </table>
+                <form id="policy-form" class="d-none" tabindex="-1" method="post" enctype="multipart/form-data" th:action="@{/setting/policy}">
+                    <input type="file" id="policy" onchange="document.getElementById('policy-form').submit()" name="file">
+                </form>
             </div>
         </div>
     </div>

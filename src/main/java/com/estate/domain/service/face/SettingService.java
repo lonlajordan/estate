@@ -2,6 +2,7 @@ package com.estate.domain.service.face;
 
 import com.estate.domain.entity.Notification;
 import com.estate.domain.entity.Setting;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
 import java.util.List;
@@ -13,4 +14,6 @@ public interface SettingService {
     Optional<Setting> findById(long id);
 
     Notification update(Setting form, Principal principal);
+
+    Notification savePolicy(MultipartFile file);
 }
