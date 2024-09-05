@@ -14,10 +14,6 @@ function deleteItem(id, url){
     }
 }
 
-function toggleItem(id, url){
-    fetch(ctx + '/' + url + '/' + id, false);
-}
-
 function toggleStanding(id, studentId, standingId, url){
     let query = '';
     if(id !== null) query = 'id=' + id;
@@ -162,15 +158,6 @@ function initPopover(){
             let id = $(this).attr('data-target');
             return $("#" + id).html();
         }
-    }).on('shown.bs.popover', function () {
-        $('.popover-content .lazy-link').each(function () {
-            let elt = this;
-            elt.addEventListener("click", function(e){
-                e.preventDefault();
-                let url = $(this).attr('href');
-                fetch(url);
-            })
-        });
     });
 }
 
@@ -321,7 +308,7 @@ function initDataList() {
 function fetch(url, flush = true){
     $.get(url, function(data) {
         let wrapper = $($.parseHTML(data)).find("#page-wrapper");
-        if(wrapper.length === 0) window.location = ctx + '/';
+        if(wrapper.length === 0) window.location = ctx + '/237in';
         $('#page-wrapper').html(wrapper.html());
         initDataList();
         initPagination();

@@ -104,19 +104,19 @@
                                     <i class="fa fa-ellipsis-h"></i>
                                 </a>
                                 <div th:id="${'popover-content-' + housing.id}" class="list-group" style="display: none">
-                                    <a class="list-group-item text-decoration-none text-left" style="cursor: pointer" th:data-housing-id="${housing.id}" href="#" onclick="toggleItem(this.getAttribute('data-housing-id'), 'housing/toggle')">
+                                    <a class="list-group-item text-decoration-none text-left" th:href="@{'/housing/toggle/' + ${housing.id}}">
                                         <i class="fa fa-fw" th:classappend="${housing.active ? 'fa-toggle-off' : 'fa-toggle-on'}"></i> <span th:text="${housing.active ? 'Désactiver' : 'Activer'}"></span>
                                     </a>
-                                    <a class="list-group-item lazy-link text-decoration-none text-left" th:href="@{'/housing/view/' + ${housing.id}}">
+                                    <a class="list-group-item text-decoration-none text-left" th:href="@{'/housing/view/' + ${housing.id}}">
                                         <i class="fa fa-eye fa-fw"></i> Détails
                                     </a>
-                                    <a class="list-group-item lazy-link text-decoration-none text-left" th:href="@{'/housing/liberate/' + ${housing.id}}">
+                                    <a class="list-group-item text-decoration-none text-left" th:href="@{'/housing/liberate/' + ${housing.id}}">
                                         <i class="fa fa-truck fa-fw"></i> Libérer
                                     </a>
-                                    <a class="list-group-item lazy-link text-decoration-none text-left" th:href="@{'/housing/save?id=' + ${housing.id}}">
+                                    <a class="list-group-item text-decoration-none text-left" th:href="@{'/housing/save?id=' + ${housing.id}}">
                                         <i class="fa fa-pencil-square-o fa-fw"></i> Modifier
                                     </a>
-                                    <a class="list-group-item text-decoration-none text-danger text-left" th:data-housing-id="${housing.id}" onclick="deleteItem(this.getAttribute('data-housing-id'), 'housing/delete')" href="#">
+                                    <a class="list-group-item text-decoration-none text-left text-danger" th:data-housing-id="${housing.id}" onclick="deleteItem(this.getAttribute('data-housing-id'), 'housing/delete')" href="#">
                                         <i class="fa fa-trash-o fa-fw"></i> Supprimer
                                     </a>
                                 </div>

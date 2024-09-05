@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
 @Getter
@@ -27,7 +28,7 @@ public class Lease extends Auditable {
     @ManyToOne
     private Housing mutationHousing;
     private Integer mutationAmount;
-    private LocalDate mutationDate;
+    private LocalDateTime mutationDate;
     @ManyToOne
     private User mutedBy;
     @OneToOne
@@ -55,5 +56,14 @@ public class Lease extends Auditable {
 
     public LocalDate getRealEndDate(){
         return nextLease != null && nextLease.getEndDate() != null && (endDate == null || endDate.isBefore(nextLease.getEndDate())) ? nextLease.getEndDate() : endDate;
+    }
+
+    public boolean isPending(){
+        LocalDate today = LocalDate.now();
+        return startDate != null && !(today.isBefore(startDate) || today.isAfter(endDate));
+    }
+
+    public boolean isMutable(){
+        return isPending() && mutationDate == null && nextLease == null;
     }
 }

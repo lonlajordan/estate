@@ -20,7 +20,7 @@
                     <div class="panel-heading">
                         <b>Formulaire</b>
                     </div>
-                    <form th:object="${lease}" onsubmit="return submitForm(event)" th:action="@{'/lease/activate/' + ${lease.id}}" enctype="multipart/form-data" autocomplete="off" method="post">
+                    <form th:object="${lease}" onsubmit="return submitForm(event)" th:action="@{'/lease/activate/' + ${lease.id}}" autocomplete="off" method="post">
                         <div class="panel-body">
                             <div class="row">
                                 <div class="form-group col-lg-6">

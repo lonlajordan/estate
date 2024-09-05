@@ -5,17 +5,21 @@ import com.estate.domain.entity.Lease;
 import com.estate.domain.entity.Notification;
 import com.estate.domain.enumaration.Availability;
 import com.estate.domain.form.LeaseSearch;
+import com.estate.domain.form.MutationForm;
 import com.estate.domain.service.face.HousingService;
 import com.estate.domain.service.face.LeaseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
 import java.util.Map;
@@ -60,6 +64,12 @@ public class LeaseController {
         return "admin/lease/view";
     }
 
+    @ResponseBody
+    @GetMapping("download/{id}")
+    public ResponseEntity<?> download(@PathVariable long id){
+        return leaseService.download(id);
+    }
+
     @PostMapping("search")
     public String search(LeaseSearch form, RedirectAttributes attributes){
         attributes.addFlashAttribute("searchForm", form);
@@ -75,6 +85,38 @@ public class LeaseController {
             model.addAttribute("housings", housings);
             model.addAttribute("notification", notification);
             return "admin/lease/activate";
+        }
+        attributes.addFlashAttribute("notification", notification);
+        return "redirect:/lease/list";
+    }
+
+    @GetMapping("save")
+    public String mutation(@RequestParam long id, Model model, RedirectAttributes attributes){
+        Lease lease = leaseService.findById(id).orElse(null);
+        if(lease == null){
+            attributes.addFlashAttribute("notification", Notification.error("Contrat de bail introuvable"));
+            return "redirect:/lease/list";
+        }
+        MutationForm mutation = new MutationForm();
+        mutation.setLeaseId(lease.getId());
+        model.addAttribute("lease", lease);
+        model.addAttribute("mutation", mutation);
+        model.addAttribute("housings", housingService.findAllByStatusAndActiveTrue(Availability.FREE));
+        return "admin/lease/save";
+    }
+
+
+    @PostMapping("save")
+    public String save(@Valid @ModelAttribute("mutation") MutationForm mutation, BindingResult result, Model model, RedirectAttributes attributes, Principal principal){
+        if(result.hasErrors()){
+            model.addAttribute("housings", housingService.findAllByStatusAndActiveTrue(Availability.FREE));
+            return "admin/lease/save";
+        }
+        Notification notification =  leaseService.mutate(mutation, principal);
+        if(notification.hasError()){
+            attributes.addAttribute("id", mutation.getLeaseId());
+            attributes.addFlashAttribute("notification", notification);
+            return "redirect:/lease/save";
         }
         attributes.addFlashAttribute("notification", notification);
         return "redirect:/lease/list";

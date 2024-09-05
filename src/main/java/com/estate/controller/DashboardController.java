@@ -41,11 +41,8 @@ public class DashboardController {
     @GetMapping(value = "explorer/**")
     @ResponseBody
     public ResponseEntity<byte[]> moduleStrings(HttpServletRequest request) {
-
         String requestURL = request.getRequestURL().toString();
-
         String path = requestURL.split("explorer/")[1];
-
         try {
             Path filePath = Paths.get(URLDecoder.decode(path, String.valueOf(StandardCharsets.UTF_8))).toAbsolutePath().normalize();
             MediaType contentType = MediaType.asMediaType(MimeType.valueOf(Files.probeContentType(filePath)));

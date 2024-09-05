@@ -58,6 +58,24 @@
                             <b>Date de fin</b>
                             <span class="pull-right"><em th:text="*{#temporals.format(endDate, 'dd-MM-yyyy')}"></em></span>
                         </a>
+                        <th:block th:if="${lease.mutationDate != null}">
+                            <a href="#" class="list-group-item">
+                                <b>Logement après transfert</b>
+                                <span class="pull-right"><em th:text="*{mutationHousing?.name}"></em></span>
+                            </a>
+                            <a href="#" class="list-group-item">
+                                <b>Montant du transfert (FCFA)</b>
+                                <span class="pull-right"><em th:text="${#numbers.formatInteger(lease.mutationAmount, 1, 'WHITESPACE')}"></em></span>
+                            </a>
+                            <a href="#" class="list-group-item">
+                                <b>Transfert effectué par</b>
+                                <span class="pull-right"><em th:text="*{#temporals.format(mutedBy?.name, 'dd-MM-yyyy  HH:mm')}"></em></span>
+                            </a>
+                            <a href="#" class="list-group-item">
+                                <b>Date de transfert</b>
+                                <span class="pull-right"><em th:text="*{#temporals.format(mutationDate, 'dd-MM-yyyy  HH:mm')}"></em></span>
+                            </a>
+                        </th:block>
                         <a href="#" class="list-group-item">
                             <b>Date de création</b>
                             <span class="pull-right"><em th:text="*{#temporals.format(creationDate, 'dd-MM-yyyy  HH:mm')}"></em></span>
@@ -68,13 +86,17 @@
                         </a>
                     </div>
                     <div class="panel-footer">
-                        <a role="button" th:href="@{/housing/save}" class="btn btn-success lazy-link mr-3">
-                            <i class="fa fa-plus-circle"></i>
-                            &nbsp; Muter
+                        <a th:if="${lease.startDate == null}" role="button" th:href="@{'/lease/activate/' + ${lease.id}}" class="btn btn-success lazy-link mr-3">
+                            <i class="fa fa-toggle-on"></i>
+                            &nbsp; Activer
                         </a>
-                        <a role="button" th:href="@{'/housing/save?id=' + ${lease.id}}" class="btn btn-primary lazy-link">
+                        <a th:if="${lease.mutable}" role="button" th:href="@{'/lease/save?id=' + ${lease.id}}" class="btn btn-primary lazy-link mr-3">
                             <i class="fa fa-pencil"></i>
-                            &nbsp; Éditer
+                            &nbsp; Modifier
+                        </a>
+                        <a th:if="${lease.startDate != null}" role="button" th:href="@{'/lease/download/' + ${lease.id}}" class="btn btn-default">
+                            <i class="fa fa-file-pdf-o"></i>
+                            &nbsp; Télécharger
                         </a>
                     </div>
                 </div>

@@ -19,7 +19,7 @@ public interface HousingService {
 
     List<Housing> findAllByStandingIdAndActiveTrue(long standingId);
 
-    List<Housing> findAllByStandingId(long standingId);
+    List<Housing> findAllByStatusAndActiveTrue(Availability status);
 
     List<Housing> findAll(HousingSearch form);
 

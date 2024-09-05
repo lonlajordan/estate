@@ -99,7 +99,7 @@
                                     <i class="fa fa-ellipsis-h"></i>
                                 </a>
                                 <div th:id="${'popover-content-' + log.id}" class="list-group" style="display: none">
-                                    <a class="list-group-item lazy-link text-decoration-none text-left" th:href="@{'/log/view/' + ${log.id}}">
+                                    <a class="list-group-item text-decoration-none text-left" th:href="@{'/log/view/' + ${log.id}}">
                                         <i class="fa fa-eye fa-fw"></i> Détails
                                     </a>
                                     <a class="list-group-item text-decoration-none text-danger text-left" th:data-log-id="${log.id}" onclick="deleteItem(this.getAttribute('data-log-id'), 'log/delete')" href="#">

@@ -45,8 +45,8 @@ public class HousingServiceImpl implements HousingService {
     }
 
     @Override
-    public List<Housing> findAllByStandingId(long standingId) {
-        return housingRepository.findAllByStandingIdOrderByNameAsc(standingId);
+    public List<Housing> findAllByStatusAndActiveTrue(Availability status) {
+        return housingRepository.findAllByStatusAndActiveTrueOrderByNameAsc(status);
     }
 
     @Override

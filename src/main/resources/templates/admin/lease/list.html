@@ -87,7 +87,9 @@
                         <tr th:each="lease,iter: ${leases}" th:data-id="${lease.id}">
                         <td th:text="${lease.id}"></td>
                         <td th:text="${lease.payment?.student?.name}"></td>
-                        <td th:text="${lease.housing?.name}"></td>
+                        <td>
+                            <span th:text="${lease.housing?.name}"></span><span th:if="${lease.mutationHousing != null}" th:text="${' -> ' + lease.mutationHousing?.name}"></span>
+                        </td>
                         <td th:text="${lease.payment?.standing?.name}"></td>
                         <td>
                             <span th:text="${#temporals.format(lease.startDate, 'dd/MM/yyyy')}"></span> - <span th:text="${#temporals.format(lease.endDate, 'dd/MM/yyyy')}"></span>
@@ -99,14 +101,17 @@
                                 <i class="fa fa-ellipsis-h"></i>
                             </a>
                             <div th:id="${'popover-content-' + lease.id}" class="list-group" style="display: none">
-                                <a th:if="${lease.startDate == null}" class="list-group-item lazy-link text-decoration-none text-left" th:href="@{'/lease/activate/' + ${lease.id}}">
+                                <a th:if="${lease.startDate == null}" class="list-group-item text-decoration-none text-left" th:href="@{'/lease/activate/' + ${lease.id}}">
                                     <i class="fa fa-fw fa-toggle-on"></i> Activer
                                 </a>
-                                <a class="list-group-item lazy-link text-decoration-none text-left" th:href="@{'/lease/save?id=' + ${lease.id}}">
+                                <a class="list-group-item text-decoration-none text-left" th:href="@{'/lease/view/' + ${lease.id}}">
+                                    <i class="fa fa-eye fa-fw"></i> Détails
+                                </a>
+                                <a th:if="${lease.mutable}" class="list-group-item text-decoration-none text-left" th:href="@{'/lease/save?id=' + ${lease.id}}">
                                     <i class="fa fa-fw fa-pencil"></i> Modifier
                                 </a>
-                                <a class="list-group-item lazy-link text-decoration-none text-left" th:href="@{'/lease/view/' + ${lease.id}}">
-                                    <i class="fa fa-eye fa-fw"></i> Détails
+                                <a th:if="${lease.startDate != null}" class="list-group-item text-decoration-none text-left" th:href="@{'/lease/download/' + ${lease.id}}">
+                                    <i class="fa fa-file-pdf-o fa-fw"></i> Télécharger
                                 </a>
                             </div>
                         </td>

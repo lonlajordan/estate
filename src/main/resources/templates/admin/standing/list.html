@@ -37,7 +37,6 @@
                         </tr>
                     </thead>
                     <tbody>
-                    <!--/*@thymesVar id="standings" type="java.util.List<com.estate.domain.entity.Standing>"*/-->
                         <tr th:each="standing,iter: ${standings}" th:data-id="${standing.id}">
                             <td th:text="${standing.id}"></td>
                             <td th:text="${standing.name}"></td>
@@ -52,16 +51,16 @@
                                     <i class="fa fa-ellipsis-h"></i>
                                 </a>
                                 <div th:id="${'popover-content-' + standing.id}" class="list-group" style="display: none">
-                                    <a class="list-group-item lazy-link text-decoration-none text-left" style="cursor: pointer" th:data-standing-id="${standing.id}" href="#" onclick="toggleItem(this.getAttribute('data-standing-id'), 'standing/toggle')">
+                                    <a class="list-group-item text-decoration-none text-left" th:href="@{'/standing/toggle/' + ${standing.id}}">
                                         <i class="fa fa-fw" th:classappend="${standing.active ? 'fa-toggle-off' : 'fa-toggle-on'}"></i> <span th:text="${standing.active ? 'Désactiver' : 'Activer'}"></span>
                                     </a>
-                                    <a class="list-group-item lazy-link text-decoration-none text-left" th:href="@{'/standing/view/' + ${standing.id}}">
+                                    <a class="list-group-item text-decoration-none text-left" th:href="@{'/standing/view/' + ${standing.id}}">
                                         <i class="fa fa-eye fa-fw"></i> Détails
                                     </a>
-                                    <a class="list-group-item lazy-link text-decoration-none text-left" th:href="@{'/standing/save?id=' + ${standing.id}}">
+                                    <a class="list-group-item text-decoration-none text-left" th:href="@{'/standing/save?id=' + ${standing.id}}">
                                         <i class="fa fa-pencil-square-o fa-fw"></i> Modifier
                                     </a>
-                                    <a class="list-group-item text-decoration-none text-danger text-left" th:data-standing-id="${standing.id}" onclick="deleteItem(this.getAttribute('data-standing-id'), 'standing/delete')" href="#">
+                                    <a class="list-group-item text-decoration-none text-left text-danger" th:data-standing-id="${standing.id}" onclick="deleteItem(this.getAttribute('data-standing-id'), 'standing/delete')" href="#">
                                         <i class="fa fa-trash-o fa-fw"></i> Supprimer
                                     </a>
                                 </div>

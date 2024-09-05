@@ -109,16 +109,16 @@
                                     <a class="list-group-item lazy-link text-decoration-none text-left" th:href="@{'/student/view/' + ${student.id}}">
                                         <i class="fa fa-fw fa-eye"></i> Détails
                                     </a>
-                                    <a class="list-group-item lazy-link text-decoration-none text-left" th:if="${student.currentLease == null || student.currentLease.nextLease == null}" th:href="@{'/payment/save?studentId=' + ${student.id}}">
+                                    <a class="list-group-item text-decoration-none text-left" th:if="${student.currentLease == null || student.currentLease.nextLease == null}" th:href="@{'/payment/save?studentId=' + ${student.id}}">
                                         <i class="fa fa-fw fa-money"></i> Payer
                                     </a>
-                                    <a class="list-group-item lazy-link text-decoration-none text-left" th:href="@{'/student/save?id=' + ${student.id}}">
+                                    <a class="list-group-item text-decoration-none text-left" th:href="@{'/student/save?id=' + ${student.id}}">
                                         <i class="fa fa-fw fa-pencil"></i> Modifier
                                     </a>
-                                    <a class="list-group-item lazy-link text-decoration-none text-left" th:data-student-id="${student.id}" onclick="toggleItem(this.getAttribute('data-student-id'), 'student/toggle')" href="#">
+                                    <a class="list-group-item text-decoration-none text-left" th:href="@{'/student/toggle/' + ${student.id}}">
                                         <i class="fa fa-fw" th:classappend="${student.active ? 'fa-toggle-off' : 'fa-toggle-on'}"></i> <span th:text="${student.active ? 'Désactiver' : 'Activer'}"></span>
                                     </a>
-                                    <a class="list-group-item text-decoration-none text-danger text-left" th:data-student-id="${student.id}" onclick="deleteItem(this.getAttribute('data-student-id'), 'student/delete')" href="#">
+                                    <a class="list-group-item text-decoration-none text-left text-danger" th:data-student-id="${student.id}" onclick="deleteItem(this.getAttribute('data-student-id'), 'student/delete')" href="#">
                                         <i class="fa fa-fw fa-trash-o"></i> Supprimer
                                     </a>
                                 </div>
