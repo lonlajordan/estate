@@ -76,14 +76,12 @@
                                 </div>
                                 <div class="form-group col-lg-6" th:classappend="${#fields.hasErrors('specialities') ? 'has-error' : ''}">
                                     <label class="control-label" for="specialities">Spécialité(s) <span class="required-field">*</span></label>
-                                    <input id="specialities" th:field="*{specialities}" class="form-control" autocomplete="off" required>
-                                    <p class="help-block"><i>Exemple : Mathématiques, Physiques, Chimie</i></p>
+                                    <input id="specialities" placeholder="Mathématiques, Physiques, Chimie" th:field="*{specialities}" class="form-control" autocomplete="off" required>
                                     <p th:if="${#fields.hasErrors('specialities')}" th:errors="*{specialities}" class="help-block"></p>
                                 </div>
                                 <div class="form-group col-lg-6" th:classappend="${#fields.hasErrors('grade') ? 'has-error' : ''}">
                                     <label for="grade" class="control-label">Niveau <span class="required-field">*</span></label>
-                                    <select id="grade" th:field="*{grade}" class="form-control searchable-select-box" required>
-                                        <option value="">Choisir un niveau</option>
+                                    <select id="grade" th:field="*{grade}" class="form-control" autocomplete="off" required>
                                         <option th:each="grade: ${T(com.estate.domain.enumaration.Grade).values()}" th:value="${grade}" th:text="${grade.name}"></option>
                                     </select>
                                     <p th:if="${#fields.hasErrors('grade')}" th:errors="*{grade}" class="help-block"></p>
@@ -95,8 +93,7 @@
                                 </div>
                                 <div class="form-group col-lg-6" th:classappend="${#fields.hasErrors('phone') ? 'has-error' : ''}">
                                     <label class="control-label" for="phone">Numéro(s) de téléphone <span class="required-field">*</span></label>
-                                    <input id="phone" th:field="*{phone}" class="form-control" autocomplete="off" required>
-                                    <p class="help-block"><i>Exemple : 695463868,654762824</i></p>
+                                    <input id="phone" th:field="*{phone}" placeholder="695463868,654762824" pattern="[0-9]{3}-[0-9]+" class="form-control" autocomplete="off" required>
                                     <p th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}" class="help-block"></p>
                                 </div>
                                 <div class="form-group col-lg-6" th:classappend="${#fields.hasErrors('email') ? 'has-error' : ''}">
@@ -112,8 +109,7 @@
                                         <legend style="font-size: 16px; font-weight: bold">Contact du premier parent</legend>
                                         <div class="form-group" th:classappend="${#fields.hasErrors('firstParentRelation') ? 'has-error' : ''}">
                                             <label for="firstParentRelation" class="control-label">Lien de parenté <span class="required-field">*</span></label>
-                                            <select id="firstParentRelation" th:field="*{firstParentRelation}" class="form-control searchable-select-box" required>
-                                                <option value="">Choisir un lien de parenté</option>
+                                            <select id="firstParentRelation" th:field="*{firstParentRelation}" class="form-control" required>
                                                 <option th:each="relation: ${T(com.estate.domain.enumaration.Relationship).values()}" th:value="${relation}" th:text="${relation.name}"></option>
                                             </select>
                                             <p th:if="${#fields.hasErrors('firstParentRelation')}" th:errors="*{firstParentRelation}" class="help-block"></p>
@@ -130,8 +126,7 @@
                                         </div>
                                         <div class="form-group" th:classappend="${#fields.hasErrors('firstParentPhone') ? 'has-error' : ''}">
                                             <label class="control-label" for="firstParentPhone">Numéro(s) de téléphone <span class="required-field">*</span></label>
-                                            <input id="firstParentPhone" th:field="*{firstParentPhone}" class="form-control" autocomplete="off" required>
-                                            <p class="help-block"><i>Exemple : 695463868,654762824</i></p>
+                                            <input id="firstParentPhone" placeholder="695463868,654762824" th:field="*{firstParentPhone}" class="form-control" autocomplete="off" required>
                                             <p th:if="${#fields.hasErrors('firstParentPhone')}" th:errors="*{firstParentPhone}" class="help-block"></p>
                                         </div>
                                         <div class="form-group" th:classappend="${#fields.hasErrors('firstParentEmail') ? 'has-error' : ''}">
@@ -146,8 +141,7 @@
                                         <legend style="font-size: 16px; font-weight: bold">Contact du second parent</legend>
                                         <div class="form-group" th:classappend="${#fields.hasErrors('secondParentRelation') ? 'has-error' : ''}">
                                             <label for="secondParentRelation" class="control-label">Lien de parenté <span class="required-field">*</span></label>
-                                            <select id="secondParentRelation" th:field="*{secondParentRelation}" class="form-control searchable-select-box" required>
-                                                <option value="">Choisir un lien de parenté</option>
+                                            <select id="secondParentRelation" th:field="*{secondParentRelation}" class="form-control" required>
                                                 <option th:each="relation: ${T(com.estate.domain.enumaration.Relationship).values()}" th:value="${relation}" th:text="${relation.name}"></option>
                                             </select>
                                         </div>
@@ -163,8 +157,7 @@
                                         </div>
                                         <div class="form-group" th:classappend="${#fields.hasErrors('secondParentPhone') ? 'has-error' : ''}">
                                             <label class="control-label" for="secondParentPhone">Numéro(s) de téléphone <span class="required-field">*</span></label>
-                                            <input id="secondParentPhone" th:field="*{secondParentPhone}" class="form-control" autocomplete="off" required>
-                                            <p class="help-block"><i>Exemple : 695463868,654762824</i></p>
+                                            <input id="secondParentPhone" placeholder="695463868,654762824" th:field="*{secondParentPhone}" class="form-control" autocomplete="off" required>
                                             <p th:if="${#fields.hasErrors('secondParentPhone')}" th:errors="*{secondParentPhone}" class="help-block"></p>
                                         </div>
                                         <div class="form-group" th:classappend="${#fields.hasErrors('secondParentEmail') ? 'has-error' : ''}">

@@ -5,6 +5,7 @@ import com.estate.domain.entity.User;
 import com.estate.domain.form.PasswordForm;
 import com.estate.domain.form.ProfilForm;
 import com.estate.domain.form.UserForm;
+import com.estate.domain.mail.SmsHelper;
 import com.estate.domain.service.face.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -50,16 +51,21 @@ public class UserController {
             return "redirect:/user/list";
         }
         model.addAttribute("user", user.toForm());
+        model.addAttribute("countryCodes", SmsHelper.countryCodes);
         return "admin/user/save";
     }
 
     @PostMapping(value="save")
     public String save(@Valid @ModelAttribute("user") UserForm user, BindingResult result, @RequestParam(required = false, defaultValue = "false") boolean multiple, Model model, RedirectAttributes attributes, HttpSession session, Principal principal){
-        if(result.hasErrors()) return "admin/user/save";
+        if(result.hasErrors()){
+            model.addAttribute("countryCodes", SmsHelper.countryCodes);
+            return "admin/user/save";
+        }
         Notification notification =  userService.save(user, session, principal);
         if(multiple || notification.hasError()){
             model.addAttribute("notification", notification);
             model.addAttribute("user", notification.hasError() ? user : new UserForm());
+            model.addAttribute("countryCodes", SmsHelper.countryCodes);
             return "admin/user/save";
         }
         attributes.addFlashAttribute("notification", notification);
@@ -68,7 +74,10 @@ public class UserController {
 
     @PostMapping(value="profile")
     public String saveProfile(@Valid @ModelAttribute("user") ProfilForm user, BindingResult result, Model model, HttpSession session){
-        if(result.hasErrors()) return "admin/user/profile";
+        if(result.hasErrors()){
+            model.addAttribute("countryCodes", SmsHelper.countryCodes);
+            return "admin/user/profile";
+        }
         Notification notification =  userService.updateProfile(user, session);
         model.addAttribute("notification", notification);
         model.addAttribute("user", ((User) session.getAttribute("user")).toProfilForm());
@@ -80,6 +89,7 @@ public class UserController {
         User user = (User) session.getAttribute("user");
         if(user == null) return "redirect:/error/404";
         model.addAttribute("user", user.toProfilForm());
+        model.addAttribute("countryCodes", SmsHelper.countryCodes);
         return "admin/user/profile";
     }
 

@@ -5,10 +5,8 @@ import com.estate.domain.enumaration.Mode;
 import com.estate.domain.enumaration.Role;
 import lombok.Data;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+import javax.validation.Valid;
+import javax.validation.constraints.*;
 import java.util.List;
 
 @Data
@@ -22,8 +20,9 @@ public class UserForm {
     @NotBlank
     @Email
     private String email;
-    @NotBlank
-    private String phone;
+    @NotNull
+    @Valid
+    private Phone phone;
     private List<@NotNull Mode> modes;
     @NotEmpty
     private List<@NotNull Role> roles;

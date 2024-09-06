@@ -8,7 +8,8 @@ public enum Relationship {
     MOTHER("Mère"),
     UNCLE("Oncle"),
     AUNT("Tante"),
-    TUTOR("Tuteur");
+    TUTOR("Tuteur"),
+    TUTOR2("Tutrice");
 
     private final String name;
 

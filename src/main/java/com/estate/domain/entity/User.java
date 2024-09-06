@@ -5,6 +5,7 @@ import com.estate.configuration.RoleListConverter;
 import com.estate.domain.enumaration.Gender;
 import com.estate.domain.enumaration.Mode;
 import com.estate.domain.enumaration.Role;
+import com.estate.domain.form.Phone;
 import com.estate.domain.form.ProfilForm;
 import com.estate.domain.form.UserForm;
 import lombok.AllArgsConstructor;
@@ -74,10 +75,10 @@ public class User extends Auditable {
         form.setFirstName(firstName);
         form.setLastName(lastName);
         form.setGender(gender);
-        form.setPhone(phone);
         form.setEmail(email);
         form.setModes(modes);
         form.setRoles(roles);
+        form.setPhone(Phone.parse(phone));
         return form;
     }
 
@@ -87,8 +88,8 @@ public class User extends Auditable {
         form.setFirstName(firstName);
         form.setLastName(lastName);
         form.setGender(gender);
-        form.setPhone(phone);
         form.setEmail(email);
+        form.setPhone(Phone.parse(phone));
         return form;
     }
 }

@@ -53,7 +53,7 @@ public class Student extends Auditable {
     private String email = "jordan@gmail.com";
     private String password;
     @Column(nullable = false)
-    private String phone = "695463868";
+    private String phone;
     @Enumerated(EnumType.STRING)
     private Gender gender = Gender.MALE;
     @ManyToOne

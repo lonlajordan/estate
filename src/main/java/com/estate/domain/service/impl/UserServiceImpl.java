@@ -98,7 +98,7 @@ public class UserServiceImpl implements UserService {
         if(user == null) return Notification.error("Utilisateur introuvable");
         user.setFirstName(form.getFirstName());
         user.setLastName(form.getLastName());
-        user.setPhone(form.getPhone());
+        user.setPhone(form.getPhone().format());
         user.setEmail(form.getEmail());
         user.setGender(form.getGender());
         user.setModes(form.getModes());
@@ -140,7 +140,7 @@ public class UserServiceImpl implements UserService {
         if(user == null) return Notification.error("Utilisateur introuvable");
         user.setFirstName(form.getFirstName());
         user.setLastName(form.getLastName());
-        user.setPhone(form.getPhone());
+        user.setPhone(form.getPhone().format());
         user.setEmail(form.getEmail());
         user.setGender(form.getGender());
         try {
