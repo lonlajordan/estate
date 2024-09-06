@@ -3,6 +3,7 @@ package com.estate.domain.service.impl;
 import com.estate.domain.entity.Notification;
 import com.estate.domain.entity.Log;
 import com.estate.domain.entity.Setting;
+import com.estate.domain.form.SettingForm;
 import com.estate.domain.service.face.SettingService;
 import com.estate.repository.LogRepository;
 import com.estate.repository.SettingRepository;
@@ -36,7 +37,7 @@ public class SettingServiceImpl implements SettingService {
     }
 
     @Override
-    public Notification update(Setting form, Principal principal) {
+    public Notification update(SettingForm form, Principal principal) {
         Notification notification;
         Setting setting = settingRepository.findById(form.getId()).orElse(null);
         if(setting == null) return Notification.error("Paramètre introuvable");

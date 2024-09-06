@@ -22,11 +22,11 @@
                     </div>
                     <form th:object="${payment}" onsubmit="return submitMultipartForm(event)" th:action="@{/payment/save}" enctype="multipart/form-data" autocomplete="off" method="post">
                         <div class="panel-body">
+                            <input th:field="*{id}" type="hidden">
+                            <input th:field="*{studentId}" type="hidden">
+                            <input th:if="${student?.housing != null}" th:field="*{standingId}" type="hidden">
+                            <input th:if="${student?.housing != null}" th:field="*{desiderataId}" type="hidden">
                             <div class="row">
-                                <input th:field="*{id}" type="hidden">
-                                <input th:field="*{studentId}" type="hidden">
-                                <input th:if="${student?.housing != null}" th:field="*{standingId}" type="hidden">
-                                <input th:if="${student?.housing != null}" th:field="*{desiderataId}" type="hidden">
                                 <div class="form-group col-lg-6">
                                     <label class="control-label" for="student">Étudiant <span class="required-field">*</span></label>
                                     <input id="student" class="form-control" th:value="${student?.name}" autocomplete="off" readonly required>
@@ -36,6 +36,8 @@
                                     <input id="months" type="number" min="12" step="12" th:field="*{months}" class="form-control" autocomplete="off" readonly required>
                                     <p th:if="${#fields.hasErrors('months')}" th:errors="*{months}" class="help-block"></p>
                                 </div>
+                            </div>
+                            <div class="row">
                                 <div class="form-group col-lg-6" th:classappend="${#fields.hasErrors('standingId') ? 'has-error' : ''}">
                                     <label for="standingId" class="control-label">Standing <span class="required-field">*</span></label>
                                     <select id="standingId" th:field="*{standingId}" class="form-control searchable-select-box" th:data-id="*{id}" th:data-student-id="*{studentId}" onchange="toggleStanding(this.getAttribute('data-id'), this.getAttribute('data-student-id'), event.target.value, 'payment/save')" th:disabled="${student?.housing != null}" required>
@@ -50,27 +52,46 @@
                                     </select>
                                     <p th:if="${#fields.hasErrors('desiderataId')}" th:errors="*{desiderataId}" class="help-block"></p>
                                 </div>
-                                <div class="form-group col-lg-6">
-                                    <label class="control-label" for="rent"> Loyer mensuel (FCFA) <span class="required-field">*</span></label>
-                                    <input id="rent" type="number" min="0" th:field="*{rent}" class="form-control" autocomplete="off" readonly required>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="form-group input-group">
+                                        <label class="control-label" for="rent"> Loyer mensuel <span class="required-field">*</span></label>
+                                        <input id="rent" type="number" min="0" th:field="*{rent}" class="form-control" autocomplete="off" readonly required>
+                                        <span class="input-group-addon">FCFA</span>
+                                    </div>
                                 </div>
-                                <div class="form-group col-lg-6">
-                                    <label class="control-label" for="caution"> Caution (FCFA) <span class="required-field">*</span></label>
-                                    <input id="caution" type="number" min="0" th:field="*{caution}" class="form-control" autocomplete="off" readonly required>
+                                <div class="col-lg-6">
+                                    <div class="form-group input-group">
+                                        <label class="control-label" for="caution"> Caution <span class="required-field">*</span></label>
+                                        <input id="caution" type="number" min="0" th:field="*{caution}" class="form-control" autocomplete="off" readonly required>
+                                        <span class="input-group-addon">FCFA</span>
+                                    </div>
                                 </div>
-                                <div class="form-group col-lg-6">
-                                    <label class="control-label" for="repair"> Frais de réhabilitation (FCFA) <span class="required-field">*</span></label>
-                                    <input id="repair" type="number" min="0" th:field="*{repair}" class="form-control" autocomplete="off" readonly required>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="form-group input-group">
+                                        <label class="control-label" for="repair"> Frais de réhabilitation <span class="required-field">*</span></label>
+                                        <input id="repair" type="number" min="0" th:field="*{repair}" class="form-control" autocomplete="off" readonly required>
+                                        <span class="input-group-addon">FCFA</span>
+                                    </div>
                                 </div>
-                                <div class="form-group col-lg-6">
-                                    <label class="control-label" for="amount"> Montant total [<i>durée x mensualité + caution + frais de réhabilitation</i>] (FCFA) <span class="required-field">*</span></label>
-                                    <input id="amount" type="number" min="0" th:value="*{amount}" class="form-control" autocomplete="off" readonly required>
+                                <div class="col-lg-6">
+                                    <div class="form-group input-group">
+                                        <label class="control-label" for="amount"> Montant total [<i>durée x mensualité + caution + frais de réhabilitation</i>] <span class="required-field">*</span></label>
+                                        <input id="amount" type="number" min="0" th:value="*{amount}" class="form-control" autocomplete="off" readonly required>
+                                        <span class="input-group-addon">FCFA</span>
+                                    </div>
                                 </div>
+                            </div>
+                            <div class="row">
                                 <div class="form-group col-lg-6">
                                     <label for="mode" class="control-label">Mode de paiement <span class="required-field">*</span></label>
                                     <select id="mode" th:field="*{mode}" class="form-control searchable-select-box" required>
                                         <option th:each="mode: ${T(com.estate.domain.enumaration.Mode).values()}" th:value="${mode}" th:text="${mode.name}"></option>
                                     </select>
+                                    <p th:if="${#fields.hasErrors('mode')}" th:errors="*{mode}" class="help-block"></p>
                                 </div>
                                 <div class="form-group col-lg-6" th:classappend="${#fields.hasErrors('proofFile') ? 'has-error' : ''}">
                                     <label class="control-label" for="proofFile">Preuve de paiement</label>

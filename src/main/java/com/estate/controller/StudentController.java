@@ -4,6 +4,7 @@ import com.estate.domain.entity.Notification;
 import com.estate.domain.entity.Student;
 import com.estate.domain.form.StudentForm;
 import com.estate.domain.form.StudentSearch;
+import com.estate.domain.mail.SmsHelper;
 import com.estate.domain.service.face.HousingService;
 import com.estate.domain.service.face.StudentService;
 import lombok.RequiredArgsConstructor;
@@ -63,6 +64,7 @@ public class StudentController {
             attributes.addFlashAttribute("notification", Notification.error("Étudiant introuvable"));
             return "redirect:/student/list";
         }
+        model.addAttribute("countryCodes", SmsHelper.countryCodes);
         model.addAttribute("student", student.toForm());
         return "admin/student/save";
     }

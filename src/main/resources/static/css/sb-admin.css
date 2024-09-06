@@ -566,3 +566,11 @@ table.vertical-align-middle td
 table.white-space-normal td {
     white-space: normal !important;
 }
+
+.form-group label.control-label {
+    display: table-header-group !important;
+}
+
+.form-group p.help-block {
+    display: table-footer-group !important;
+}

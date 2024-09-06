@@ -18,7 +18,7 @@
                 <div th:replace="base.html :: alert(${notification})"></div>
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <b>Formulaire</b>
+                        <b>Formulaire : </b> <span style="font-size: 13px">Les champs avec l'astérisque ( <span class="required-field">*</span> ) sont obligatoires</span>
                     </div>
                     <form th:object="${student}" onsubmit="return submitMultipartForm(event)" th:action="@{/student/save}" enctype="multipart/form-data" autocomplete="off" method="post">
                         <div class="panel-body">
