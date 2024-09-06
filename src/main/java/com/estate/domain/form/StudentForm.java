@@ -7,6 +7,7 @@ import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -41,8 +42,12 @@ public class StudentForm {
     @NotBlank
     @Email
     private String email;
-    @NotBlank
-    private String phone;
+    @NotNull
+    @Valid
+    private Phone phone;
+    @NotNull
+    @Valid
+    private Phone mobile;
 
     @NotNull
     private Relationship firstParentRelation;
@@ -50,8 +55,12 @@ public class StudentForm {
     private String firstParentName;
     @NotBlank
     private String firstParentAddress;
-    @NotBlank
-    private String firstParentPhone;
+    @NotNull
+    @Valid
+    private Phone firstParentPhone;
+    @NotNull
+    @Valid
+    private Phone firstParentMobile;
     @NotBlank
     @Email
     private String firstParentEmail;
@@ -62,8 +71,12 @@ public class StudentForm {
     private String secondParentName;
     @NotBlank
     private String secondParentAddress;
-    @NotBlank
-    private String secondParentPhone;
+    @NotNull
+    @Valid
+    private Phone secondParentPhone;
+    @NotNull
+    @Valid
+    private Phone secondParentMobile;
     @NotBlank
     @Email
     private String secondParentEmail;

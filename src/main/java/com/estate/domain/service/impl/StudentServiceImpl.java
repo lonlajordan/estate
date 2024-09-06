@@ -69,19 +69,22 @@ public class StudentServiceImpl implements StudentService {
         student.setSchool(form.getSchool());
         student.setSpecialities(form.getSpecialities());
         student.setGrade(form.getGrade());
-        student.setPhone(form.getPhone());
+        student.setPhone(form.getPhone().format());
+        student.setMobile(form.getMobile().format());
         student.setEmail(form.getEmail());
 
         student.setFirstParentRelation(form.getFirstParentRelation());
         student.setFirstParentName(form.getFirstParentName());
         student.setFirstParentAddress(form.getFirstParentAddress());
-        student.setFirstParentPhone(form.getFirstParentPhone());
+        student.setFirstParentPhone(form.getFirstParentPhone().format());
+        student.setFirstParentMobile(form.getFirstParentMobile().format());
         student.setFirstParentEmail(form.getFirstParentEmail());
 
         student.setSecondParentRelation(form.getSecondParentRelation());
         student.setSecondParentName(form.getSecondParentName());
         student.setSecondParentAddress(form.getSecondParentAddress());
-        student.setSecondParentPhone(form.getSecondParentPhone());
+        student.setSecondParentPhone(form.getSecondParentPhone().format());
+        student.setSecondParentMobile(form.getSecondParentMobile().format());
         student.setSecondParentEmail(form.getSecondParentEmail());
         long date = System.currentTimeMillis();
         String extension;

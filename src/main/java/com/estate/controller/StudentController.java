@@ -78,10 +78,14 @@ public class StudentController {
             if(student.getCniVersoFile() == null || student.getCniVersoFile().isEmpty()) result.rejectValue("cniVersoFile", notNullMessage, defaultMessage);
             if(student.getBirthCertificateFile() == null || student.getBirthCertificateFile().isEmpty()) result.rejectValue("birthCertificateFile", notNullMessage, defaultMessage);
         }
-        if(result.hasErrors()) return "admin/student/save";
+        if(result.hasErrors()){
+            model.addAttribute("countryCodes", SmsHelper.countryCodes);
+            return "admin/student/save";
+        }
         Notification notification =  studentService.save(student);
         if(multiple || notification.hasError()){
             model.addAttribute("notification", notification);
+            model.addAttribute("countryCodes", SmsHelper.countryCodes);
             model.addAttribute("student", notification.hasError() ? student : new StudentForm());
             return "admin/student/save";
         }

@@ -3,6 +3,7 @@ package com.estate.domain.entity;
 import com.estate.domain.enumaration.Gender;
 import com.estate.domain.enumaration.Grade;
 import com.estate.domain.enumaration.Relationship;
+import com.estate.domain.form.Phone;
 import com.estate.domain.form.StudentForm;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -54,6 +55,7 @@ public class Student extends Auditable {
     private String password;
     @Column(nullable = false)
     private String phone;
+    private String mobile;
     @Enumerated(EnumType.STRING)
     private Gender gender = Gender.MALE;
     @ManyToOne
@@ -68,6 +70,7 @@ public class Student extends Auditable {
     private String firstParentAddress = "MESSASSI";
     @Column(nullable = false)
     private String firstParentPhone = "677432413";
+    private String firstParentMobile;
     @Column(nullable = false)
     private String firstParentEmail = "admin@gmail.com";
 
@@ -80,6 +83,7 @@ public class Student extends Auditable {
     private String secondParentAddress = "MESSASSI";
     @Column(nullable = false)
     private String secondParentPhone = "677078633";
+    private String secondParentMobile;
     @Column(nullable = false)
     private String secondParentEmail = "admin@gmail.com";
 
@@ -118,19 +122,22 @@ public class Student extends Auditable {
         form.setSchool(school);
         form.setSpecialities(specialities);
         form.setGrade(grade);
-        form.setPhone(phone);
+        form.setPhone(Phone.parse(phone));
+        form.setMobile(Phone.parse(mobile));
         form.setEmail(email);
 
         form.setFirstParentRelation(firstParentRelation);
         form.setFirstParentName(firstParentName);
         form.setFirstParentAddress(firstParentAddress);
-        form.setFirstParentPhone(firstParentPhone);
+        form.setFirstParentPhone(Phone.parse(firstParentPhone));
+        form.setFirstParentMobile(Phone.parse(firstParentMobile));
         form.setFirstParentEmail(firstParentEmail);
 
         form.setSecondParentRelation(secondParentRelation);
         form.setSecondParentName(secondParentName);
         form.setSecondParentAddress(secondParentAddress);
-        form.setSecondParentPhone(secondParentPhone);
+        form.setSecondParentPhone(Phone.parse(secondParentPhone));
+        form.setSecondParentMobile(Phone.parse(secondParentMobile));
         form.setSecondParentEmail(secondParentEmail);
         return form;
     }

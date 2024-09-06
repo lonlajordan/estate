@@ -2,6 +2,7 @@ package com.estate.domain.form;
 
 import com.estate.domain.mail.SmsHelper;
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
@@ -10,11 +11,11 @@ import javax.validation.constraints.Pattern;
 public class Phone {
     @NotBlank
     private String code;
-    @Pattern(regexp = "[0-9]+", message = "uniquement les chiffres")
+    @Pattern(regexp = "[0-9]*", message = "uniquement les chiffres")
     private String number;
 
     public String format(){
-        return code + " " + number;
+        return StringUtils.isBlank(number) ? "" : code + " " + number;
     }
 
     public static Phone parse(String telephone){

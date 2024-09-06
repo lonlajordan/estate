@@ -22,46 +22,72 @@
                         <b>Informations sur l'étudiant</b>
                     </div>
                     <div class="list-group">
-                        <div class="list-group-item">
+                        <a class="list-group-item" href="#">
                             <b>Nom</b>
                             <span class="pull-right"><em th:text="*{firstName}"></em></span>
-                        </div>
-                        <div class="list-group-item">
+                        </a>
+                        <a class="list-group-item" href="#">
                             <b>Prénom</b>
                             <span class="pull-right"><em th:text="*{lastName}"></em></span>
-                        </div>
-                        <div class="list-group-item">
+                        </a>
+                        <a class="list-group-item" href="#">
                             <b>Date de naissance</b>
                             <span class="pull-right"><em th:text="*{#temporals.format(dateOfBirth, 'dd-MM-yyyy')}"></em></span>
-                        </div>
-                        <div class="list-group-item">
+                        </a>
+                        <a class="list-group-item" href="#">
                             <b>Lieu de naissance</b>
                             <span class="pull-right"><em th:text="*{placeOfBirth}"></em></span>
-                        </div>
-                        <div class="list-group-item">
+                        </a>
+                        <a class="list-group-item" href="#">
                             <b>Sexe</b>
                             <span class="pull-right"><em th:text="*{gender.name}"></em></span>
-                        </div>
-                        <div class="list-group-item">
+                        </a>
+                        <a class="list-group-item" href="#">
+                            <b>Logement</b>
+                            <span class="pull-right"><em th:text="*{housing?.name}"></em></span>
+                        </a>
+                        <a class="list-group-item" href="#">
+                            <b>Statut</b>
+                            <span class="pull-right"><em th:text="${student.active ? 'ACTIF' : 'DÉSACTIVÉ'}"></em></span>
+                        </a>
+                        <a class="list-group-item" href="#">
                             <b>Nom de l'établissement fréquenté</b>
                             <span class="pull-right"><em th:text="*{school}"></em></span>
-                        </div>
-                        <div class="list-group-item">
+                        </a>
+                        <a class="list-group-item" href="#">
+                            <b>Spécialité(s)</b>
+                            <span class="pull-right"><em th:text="*{specialities}"></em></span>
+                        </a>
+                        <a class="list-group-item" href="#">
+                            <b>Niveau</b>
+                            <span class="pull-right"><em th:text="*{grade?.name}"></em></span>
+                        </a>
+                        <a class="list-group-item" href="#">
                             <b>Téléphone(s)</b>
-                            <span class="pull-right"><em th:text="*{phone}"></em></span>
-                        </div>
-                        <div class="list-group-item">
+                            <span class="pull-right"><em th:text="*{phone}"></em><em th:if="${student.mobile != null}" th:text="${' / ' + student.mobile}"></em></span>
+                        </a>
+                        <a class="list-group-item" href="#">
                             <b>Adresse e-mail</b>
                             <span class="pull-right"><em th:text="*{email}"></em></span>
-                        </div>
-                        <div class="list-group-item">
+                        </a>
+                        <a class="list-group-item" href="#">
                             <b>Date d'inscription</b>
                             <span class="pull-right"><em th:text="*{#temporals.format(creationDate, 'dd-MM-yyyy  HH:mm')}"></em></span>
-                        </div>
-                        <div class="list-group-item">
+                        </a>
+                        <a class="list-group-item" href="#">
                             <b>Date de modification</b>
                             <span class="pull-right"><em th:text="*{#temporals.format(lastModifiedDate, 'dd-MM-yyyy  HH:mm')}"></em></span>
-                        </div>
+                        </a>
+                    </div>
+                    <div class="panel-footer">
+                        <a role="button" th:href="@{/student/save}" class="btn btn-success lazy-link mr-3">
+                            <i class="fa fa-plus-circle"></i>
+                            &nbsp; Ajouter
+                        </a>
+                        <a role="button" th:href="@{'/student/save?id=' + ${student?.id}}" class="btn btn-primary lazy-link">
+                            <i class="fa fa-pencil"></i>
+                            &nbsp; Éditer
+                        </a>
                     </div>
                 </div>
             </div>
@@ -70,28 +96,30 @@
             <table class="table table-bordered table-hover table-striped">
                 <tr>
                     <th class="fit-cell-content">Contacts</th>
-                    <th th:text="*{firstParentRelation.name}"></th>
-                    <th th:text="*{secondParentRelation.name}"></th>
+                    <th colspan="2" th:text="*{firstParentRelation.name}"></th>
+                    <th colspan="2" th:text="*{secondParentRelation.name}"></th>
                 </tr>
                 <tr>
                     <th>Nom</th>
-                    <td th:text="*{firstParentName}"></td>
-                    <td th:text="*{secondParentName}"></td>
+                    <td colspan="2" th:text="*{firstParentName}"></td>
+                    <td colspan="2" th:text="*{secondParentName}"></td>
                 </tr>
                 <tr>
                     <th>Lieu de résidence</th>
-                    <td th:text="*{firstParentAddress}"></td>
-                    <td th:text="*{secondParentAddress}"></td>
+                    <td colspan="2" th:text="*{firstParentAddress}"></td>
+                    <td colspan="2" th:text="*{secondParentAddress}"></td>
                 </tr>
                 <tr>
                     <th>Téléphone(s)</th>
-                    <td th:text="*{firstParentPhone}"></td>
-                    <td th:text="*{secondParentPhone}"></td>
+                    <td th:colspan="${student.firstParentMobile == null ? 2 : 1}" th:text="*{firstParentPhone}"></td>
+                    <td th:if="${student.firstParentMobile != null}" th:text="*{firstParentMobile}"></td>
+                    <td th:colspan="${student.secondParentMobile == null ? 2 : 1}" th:text="*{secondParentPhone}"></td>
+                    <td th:if="${student.secondParentMobile != null}" th:text="*{secondParentMobile}"></td>
                 </tr>
                 <tr>
                     <th>Adresse e-mail</th>
-                    <td th:text="*{firstParentEmail}"></td>
-                    <td th:text="*{secondParentEmail}"></td>
+                    <td colspan="2" th:text="*{firstParentEmail}"></td>
+                    <td colspan="2" th:text="*{secondParentEmail}"></td>
                 </tr>
             </table>
         </div>
@@ -99,23 +127,23 @@
             <table class="table table-bordered table-hover table-striped">
                 <tr>
                     <th>Documents</th>
-                    <th class="fit-cell-content">Action</th>
+                    <th class="fit-cell-content text-center">Action</th>
                 </tr>
                 <tr th:unless="${#strings.isEmpty(student.cniRecto)}">
                     <td>Pièce d'identité (Recto)</td>
-                    <td><a target="_blank" th:href="@{'/explorer/' + ${student.cniRecto}}">Voir</a></td>
+                    <td class="text-center"><a target="_blank" th:href="@{'/explorer/' + ${student.cniRecto}}">Voir</a></td>
                 </tr>
                 <tr th:unless="${#strings.isEmpty(student.cniVerso)}">
                     <td>Pièce d'identité (Verso)</td>
-                    <td><a target="_blank" th:href="@{'/explorer/' + ${student.cniVerso}}">Voir</a></td>
+                    <td class="text-center"><a target="_blank" th:href="@{'/explorer/' + ${student.cniVerso}}">Voir</a></td>
                 </tr>
                 <tr th:unless="${#strings.isEmpty(student.birthCertificate)}">
                     <td>Acte de naissance</td>
-                    <td><a target="_blank" th:href="@{'/explorer/' + ${student.birthCertificate}}">Voir</a></td>
+                    <td class="text-center"><a target="_blank" th:href="@{'/explorer/' + ${student.birthCertificate}}">Voir</a></td>
                 </tr>
                 <tr th:unless="${#strings.isEmpty(student.studentCard)}">
                     <td>Carte d'étudiant</td>
-                    <td><a target="_blank" th:href="@{'/explorer/' + ${student.studentCard}}">Voir</a></td>
+                    <td class="text-center"><a target="_blank" th:href="@{'/explorer/' + ${student.studentCard}}">Voir</a></td>
                 </tr>
             </table>
         </div>
