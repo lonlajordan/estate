@@ -104,7 +104,7 @@
                                     <i class="fa fa-eye fa-fw"></i> Détails
                                 </a>
                                 <a th:if="${lease.mutable}" class="list-group-item text-decoration-none text-left" th:href="@{'/lease/save?id=' + ${lease.id}}">
-                                    <i class="fa fa-fw fa-pencil"></i> Modifier
+                                    <i class="fa fa-fw fa-pencil-square-o"></i> Modifier
                                 </a>
                                 <a th:if="${lease.startDate != null}" class="list-group-item text-decoration-none text-left" th:href="@{'/lease/download/' + ${lease.id}}">
                                     <i class="fa fa-file-pdf-o fa-fw"></i> Télécharger

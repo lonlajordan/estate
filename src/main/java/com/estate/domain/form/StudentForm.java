@@ -1,5 +1,6 @@
 package com.estate.domain.form;
 
+import com.estate.domain.annotation.FileSize;
 import com.estate.domain.enumaration.Gender;
 import com.estate.domain.enumaration.Grade;
 import com.estate.domain.enumaration.Relationship;
@@ -26,8 +27,11 @@ public class StudentForm {
     private String placeOfBirth;
     @NotNull
     private Gender gender;
+    @FileSize(extensions = {"pdf"})
     private MultipartFile birthCertificateFile;
+    @FileSize(extensions = {"pdf"})
     private MultipartFile cniRectoFile;
+    @FileSize(extensions = {"pdf"})
     private MultipartFile cniVersoFile;
 
 
@@ -37,6 +41,7 @@ public class StudentForm {
     private String specialities;
     @NotNull
     private Grade grade;
+    @FileSize(extensions = {"pdf"})
     private MultipartFile studentCardFile;
 
     @NotBlank

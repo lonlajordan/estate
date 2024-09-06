@@ -112,7 +112,7 @@
                                         <i class="fa fa-fw fa-money"></i> Payer
                                     </a>
                                     <a class="list-group-item text-decoration-none text-left" th:href="@{'/student/save?id=' + ${student.id}}">
-                                        <i class="fa fa-fw fa-pencil"></i> Modifier
+                                        <i class="fa fa-fw fa-pencil-square-o"></i> Modifier
                                     </a>
                                     <a class="list-group-item text-decoration-none text-left" th:href="@{'/student/toggle/' + ${student.id}}">
                                         <i class="fa fa-fw" th:classappend="${student.active ? 'fa-toggle-off' : 'fa-toggle-on'}"></i> <span th:text="${student.active ? 'Désactiver' : 'Activer'}"></span>

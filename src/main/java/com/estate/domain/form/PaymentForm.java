@@ -1,5 +1,6 @@
 package com.estate.domain.form;
 
+import com.estate.domain.annotation.FileSize;
 import com.estate.domain.enumaration.Mode;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,6 +26,7 @@ public class PaymentForm {
     @PositiveOrZero
     private Integer repair;
     private Mode mode;
+    @FileSize(extensions = {"pdf"})
     private MultipartFile proofFile;
 
     public Integer getAmount(){

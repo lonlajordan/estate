@@ -1,7 +1,5 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
-
-<!--/*@thymesVar id="title" type="java.lang.String"*/-->
 <head th:replace="base.html :: head(${title})"></head>
 
 <body>
@@ -10,8 +8,7 @@
     <div id="page-wrapper">
         <div class="row mt-6">
             <ol class="breadcrumb">
-                <li><i class="fa fa-home"></i> <a class="lazy-link" th:href="@{/home}">Accueil</a></li>
-                <!--/*@thymesVar id="title" type="java.lang.String"*/-->
+                <li><i class="fa fa-home"></i> <a class="lazy-link" th:href="@{/dashboard}">Accueil</a></li>
                 <li th:text="${title}">Erreur</li>
             </ol>
         </div>

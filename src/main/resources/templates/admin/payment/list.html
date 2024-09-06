@@ -105,7 +105,7 @@
                                         <i class="fa fa-eye fa-fw"></i> Details
                                     </a>
                                     <a th:if="${T(com.estate.domain.enumaration.Status).INITIATED.equals(payment.status)}" class="list-group-item text-decoration-none text-left" th:href="@{'/payment/save?id=' + ${payment.id}}">
-                                        <i class="fa fa-edit fa-fw"></i> Modifier
+                                        <i class="fa fa-pencil-square-o fa-fw"></i> Modifier
                                     </a>
                                     <a class="list-group-item text-decoration-none text-danger text-left" th:data-payment-id="${payment.id}" onclick="deleteItem(this.getAttribute('data-payment-id'), 'payment/delete')" href="#">
                                         <i class="fa fa-trash-o fa-fw"></i> Supprimer

@@ -91,7 +91,7 @@
                             &nbsp; Activer
                         </a>
                         <a th:if="${lease.mutable}" role="button" th:href="@{'/lease/save?id=' + ${lease.id}}" class="btn btn-primary lazy-link mr-3">
-                            <i class="fa fa-pencil"></i>
+                            <i class="fa fa-pencil-square-o"></i>
                             &nbsp; Modifier
                         </a>
                         <a th:if="${lease.startDate != null}" role="button" th:href="@{'/lease/download/' + ${lease.id}}" class="btn btn-default">
