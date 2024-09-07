@@ -16,6 +16,7 @@ public class PaymentForm {
     private Long studentId;
     @NotNull
     private Long standingId;
+    @NotNull
     private Long desiderataId;
     @Min(12)
     private Integer months;
@@ -25,8 +26,9 @@ public class PaymentForm {
     private Integer caution;
     @PositiveOrZero
     private Integer repair;
+    @NotNull
     private Mode mode;
-    @FileSize(extensions = {"pdf"})
+    @FileSize(extensions = {"pdf", "png", "jpg", "jpeg"}, max = 2 * 1024 * 1024)
     private MultipartFile proofFile;
 
     public Integer getAmount(){

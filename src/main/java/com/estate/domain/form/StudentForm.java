@@ -27,11 +27,11 @@ public class StudentForm {
     private String placeOfBirth;
     @NotNull
     private Gender gender;
-    @FileSize(extensions = {"pdf"})
+    @FileSize(extensions = {"pdf", "png", "jpg", "jpeg"}, max = 2 * 1024 * 1024)
     private MultipartFile birthCertificateFile;
-    @FileSize(extensions = {"pdf"})
+    @FileSize(extensions = {"pdf", "png", "jpg", "jpeg"}, max = 2 * 1024 * 1024)
     private MultipartFile cniRectoFile;
-    @FileSize(extensions = {"pdf"})
+    @FileSize(extensions = {"pdf", "png", "jpg", "jpeg"}, max = 2 * 1024 * 1024)
     private MultipartFile cniVersoFile;
 
 
@@ -41,7 +41,7 @@ public class StudentForm {
     private String specialities;
     @NotNull
     private Grade grade;
-    @FileSize(extensions = {"pdf"})
+    @FileSize(extensions = {"pdf", "png", "jpg", "jpeg"}, max = 2 * 1024 * 1024)
     private MultipartFile studentCardFile;
 
     @NotBlank

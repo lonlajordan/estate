@@ -43,7 +43,7 @@
                     </tbody>
                 </table>
                 <form id="policy-form" class="d-none" tabindex="-1" method="post" enctype="multipart/form-data" th:action="@{/setting/policy}">
-                    <input type="file" id="policy" onchange="document.getElementById('policy-form').submit()" name="file">
+                    <input type="file" id="policy" accept="application/pdf" onchange="document.getElementById('policy-form').submit()" name="file">
                 </form>
             </div>
         </div>
