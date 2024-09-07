@@ -31,7 +31,8 @@ public class FileSizeValidator implements ConstraintValidator<FileSize, Multipar
                 message = "taille maximale " + readableSize(max);
             } else if(extensions.length > 0 && Arrays.stream(extensions).noneMatch(extension -> StringUtils.defaultString(extension).equalsIgnoreCase(FilenameUtils.getExtension(file.getOriginalFilename())))) {
                 valid = false;
-                message = "accepte uniquement les formats " + Arrays.stream(extensions).map(extension -> StringUtils.defaultString(extension, "pdf").toUpperCase()).distinct().collect(Collectors.joining(", "));
+                String formats = Arrays.stream(extensions).map(extension -> StringUtils.defaultString(extension, "pdf").toUpperCase()).distinct().collect(Collectors.joining(" , "));
+                message = "accepte uniquement" + (formats.split(",").length > 1 ? " les formats " : " le format ") + formats;
             }
         }
         if(!valid){

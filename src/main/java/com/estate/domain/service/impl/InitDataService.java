@@ -41,10 +41,10 @@ public class InitDataService implements CommandLineRunner {
             new Setting(SettingCode.ORANGE_MONEY_MERCHANT_NAME, SettingType.TEXT, ""),
             new Setting(SettingCode.MTN_MOBILE_MONEY_MERCHANT_CODE, SettingType.TEXT, ""),
             new Setting(SettingCode.MTN_MOBILE_MONEY_MERCHANT_NAME, SettingType.TEXT, ""),
-            new Setting(SettingCode.BANK_NAME, SettingType.INTEGER, ""),
-            new Setting(SettingCode.BANK_ACCOUNT_NAME, SettingType.INTEGER, ""),
-            new Setting(SettingCode.BANK_ACCOUNT_NUMBER, SettingType.INTEGER, ""),
-            new Setting(SettingCode.PAYPAL_LINK, SettingType.INTEGER, "")
+            new Setting(SettingCode.BANK_NAME, SettingType.TEXT, ""),
+            new Setting(SettingCode.BANK_ACCOUNT_NAME, SettingType.TEXT, ""),
+            new Setting(SettingCode.BANK_ACCOUNT_NUMBER, SettingType.TEXT, ""),
+            new Setting(SettingCode.PAYPAL_LINK, SettingType.TEXT, "")
         ));
         settingRepository.saveAll(settings.stream().filter(setting -> !settingRepository.existsByCode(setting.getCode())).collect(Collectors.toList()));
         List<SettingCode> codes = settings.stream().map(Setting::getCode).collect(Collectors.toList());
