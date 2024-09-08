@@ -1,153 +1,155 @@
 <!DOCTYPE html>
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{public/base}" class="no-js" lang="en">
 <head>
-	<title>BHouse - Real Estate HTML5 Template</title>
+	<title>Paiement</title>
 </head>
 <body>
-	<!-- Start Breadcrumb Area -->
-	<section class="breadcrumb-area section-padding" style="background-image:url('assets/img/breadcrumb.jpg');">
-		<div class="container">
-			<div class="row">
-				<div class="col-lg-12">
-					<div class="breadcrumb-content">
-						<h2>Checkout</h2>
-						<ul>
-							<li><a href="index-2.html">Home</a></li>
-							<li><i class="fas fa-angle-double-right"></i></li>
-							<li>Checkout</li>
-						</ul>
+	<div layout:fragment="content">
+		<!-- Start Breadcrumb Area -->
+		<section class="breadcrumb-area section-padding" style="background-image:url('assets/img/breadcrumb.jpg');">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="breadcrumb-content">
+							<h2>Checkout</h2>
+							<ul>
+								<li><a href="index-2.html">Home</a></li>
+								<li><i class="fas fa-angle-double-right"></i></li>
+								<li>Checkout</li>
+							</ul>
+						</div>
 					</div>
 				</div>
 			</div>
-		</div>
-	</section>
-	<!-- End Breadcrumb Area -->
+		</section>
+		<!-- End Breadcrumb Area -->
 
-	<!-- Start Checkout Page -->
-	<section class="section-padding-2">
-		<div class="container">
-			<div class="row">
-				<div class="col-lg-8 mb-30">
-					<div class="checkout-form-main">
-						<h2>Billing details</h2>
-						<form action="#">
-							<div class="row">
-								<div class="col-md-6">
-									<div class="input-field">
-										<label>First Name*</label>
-										<input type="text" required="required" name="namme" >
+		<!-- Start Checkout Page -->
+		<section class="section-padding-2">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-8 mb-30">
+						<div class="checkout-form-main">
+							<h2>Billing details</h2>
+							<form action="#">
+								<div class="row">
+									<div class="col-md-6">
+										<div class="input-field">
+											<label>First Name*</label>
+											<input type="text" required="required" name="namme" >
+										</div>
 									</div>
-								</div>
-								<div class="col-md-6">
-									<div class="input-field">
-										<label>Last name *</label>
-										<input type="text" required="required" name="lnamme">
+									<div class="col-md-6">
+										<div class="input-field">
+											<label>Last name *</label>
+											<input type="text" required="required" name="lnamme">
+										</div>
 									</div>
-								</div>
-								<div class="col-12">
-									<div class="input-field">
-										<label>Company name (Optional) </label>
-										<input type="text" name="companyname" >
+									<div class="col-12">
+										<div class="input-field">
+											<label>Company name (Optional) </label>
+											<input type="text" name="companyname" >
+										</div>
 									</div>
-								</div>
-								<div class="col-12">
-									<div class="input-field">
-										<label>Email * </label>
-										<input type="email" name="email" >
+									<div class="col-12">
+										<div class="input-field">
+											<label>Email * </label>
+											<input type="email" name="email" >
+										</div>
 									</div>
-								</div>
-								<div class="col-12">
-									<div class="input-field">
-										<label>Phone * </label>
-										<input type="text" name="phone" >
+									<div class="col-12">
+										<div class="input-field">
+											<label>Phone * </label>
+											<input type="text" name="phone" >
+										</div>
 									</div>
-								</div>
-								<div class="col-12">
-									<div class="input-field">
-										<label>Country * </label>
-										<select name="country">
-											<option value="0">United Kingdom</option>
-											<option value="1">China</option>
-											<option value="2">United Arab Emirates</option>
-											<option value="3">Germany</option>
-											<option value="4">France</option>
-											<option value="5">Japan</option>
-											<option value="6">Bangladesh</option>
-											<option value="7">India</option>
-											<option value="8">London</option>
-											<option value="9">Afghanistan</option>
-										</select>
+									<div class="col-12">
+										<div class="input-field">
+											<label>Country * </label>
+											<select name="country">
+												<option value="0">United Kingdom</option>
+												<option value="1">China</option>
+												<option value="2">United Arab Emirates</option>
+												<option value="3">Germany</option>
+												<option value="4">France</option>
+												<option value="5">Japan</option>
+												<option value="6">Bangladesh</option>
+												<option value="7">India</option>
+												<option value="8">London</option>
+												<option value="9">Afghanistan</option>
+											</select>
+										</div>
 									</div>
-								</div>
-								<div class="col-12">
-									<div class="input-field">
-										<label>Zip * </label>
-										<input type="text" name="zip" >
+									<div class="col-12">
+										<div class="input-field">
+											<label>Zip * </label>
+											<input type="text" name="zip" >
+										</div>
 									</div>
-								</div>
-								<div class="col-12">
-									<div class="input-field">
-										<div class="form-check">
-	                                    	<label class="inline">
-	                                    		<input class="form-check-input" type="checkbox">
-	                                    		<span class="input"></span>Ship to a different address?
-	                                    	</label>
+									<div class="col-12">
+										<div class="input-field">
+											<div class="form-check">
+												<label class="inline">
+													<input class="form-check-input" type="checkbox">
+													<span class="input"></span>Ship to a different address?
+												</label>
+											</div>
+										</div>
+									</div>
+									<div class="col-12">
+										<div class="input-field">
+											<label>Order notes (Optional) </label>
+											<textarea name="ordernote" ></textarea>
 										</div>
 									</div>
 								</div>
-								<div class="col-12">
-									<div class="input-field">
-										<label>Order notes (Optional) </label>
-										<textarea name="ordernote" ></textarea>
-									</div>
-								</div>
-							</div>
-						</form>
-					</div>
-				</div>
-				<div class="col-lg-4 mb-30">
-					<div class="checkout-summery mb-30">
-						<h2>Checkout summary</h2>
-						<ul>
-							<li>Subtotal <span>$530.00</span></li>
-							<li>Shipping <span>$530.00</span></li>
-							<li>Coupon <span>$0.00</span></li>
-							<li>Total <span>$530.00</span></li>
-							<li><b>Payable Total</b><span><b>$530.00</b></span></li>
-						</ul>
-					</div>
-					<div class="checkout-summery">
-						<h2>Payment method</h2>
-						<div class="form-check">
-                        	<label class="inline">
-                        		<input class="form-check-input" type="checkbox">
-                        		<span class="input"></span>Direct bank transfer 
-                        	</label>
-                        </div>
-                        <div class="form-check">
-                        	<label class="inline">
-                        		<input class="form-check-input" type="checkbox">
-                        		<span class="input"></span>Cash on delivery 
-                        	</label>
-                        </div>
-                        <div class="form-check">
-                        	<label class="inline">
-                        		<input class="form-check-input" type="checkbox">
-                        		<span class="input"></span>Check payments 
-                        	</label>
-                        </div>
-                        <div class="form-check">
-                        	<label class="inline">
-                        		<input class="form-check-input" type="checkbox">
-                        		<span class="input"></span>PayPal 
-                        	</label>
+							</form>
 						</div>
-						<button type="submit" class="button-1 border-none mt-10">Place Order</button>
+					</div>
+					<div class="col-lg-4 mb-30">
+						<div class="checkout-summery mb-30">
+							<h2>Checkout summary</h2>
+							<ul>
+								<li>Subtotal <span>$530.00</span></li>
+								<li>Shipping <span>$530.00</span></li>
+								<li>Coupon <span>$0.00</span></li>
+								<li>Total <span>$530.00</span></li>
+								<li><b>Payable Total</b><span><b>$530.00</b></span></li>
+							</ul>
+						</div>
+						<div class="checkout-summery">
+							<h2>Payment method</h2>
+							<div class="form-check">
+								<label class="inline">
+									<input class="form-check-input" type="checkbox">
+									<span class="input"></span>Direct bank transfer
+								</label>
+							</div>
+							<div class="form-check">
+								<label class="inline">
+									<input class="form-check-input" type="checkbox">
+									<span class="input"></span>Cash on delivery
+								</label>
+							</div>
+							<div class="form-check">
+								<label class="inline">
+									<input class="form-check-input" type="checkbox">
+									<span class="input"></span>Check payments
+								</label>
+							</div>
+							<div class="form-check">
+								<label class="inline">
+									<input class="form-check-input" type="checkbox">
+									<span class="input"></span>PayPal
+								</label>
+							</div>
+							<button type="submit" class="button-1 border-none mt-10">Place Order</button>
+						</div>
 					</div>
 				</div>
 			</div>
-		</div>
-	</section>
-	<!-- End Checkout Page -->
+		</section>
+		<!-- End Checkout Page -->
+	</div>
 </body>
 </html>
