@@ -18,7 +18,7 @@ public class HomeController {
 
     @GetMapping("/")
     public String index(){
-        return "public/index2";
+        return "public/index3";
     }
 
     @GetMapping("/login")
@@ -29,5 +29,35 @@ public class HomeController {
     @GetMapping("faq")
     public String faq(){
         return "public/faq";
+    }
+
+    @GetMapping("blog")
+    public String blog(){
+        return "public/blog";
+    }
+
+    @GetMapping("cart")
+    public String cart(){
+        return "public/cart";
+    }
+
+    @GetMapping("forget-password")
+    public String forgetPassword(){
+        return "public/forget-password";
+    }
+
+    @GetMapping("pricing")
+    public String pricing(){
+        return "public/pricing";
+    }
+
+    @GetMapping("team")
+    public String team(){
+        return "public/team";
+    }
+
+    @GetMapping("account")
+    public String account(){
+        return "public/account";
     }
 }
