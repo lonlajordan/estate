@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5" lang="en">
 
 <head th:insert="base.html :: head(${'Détails du standing'})"></head>
 
@@ -51,7 +51,7 @@
                             <span class="pull-right"><em th:text="${#temporals.format(standing.lastModifiedDate, 'dd-MM-yyyy hh:mm')}"></em></span>
                         </div>
                     </div>
-                    <div class="panel-footer">
+                    <div class="panel-footer" sec:authorize="hasRole('ADMIN')">
                         <a role="button" th:href="@{/standing/save}" class="btn btn-success lazy-link mr-3">
                             <i class="fa fa-plus-circle"></i>
                             &nbsp; Ajouter
