@@ -15,7 +15,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,7 +36,7 @@ public class SettingServiceImpl implements SettingService {
     }
 
     @Override
-    public Notification update(SettingForm form, Principal principal) {
+    public Notification update(SettingForm form) {
         Notification notification;
         Setting setting = settingRepository.findById(form.getId()).orElse(null);
         if(setting == null) return Notification.error("Paramètre introuvable");
@@ -45,10 +44,10 @@ public class SettingServiceImpl implements SettingService {
         try {
             settingRepository.save(setting);
             notification = Notification.info("Le paramètre <b>« " + setting.getCode().getName() + " »</b> a été modifié.");
-            logRepository.save(Log.info(notification.getMessage()).author(Optional.ofNullable(principal).map(Principal::getName).orElse("")));
+            logRepository.save(Log.info(notification.getMessage()));
         } catch (Exception e){
             notification = Notification.error("Erreur lors de la modification du paramètre <b>« " + setting.getCode().getName() + " »</b> ");
-            logRepository.save(Log.error(notification.getMessage(), ExceptionUtils.getStackTrace(e)).author(Optional.ofNullable(principal).map(Principal::getName).orElse("")));
+            logRepository.save(Log.error(notification.getMessage(), ExceptionUtils.getStackTrace(e)));
         }
         return notification;
     }

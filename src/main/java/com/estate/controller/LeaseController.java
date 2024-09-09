@@ -77,8 +77,8 @@ public class LeaseController {
     }
 
     @RequestMapping(value="activate/{id}")
-    public String activate(@PathVariable long id, @RequestParam(required = false) Long housingId, RedirectAttributes attributes, Model model, Principal principal){
-        Notification notification = leaseService.activate(id, housingId, model, principal);
+    public String activate(@PathVariable long id, @RequestParam(required = false) Long housingId, RedirectAttributes attributes, Model model){
+        Notification notification = leaseService.activate(id, housingId, model);
         Lease lease = (Lease) model.getAttribute("lease");
         if(notification.hasError() && lease != null){
             List<Housing> housings = housingService.findAllByStandingIdAndStatusAndActiveTrue(lease.getPayment().getStanding().getId(), Availability.FREE);

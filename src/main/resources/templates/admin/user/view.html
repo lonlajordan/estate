@@ -59,8 +59,16 @@
                             </span>
                         </a>
                         <a href="#" class="list-group-item">
+                            <b>Créé par</b>
+                            <span class="pull-right"><em th:text="${user.createdBy}"></em></span>
+                        </a>
+                        <a href="#" class="list-group-item">
                             <b>Date d'enregistrement</b>
                             <span class="pull-right"><em th:text="*{#temporals.format(creationDate, 'dd-MM-yyyy  HH:mm')}"></em></span>
+                        </a>
+                        <a href="#" class="list-group-item">
+                            <b>Modifié par</b>
+                            <span class="pull-right"><em th:text="${user.lastModifiedBy}"></em></span>
                         </a>
                         <a href="#" class="list-group-item">
                             <b>Date de modification</b>

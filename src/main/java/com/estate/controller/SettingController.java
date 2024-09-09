@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
-import java.security.Principal;
 import java.util.Optional;
 
 @Controller
@@ -42,9 +41,9 @@ public class SettingController {
     }
 
     @PostMapping(value="save")
-    public String save(@Valid @ModelAttribute("setting") SettingForm setting, BindingResult result, RedirectAttributes attributes, Principal principal){
+    public String save(@Valid @ModelAttribute("setting") SettingForm setting, BindingResult result, RedirectAttributes attributes){
         if(result.hasErrors()) return "admin/setting/save";
-        attributes.addFlashAttribute("notification", settingService.update(setting, principal));
+        attributes.addFlashAttribute("notification", settingService.update(setting));
         return "redirect:/setting/list";
     }
 

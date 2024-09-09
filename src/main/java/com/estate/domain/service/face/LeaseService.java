@@ -22,7 +22,7 @@ public interface LeaseService {
 
     long count();
 
-    Notification activate(long id, Long housingId, Model model, Principal principal);
+    Notification activate(long id, Long housingId, Model model);
 
     Notification mutate(MutationForm mutation, Principal principal);
 }

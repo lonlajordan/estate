@@ -27,12 +27,12 @@
                             <span class="pull-right"><em th:text="*{level?.name}"></em></span>
                         </div>
                         <div class="list-group-item">
-                            <b>Date et heure</b>
-                            <span class="pull-right"><em th:text="*{#temporals.format(creationDate, 'dd-MM-yyyy  HH:mm')}"></em></span>
+                            <b>Créé par</b>
+                            <span class="pull-right"><em th:text="*{createdBy}"></em></span>
                         </div>
                         <div class="list-group-item">
-                            <b>Auteur</b>
-                            <span class="pull-right"><em th:text="*{author}"></em></span>
+                            <b>Date et heure</b>
+                            <span class="pull-right"><em th:text="*{#temporals.format(creationDate, 'dd-MM-yyyy  HH:mm')}"></em></span>
                         </div>
                         <div class="list-group-item">
                             <b>Message</b>

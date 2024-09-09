@@ -53,10 +53,10 @@ public class SecurityConfiguration {
         http.csrf()
             .and()
                 .sessionManagement()
-                .maximumSessions(1).expiredUrl("/237in").and()
+                .maximumSessions(1).expiredUrl("/").and()
             .and()
                 .exceptionHandling()
-                .accessDeniedPage("/error/403")
+                .accessDeniedPage("/")
             .and()
                 .formLogin()
                     .usernameParameter("email")
@@ -73,8 +73,8 @@ public class SecurityConfiguration {
                     .invalidateHttpSession(true)
             .and()
                 .authorizeRequests()
-                    .antMatchers("/237in", "/error", "/error/**", "/password/reset/**").permitAll()
-                    .anyRequest().permitAll();
+                    .antMatchers("/237in", "/error", "/error/**", "/password/reset/**", "/", "/about", "/contact", "/login", "/faq").permitAll()
+                    .anyRequest().authenticated();
         return http.build();
     }
 

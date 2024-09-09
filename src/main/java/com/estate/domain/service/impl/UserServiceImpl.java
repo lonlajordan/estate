@@ -57,7 +57,7 @@ public class UserServiceImpl implements UserService {
             if(force) paymentRepository.setValidatorToNullByUserId(id);
             userRepository.deleteById(id);
             notification = Notification.info("L'utilisateur <b>" + user.getName() + "</b> a été supprimé");
-            logRepository.save(Log.info(notification.getMessage()).author(Optional.ofNullable(request.getUserPrincipal()).map(Principal::getName).orElse("")));
+            logRepository.save(Log.info(notification.getMessage()));
         }catch (Throwable e){
             notification = Notification.error("Erreur lors de la suppression de l'utilisateur <b>" + user.getName() + "</b>.");
             if(!force){
@@ -65,16 +65,16 @@ public class UserServiceImpl implements UserService {
                 if(user.isActive()) actions = "<a class='lazy-link' href='" + request.getContextPath() + "/user/toggle/" + id + "'><b>Désactiver</b></a> ou ";
                 actions += "<a class='lazy-link text-danger' href='" + request.getRequestURI() + "?id=" + id + "&force=true" + "'><b>Forcer la suppression</b></a>.";
                 notification = Notification.warn("Cet utilisateur est impliqué dans certains enregistrements. " + actions);
-                logRepository.save(Log.warn(notification.getMessage()).author(Optional.ofNullable(request.getUserPrincipal()).map(Principal::getName).orElse("")));
+                logRepository.save(Log.warn(notification.getMessage()));
             } else {
-                logRepository.save(Log.error(notification.getMessage(), ExceptionUtils.getStackTrace(e)).author(Optional.ofNullable(request.getUserPrincipal()).map(Principal::getName).orElse("")));
+                logRepository.save(Log.error(notification.getMessage(), ExceptionUtils.getStackTrace(e)));
             }
         }
         return notification;
     }
 
     @Override
-    public Notification toggleById(long id, Principal principal) {
+    public Notification toggleById(long id) {
         Notification notification = new Notification();
         User user = userRepository.findById(id).orElse(null);
         if(user == null) return Notification.error("Utilisateur introuvable");
@@ -82,16 +82,16 @@ public class UserServiceImpl implements UserService {
             user.setActive(!user.isActive());
             userRepository.save(user);
             notification.setMessage("L'utilisateur <b>" + user.getName() + "</b> a été " + (user.isActive() ? "activé" : "désactivé") + " avec succès.");
-            logRepository.save(Log.info(notification.getMessage()).author(Optional.ofNullable(principal).map(Principal::getName).orElse("")));
+            logRepository.save(Log.info(notification.getMessage()));
         } catch (Throwable e){
             notification = Notification.error("Erreur lors du changement de statut de l'utilisateur <b>" + user.getName() + "</b>.");
-            logRepository.save(Log.error(notification.getMessage(), ExceptionUtils.getStackTrace(e)).author(Optional.ofNullable(principal).map(Principal::getName).orElse("")));
+            logRepository.save(Log.error(notification.getMessage(), ExceptionUtils.getStackTrace(e)));
         }
         return notification;
     }
 
     @Override
-    public Notification save(UserForm form, HttpSession session, Principal principal) {
+    public Notification save(UserForm form, HttpSession session) {
         boolean creation = form.getId() == null;
         Notification notification = Notification.info();
         User user = creation ? new User() : userRepository.findById(form.getId()).orElse(null);
@@ -114,7 +114,7 @@ public class UserServiceImpl implements UserService {
             }
             user = userRepository.save(user);
             notification.setMessage("L'utilisateur <b>" + user.getName() +"</b> a été " + (creation ? "ajouté." : "modifié."));
-            logRepository.save(Log.info(notification.getMessage()).author(Optional.ofNullable(principal).map(Principal::getName).orElse("")));
+            logRepository.save(Log.info(notification.getMessage()));
             if(!creation){
                 User client = (User) session.getAttribute("user");
                 if(client != null && client.getId().equals(user.getId())){
@@ -128,7 +128,7 @@ public class UserServiceImpl implements UserService {
         } catch (Throwable e){
             notification.setType(Level.ERROR);
             notification.setMessage("Erreur lors de la " + (creation ? "création" : "modification") + " de l'utilisateur <b>" + user.getName() + "</b>.");
-            logRepository.save(Log.error(notification.getMessage(), ExceptionUtils.getStackTrace(e)).author(Optional.ofNullable(principal).map(Principal::getName).orElse("")));
+            logRepository.save(Log.error(notification.getMessage(), ExceptionUtils.getStackTrace(e)));
         }
         return notification;
     }
@@ -146,7 +146,7 @@ public class UserServiceImpl implements UserService {
         try {
             user = userRepository.save(user);
             notification.setMessage("L'utilisateur <b>" + user.getName() +"</b> a été modifié.");
-            logRepository.save(Log.info(notification.getMessage()).author(user.getEmail()));
+            logRepository.save(Log.info(notification.getMessage()));
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             Collection<SimpleGrantedAuthority> authorities = user.getRoles().stream().map(Enum::name).map(SimpleGrantedAuthority::new).collect(Collectors.toList());
             auth = new UsernamePasswordAuthenticationToken(user.getEmail(), auth.getCredentials(), authorities);
@@ -155,7 +155,7 @@ public class UserServiceImpl implements UserService {
         } catch (Throwable e){
             notification.setType(Level.ERROR);
             notification.setMessage("Erreur lors de la modification de l'utilisateur <b>" + user.getName() + "</b>.");
-            logRepository.save(Log.error(notification.getMessage(), ExceptionUtils.getStackTrace(e)).author(user.getEmail()));
+            logRepository.save(Log.error(notification.getMessage(), ExceptionUtils.getStackTrace(e)));
         }
         return notification;
     }
@@ -175,7 +175,7 @@ public class UserServiceImpl implements UserService {
         } else {
             user.setPassword(passwordEncoder.encode(form.getAfter()));
             userRepository.save(user);
-            logRepository.save(Log.info("L'utilisateur <b>" + user.getName() + "</b> a modifié son mot de passe.").author(user.getEmail()));
+            logRepository.save(Log.info("L'utilisateur <b>" + user.getName() + "</b> a modifié son mot de passe."));
         }
         return notification;
     }

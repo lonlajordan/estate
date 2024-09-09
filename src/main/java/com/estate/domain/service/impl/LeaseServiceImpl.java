@@ -81,7 +81,7 @@ public class LeaseServiceImpl implements LeaseService {
     }
 
     @Override
-    public Notification activate(long id, Long housingId, Model model, Principal principal) {
+    public Notification activate(long id, Long housingId, Model model) {
         Notification notification = new Notification();
         Lease lease = leaseRepository.findById(id).orElse(null);
         if(lease == null) return Notification.error("Contrat de bail introuvable");
@@ -120,10 +120,10 @@ public class LeaseServiceImpl implements LeaseService {
             studentRepository.save(student);
             housingRepository.save(housing);
             notification.setMessage("Le contract de bail de l'étudiant <b>" + lease.getPayment().getStudent().getName() + "</b> a été activé avec succès.");
-            logRepository.save(Log.info(notification.getMessage()).author(Optional.ofNullable(principal).map(Principal::getName).orElse("")));
+            logRepository.save(Log.info(notification.getMessage()));
         } catch (Throwable e){
             notification = Notification.error("Erreur lors de l'activation du contrat de bail.");
-            logRepository.save(Log.error(notification.getMessage(), ExceptionUtils.getStackTrace(e)).author(Optional.ofNullable(principal).map(Principal::getName).orElse("")));
+            logRepository.save(Log.error(notification.getMessage(), ExceptionUtils.getStackTrace(e)));
         }
         return notification;
     }
@@ -157,10 +157,10 @@ public class LeaseServiceImpl implements LeaseService {
             housing.setStatus(Availability.FREE);
             housingRepository.save(housing);
             leaseRepository.save(lease);
-            logRepository.save(Log.info(notification.getMessage()).author(Optional.ofNullable(principal).map(Principal::getName).orElse("")));
+            logRepository.save(Log.info(notification.getMessage()));
         } catch (Throwable e){
             notification = Notification.error("Erreur lors de la mutation du contrat de bail.");
-            logRepository.save(Log.error(notification.getMessage(), ExceptionUtils.getStackTrace(e)).author(Optional.ofNullable(principal).map(Principal::getName).orElse("")));
+            logRepository.save(Log.error(notification.getMessage(), ExceptionUtils.getStackTrace(e)));
         }
         return notification;
     }

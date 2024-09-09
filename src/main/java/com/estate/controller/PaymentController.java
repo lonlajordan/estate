@@ -23,7 +23,6 @@ import org.springframework.web.servlet.support.RequestContextUtils;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-import java.security.Principal;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -134,14 +133,14 @@ public class PaymentController {
     }
 
     @PostMapping("save")
-    public String save(@Valid @ModelAttribute("payment") PaymentForm payment, BindingResult result, Model model, RedirectAttributes attributes, Principal principal){
+    public String save(@Valid @ModelAttribute("payment") PaymentForm payment, BindingResult result, Model model, RedirectAttributes attributes){
         if(payment.getId() == null) {
             String notNullMessage = "javax.validation.constraints.NotNull.message";
             String defaultMessage = "ne doit pas être nul";
             if(payment.getProofFile() == null || payment.getProofFile().isEmpty()) result.rejectValue("proofFile", notNullMessage, defaultMessage);
         }
         Notification notification = null;
-        if(!result.hasErrors()) notification =  paymentService.save(payment, principal);
+        if(!result.hasErrors()) notification =  paymentService.save(payment);
         if(result.hasErrors() || (notification != null && notification.hasError())){
             List<Standing> standings = standingService.findAll();
             model.addAttribute("notification", notification);

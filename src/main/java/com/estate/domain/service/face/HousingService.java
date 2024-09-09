@@ -7,7 +7,6 @@ import com.estate.domain.form.HousingForm;
 import com.estate.domain.form.HousingSearch;
 
 import javax.servlet.http.HttpServletRequest;
-import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,9 +28,9 @@ public interface HousingService {
 
     long count();
 
-    Notification save(HousingForm form, Principal principal);
+    Notification save(HousingForm form);
 
-    Notification toggleById(long id, Principal principal);
+    Notification toggleById(long id);
 
-    Notification liberate(long id, Principal principal);
+    Notification liberate(long id);
 }

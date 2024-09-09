@@ -18,7 +18,6 @@ import org.springframework.web.servlet.support.RequestContextUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.security.Principal;
 import java.util.Map;
 
 @Controller
@@ -105,8 +104,8 @@ public class StudentController {
     }
 
     @RequestMapping(value="toggle/{id}")
-    public String toggle(@PathVariable long id, RedirectAttributes attributes, Principal principal){
-        attributes.addFlashAttribute("notification", studentService.toggleById(id, principal));
+    public String toggle(@PathVariable long id, RedirectAttributes attributes){
+        attributes.addFlashAttribute("notification", studentService.toggleById(id));
         return "redirect:/student/list";
     }
 }

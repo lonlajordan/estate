@@ -2,6 +2,7 @@ package com.estate.domain.service.impl;
 
 import com.estate.domain.entity.Setting;
 import com.estate.domain.entity.User;
+import com.estate.domain.enumaration.Role;
 import com.estate.domain.enumaration.SettingCode;
 import com.estate.repository.SettingRepository;
 import com.estate.repository.UserRepository;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,6 +33,7 @@ public class InitDataService implements CommandLineRunner {
             user.setLastName("Gatien Jordan");
             user.setPhone("695463868");
             user.setPassword(new BCryptPasswordEncoder().encode("admin"));
+            user.setRoles(Collections.singletonList(Role.ROLE_ADMIN));
             userRepository.save(user);
         }
 

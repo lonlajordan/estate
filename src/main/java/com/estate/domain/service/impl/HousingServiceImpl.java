@@ -18,7 +18,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
-import java.security.Principal;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.List;
@@ -70,7 +69,7 @@ public class HousingServiceImpl implements HousingService {
     }
 
     @Override
-    public Notification save(HousingForm form, Principal principal) {
+    public Notification save(HousingForm form) {
         boolean creation = form.getId() == null;
         Notification notification = Notification.info();
         Housing housing = creation ? new Housing() : housingRepository.findById(form.getId()).orElse(null);
@@ -84,7 +83,7 @@ public class HousingServiceImpl implements HousingService {
             housingRepository.saveAndFlush(housing);
             notification.setMessage("Un logement a été " + (creation ? "ajouté." : "modifié."));
             log.info(notification.getMessage());
-            logRepository.save(Log.info(notification.getMessage()).author(Optional.ofNullable(principal).map(Principal::getName).orElse("")));
+            logRepository.save(Log.info(notification.getMessage()));
         } catch (Throwable e){
             String message = ExceptionUtils.getRootCauseMessage(e);
             notification.setType(Level.ERROR);
@@ -94,7 +93,7 @@ public class HousingServiceImpl implements HousingService {
                 notification.setMessage("Erreur lors de la " + (creation ? "création" : "modification") + " du logement.");
             }
             log.error(notification.getMessage(), e);
-            logRepository.save(Log.error(notification.getMessage(), ExceptionUtils.getStackTrace(e)).author(Optional.ofNullable(principal).map(Principal::getName).orElse("")));
+            logRepository.save(Log.error(notification.getMessage(), ExceptionUtils.getStackTrace(e)));
         }
 
         return notification;
@@ -112,7 +111,7 @@ public class HousingServiceImpl implements HousingService {
             }
             housingRepository.deleteById(id);
             notification = Notification.info("Le logement <b>" + housing.getName() + "</b> a été supprimé");
-            logRepository.save(Log.info(notification.getMessage()).author(Optional.ofNullable(request.getUserPrincipal()).map(Principal::getName).orElse("")));
+            logRepository.save(Log.info(notification.getMessage()));
         }catch (Throwable e){
             notification = Notification.error("Erreur lors de la suppression du logement <b>" + housing.getName() + "</b>.");
             if(!force){
@@ -120,16 +119,16 @@ public class HousingServiceImpl implements HousingService {
                 if(housing.isActive()) actions = "<a class='lazy-link' href='" + request.getContextPath() + "/housing/toggle/" + id + "'><b>Désactiver</b></a> ou ";
                 actions += "<a class='lazy-link text-danger' href='" + request.getRequestURI() + "?id=" + id + "&force=true" + "'><b>Forcer la suppression</b></a>.";
                 notification = Notification.warn("Ce logement est utilisé dans certains enregistrements. " + actions);
-                logRepository.save(Log.warn(notification.getMessage()).author(Optional.ofNullable(request.getUserPrincipal()).map(Principal::getName).orElse("")));
+                logRepository.save(Log.warn(notification.getMessage()));
             } else {
-                logRepository.save(Log.error(notification.getMessage(), ExceptionUtils.getStackTrace(e)).author(Optional.ofNullable(request.getUserPrincipal()).map(Principal::getName).orElse("")));
+                logRepository.save(Log.error(notification.getMessage(), ExceptionUtils.getStackTrace(e)));
             }
         }
         return notification;
     }
 
     @Override
-    public Notification toggleById(long id, Principal principal) {
+    public Notification toggleById(long id) {
         Notification notification = new Notification();
         Housing housing = housingRepository.findById(id).orElse(null);
         if(housing == null) return Notification.error("Logement introuvable");
@@ -138,16 +137,16 @@ public class HousingServiceImpl implements HousingService {
             if(!housing.isActive() && housing.getResident() != null) return Notification.warn("Ce logement est encore occupé");
             housingRepository.save(housing);
             notification.setMessage("Le logement <b>" + housing.getName() + "</b> a été " + (housing.isActive() ? "activé" : "désactivé") + " avec succès.");
-            logRepository.save(Log.info(notification.getMessage()).author(Optional.ofNullable(principal).map(Principal::getName).orElse("")));
+            logRepository.save(Log.info(notification.getMessage()));
         } catch (Throwable e){
             notification = Notification.error("Erreur lors de la modification du logement <b>" + housing.getName() + "</b>.");
-            logRepository.save(Log.error(notification.getMessage(), ExceptionUtils.getStackTrace(e)).author(Optional.ofNullable(principal).map(Principal::getName).orElse("")));
+            logRepository.save(Log.error(notification.getMessage(), ExceptionUtils.getStackTrace(e)));
         }
         return notification;
     }
 
     @Override
-    public Notification liberate(long id, Principal principal) {
+    public Notification liberate(long id) {
         Notification notification = new Notification();
         Housing housing = housingRepository.findById(id).orElse(null);
         if(housing == null) return Notification.error("Logement introuvable");
@@ -161,10 +160,10 @@ public class HousingServiceImpl implements HousingService {
             housing.setStatus(Availability.FREE);
             housingRepository.save(housing);
             notification.setMessage("Le logement <b>" + housing.getName() + "</b> a été libéré avec succès.");
-            logRepository.save(Log.info(notification.getMessage()).author(Optional.ofNullable(principal).map(Principal::getName).orElse("")));
+            logRepository.save(Log.info(notification.getMessage()));
         } catch (Throwable e){
             notification = Notification.error("Erreur lors de la libération du logement <b>" + housing.getName() + "</b>.");
-            logRepository.save(Log.error(notification.getMessage(), ExceptionUtils.getStackTrace(e)).author(Optional.ofNullable(principal).map(Principal::getName).orElse("")));
+            logRepository.save(Log.error(notification.getMessage(), ExceptionUtils.getStackTrace(e)));
         }
         return notification;
     }

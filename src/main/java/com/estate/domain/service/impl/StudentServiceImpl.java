@@ -23,7 +23,6 @@ import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.io.File;
 import java.io.IOException;
-import java.security.Principal;
 import java.util.Optional;
 
 @Slf4j
@@ -187,7 +186,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public Notification toggleById(long id, Principal principal) {
+    public Notification toggleById(long id) {
         Notification notification = new Notification();
         Student student = studentRepository.findById(id).orElse(null);
         if(student == null) return Notification.error("Étudiant introuvable");
@@ -195,10 +194,10 @@ public class StudentServiceImpl implements StudentService {
             student.setActive(!student.isActive());
             studentRepository.save(student);
             notification.setMessage("L'étudiant <b>" + student.getName() + "</b> a été " + (student.isActive() ? "activé" : "désactivé") + " avec succès.");
-            logRepository.save(Log.info(notification.getMessage()).author(Optional.ofNullable(principal).map(Principal::getName).orElse("")));
+            logRepository.save(Log.info(notification.getMessage()));
         } catch (Throwable e){
             notification = Notification.error("Erreur lors de la modification de l'étudiant <b>" + student.getName() + "</b>.");
-            logRepository.save(Log.error(notification.getMessage(), ExceptionUtils.getStackTrace(e)).author(Optional.ofNullable(principal).map(Principal::getName).orElse("")));
+            logRepository.save(Log.error(notification.getMessage(), ExceptionUtils.getStackTrace(e)));
         }
         return notification;
     }

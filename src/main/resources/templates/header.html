@@ -1,4 +1,4 @@
-<nav class="navbar navbar-default navbar-fixed-top" role="navigation" style="margin-bottom: 0" xmlns:th="http://www.thymeleaf.org">
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation" style="margin-bottom: 0" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
     <div class="navbar-header">
         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-collapse">
             <span class="sr-only">Toggle navigation</span>
@@ -10,13 +10,13 @@
             <img class="fa fa-fw" style="margin-right: 11px" tabindex="-1" th:src="@{/images/favicon.png}" alt=""> <span style="font-weight: bold">MINI CITÉ CONCORDE</span>
         </a>
     </div>
-    <ul class="nav navbar-top-links navbar-right">
+    <ul sec:authorize="isFullyAuthenticated()" class="nav navbar-top-links navbar-right">
         <li class="dropdown" id="user-menu">
             <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                 <span th:if="${session?.user}" th:text="${session.user.name}"></span> &nbsp; <i class="fa fa-user fa-fw"></i> &nbsp; <i class="fa fa-caret-down"></i>
             </a>
             <ul class="dropdown-menu dropdown-user p-0">
-                <li><a th:href="@{/user/profile}" style="padding: 10px"><i class="fa fa-cogs fa-fw"></i> <span th:text="${session?.user?.email}"></span></a></li>
+                <li><a th:href="@{/user/profile}" style="padding: 10px"><i class="fa fa-cogs fa-fw"></i> <span th:text="${#authentication.name}"></span></a></li>
                 <li class="divider m-0"></li>
                 <li><a th:href="@{/user/change/password}" style="padding: 10px"><i class="fa fa-lock fa-fw"></i> Changer de mot de passe</a></li>
                 <li class="divider m-0"></li>

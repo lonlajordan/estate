@@ -18,7 +18,7 @@ public interface StandingService {
 
     Notification deleteById(long id, boolean force, HttpServletRequest request);
 
-    Notification save(StandingForm form, Principal principal);
+    Notification save(StandingForm form);
 
-    Notification toggleById(long id, Principal principal);
+    Notification toggleById(long id);
 }

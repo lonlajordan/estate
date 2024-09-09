@@ -16,7 +16,6 @@ import org.springframework.web.servlet.support.RequestContextUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.security.Principal;
 import java.util.List;
 import java.util.Map;
 
@@ -60,12 +59,12 @@ public class HousingController {
     }
 
     @PostMapping("save")
-    public String save(@Valid @ModelAttribute("housing") HousingForm housing, BindingResult result, @RequestParam(required = false, defaultValue = "false") boolean multiple, Model model, RedirectAttributes attributes, Principal principal){
+    public String save(@Valid @ModelAttribute("housing") HousingForm housing, BindingResult result, @RequestParam(required = false, defaultValue = "false") boolean multiple, Model model, RedirectAttributes attributes){
         if(result.hasErrors()){
             model.addAttribute("standings", standingService.findAllByActiveTrue());
             return "admin/housing/save";
         }
-        Notification notification =  housingService.save(housing, principal);
+        Notification notification =  housingService.save(housing);
         if(multiple || notification.hasError()){
             model.addAttribute("notification", notification);
             model.addAttribute("housing", notification.hasError() ? housing : new HousingForm());
@@ -94,14 +93,14 @@ public class HousingController {
     }
 
     @RequestMapping(value="toggle/{id}")
-    public String toggle(@PathVariable long id, RedirectAttributes attributes, Principal principal){
-        attributes.addFlashAttribute("notification", housingService.toggleById(id, principal));
+    public String toggle(@PathVariable long id, RedirectAttributes attributes){
+        attributes.addFlashAttribute("notification", housingService.toggleById(id));
         return "redirect:/housing/list";
     }
 
     @RequestMapping(value="liberate/{id}")
-    public String liberate(@PathVariable long id, RedirectAttributes attributes, Principal principal){
-        attributes.addFlashAttribute("notification", housingService.liberate(id, principal));
+    public String liberate(@PathVariable long id, RedirectAttributes attributes){
+        attributes.addFlashAttribute("notification", housingService.liberate(id));
         return "redirect:/housing/list";
     }
 

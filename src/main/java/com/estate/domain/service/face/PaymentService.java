@@ -9,7 +9,6 @@ import com.estate.domain.form.PaymentSearch;
 import org.springframework.data.domain.Page;
 
 import javax.servlet.http.HttpSession;
-import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,7 +22,7 @@ public interface PaymentService {
 
     long countByStatus(Status status);
 
-    Notification save(PaymentForm form, Principal principal);
+    Notification save(PaymentForm form);
 
     List<Payment> findAllByStatusAndYear(Status status, Integer year);
 

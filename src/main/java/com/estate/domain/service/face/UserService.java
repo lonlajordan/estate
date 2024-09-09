@@ -20,11 +20,11 @@ public interface UserService {
 
     Optional<User> findById(long id);
 
-    Notification save(UserForm form, HttpSession session, Principal principal);
+    Notification save(UserForm form, HttpSession session);
 
     Notification updateProfile(ProfilForm form, HttpSession session);
 
-    Notification toggleById(long id, Principal principal);
+    Notification toggleById(long id);
 
     Notification changePassword(PasswordForm form, Principal principal);
 

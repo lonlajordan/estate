@@ -38,17 +38,25 @@
                             <b>Frais de réhabilitation (FCFA)</b>
                             <span class="pull-right"><em th:text="${#numbers.formatInteger(standing.repair, 1, 'WHITESPACE')}"></em></span>
                         </div>
-                        <a href="#" class="list-group-item">
+                        <div class="list-group-item">
                             <b>Statut</b>
                             <span class="pull-right"><em th:text="${#bools.isTrue(standing.active) ? 'ACTIF' : 'DÉSACTIVÉ'}"></em></span>
-                        </a>
+                        </div>
+                        <div class="list-group-item">
+                            <b>Créé par</b>
+                            <span class="pull-right"><em th:text="*{createdBy}"></em></span>
+                        </div>
                         <div class="list-group-item">
                             <b>Date de création</b>
-                            <span class="pull-right"><em th:text="${#temporals.format(standing.creationDate, 'dd-MM-yyyy hh:mm')}"></em></span>
+                            <span class="pull-right"><em th:text="*{#temporals.format(creationDate, 'dd-MM-yyyy hh:mm')}"></em></span>
+                        </div>
+                        <div class="list-group-item">
+                            <b>Modifié par</b>
+                            <span class="pull-right"><em th:text="*{lastModifiedBy}"></em></span>
                         </div>
                         <div class="list-group-item">
                             <b>Date de modification</b>
-                            <span class="pull-right"><em th:text="${#temporals.format(standing.lastModifiedDate, 'dd-MM-yyyy hh:mm')}"></em></span>
+                            <span class="pull-right"><em th:text="*{#temporals.format(lastModifiedDate, 'dd-MM-yyyy hh:mm')}"></em></span>
                         </div>
                     </div>
                     <div class="panel-footer" sec:authorize="hasRole('ADMIN')">
@@ -56,7 +64,7 @@
                             <i class="fa fa-plus-circle"></i>
                             &nbsp; Ajouter
                         </a>
-                        <a role="button" th:href="@{'/standing/save?id=' + ${standing?.id}}" class="btn btn-primary lazy-link">
+                        <a role="button" th:href="@{'/standing/save?id=' + ${standing.id}}" class="btn btn-primary lazy-link">
                             <i class="fa fa-pencil-square-o"></i>
                             &nbsp; Modifier
                         </a>

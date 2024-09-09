@@ -21,7 +21,6 @@ public class Log extends Auditable {
     private Level level = Level.INFO;
     @Column(columnDefinition = "TEXT")
     private String message = "";
-    private String author;
     @Column(columnDefinition = "TEXT")
     private String details = "";
 
@@ -34,11 +33,6 @@ public class Log extends Auditable {
         this.level = level;
         this.message = message;
         this.details = details;
-    }
-
-    public Log author(String author) {
-        this.author = author;
-        return this;
     }
 
     public static Log info(String message){

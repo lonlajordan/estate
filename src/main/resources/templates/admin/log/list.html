@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5" lang="en">
 
 <head th:replace="base.html :: head('Historique')"></head>
 
@@ -65,30 +65,29 @@
                         </div>
                     </div>
                 </div>
-                <button id="delete-items" role="link" class="d-none" onclick="invokeActionOnItems('log/delete', 'supprimer')"></button>
-                <!--/*@thymesVar id="notification" type="com.estate.domain.entity.Notification"*/-->
+                <button sec:authorize="hasRole('ADMIN')" id="delete-items" role="link" class="d-none" onclick="invokeActionOnItems('log/delete', 'supprimer')"></button>
                 <div th:replace="base.html :: alert(${notification})"></div>
-                <table id="data-list" data-pdf-title="HISTORIQUE" data-pdf-name="Historique" data-columns-left="2" data-columns-right="3" class="table table-striped table-bordered table-hover paging searching landscape dataTable can-delete exclude-first-sort multiple-selection fixed-columns">
+                <table id="data-list" data-pdf-title="HISTORIQUE" data-pdf-name="Historique" data-columns-left="2" data-columns-right="3" class="table table-striped table-bordered table-hover paging searching landscape dataTable fixed-columns" th:classappend="${#authorization.expression('hasRole(''ADMIN'')') ? 'can-delete multiple-selection exclude-first-sort' : ''}">
                     <thead>
                         <tr>
-                            <th class="action fit-cell-content">
+                            <th sec:authorize="hasRole('ADMIN')" class="action fit-cell-content">
                                 <input type="checkbox">
                             </th>
                             <th>Type</th>
                             <th>Message</th>
-                            <th>Auteur</th>
+                            <th>Créé par</th>
                             <th>Date et heure</th>
                             <th class="action fit-cell-content">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr th:each="log,iter: ${logs}" th:data-id="${log.id}">
-                            <td>
+                            <td sec:authorize="hasRole('ADMIN')">
                                 <input th:data-index="${iter.count}" type="checkbox">
                             </td>
                             <td th:text="${log.level.name}"></td>
                             <td th:utext="${log.message}"></td>
-                            <td th:text="${log.author}"></td>
+                            <td th:text="${log.createdBy}"></td>
                             <td th:text="${#temporals.format(log.creationDate, 'dd-MM-yyyy  HH:mm')}"></td>
                             <td class="text-center">
                                 <a class="dropdown-toggle" tabindex="0" data-toggle="popover" data-placement="auto" data-trigger="focus" th:data-target="${'popover-content-' + log.id}" href="#">
@@ -98,7 +97,7 @@
                                     <a class="list-group-item text-decoration-none text-left" th:href="@{'/log/view/' + ${log.id}}">
                                         <i class="fa fa-eye fa-fw"></i> Détails
                                     </a>
-                                    <a class="list-group-item text-decoration-none text-danger text-left" th:data-log-id="${log.id}" onclick="deleteItem(this.getAttribute('data-log-id'), 'log/delete')" href="#">
+                                    <a sec:authorize="hasRole('ADMIN')" class="list-group-item text-decoration-none text-danger text-left" th:data-log-id="${log.id}" onclick="deleteItem(this.getAttribute('data-log-id'), 'log/delete')" href="#">
                                         <i class="fa fa-trash-o fa-fw"></i> Supprimer
                                     </a>
                                 </div>

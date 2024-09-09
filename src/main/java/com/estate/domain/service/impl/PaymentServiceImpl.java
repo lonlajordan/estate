@@ -25,7 +25,6 @@ import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
-import java.security.Principal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -66,7 +65,7 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public Notification save(PaymentForm form, Principal principal) {
+    public Notification save(PaymentForm form) {
         boolean creation = form.getId() == null;
         Notification notification = Notification.info();
         Payment payment = creation ? new Payment() : paymentRepository.findById(form.getId()).orElse(null);
@@ -112,13 +111,13 @@ public class PaymentServiceImpl implements PaymentService {
             paymentRepository.saveAndFlush(payment);
             notification.setMessage("Un paiement a été " + (creation ? "ajouté." : "modifié."));
             log.info(notification.getMessage());
-            logRepository.save(Log.info(notification.getMessage()).author(Optional.ofNullable(principal).map(Principal::getName).orElse("")));
+            logRepository.save(Log.info(notification.getMessage()));
         } catch (Throwable e){
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             notification.setType(Level.ERROR);
             notification.setMessage("Erreur lors de la " + (creation ? "création" : "modification") + " du paiement.");
             log.error(notification.getMessage(), e);
-            logRepository.save(Log.error(notification.getMessage(), ExceptionUtils.getStackTrace(e)).author(Optional.ofNullable(principal).map(Principal::getName).orElse("")));
+            logRepository.save(Log.error(notification.getMessage(), ExceptionUtils.getStackTrace(e)));
         }
 
         return notification;

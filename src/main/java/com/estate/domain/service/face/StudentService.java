@@ -15,5 +15,5 @@ public interface StudentService {
     Page<Student> findAll(StudentSearch form);
     Optional<Student> findById(Long id);
     Notification save(StudentForm form);
-    Notification toggleById(long id, Principal principal);
+    Notification toggleById(long id);
 }

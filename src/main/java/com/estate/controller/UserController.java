@@ -56,12 +56,12 @@ public class UserController {
     }
 
     @PostMapping(value="save")
-    public String save(@Valid @ModelAttribute("user") UserForm user, BindingResult result, @RequestParam(required = false, defaultValue = "false") boolean multiple, Model model, RedirectAttributes attributes, HttpSession session, Principal principal){
+    public String save(@Valid @ModelAttribute("user") UserForm user, BindingResult result, @RequestParam(required = false, defaultValue = "false") boolean multiple, Model model, RedirectAttributes attributes, HttpSession session){
         if(result.hasErrors()){
             model.addAttribute("countryCodes", SmsHelper.countryCodes);
             return "admin/user/save";
         }
-        Notification notification =  userService.save(user, session, principal);
+        Notification notification =  userService.save(user, session);
         if(multiple || notification.hasError()){
             model.addAttribute("notification", notification);
             model.addAttribute("user", notification.hasError() ? user : new UserForm());
@@ -110,8 +110,8 @@ public class UserController {
     }
 
     @RequestMapping(value="toggle/{id}")
-    public String toggle(@PathVariable int id, RedirectAttributes attributes, Principal principal){
-        attributes.addFlashAttribute("notification", userService.toggleById(id, principal));
+    public String toggle(@PathVariable int id, RedirectAttributes attributes){
+        attributes.addFlashAttribute("notification", userService.toggleById(id));
         return "redirect:/user/list";
     }
 

@@ -19,7 +19,9 @@
                     <thead>
                         <tr>
                             <th>Paramètre</th>
-                            <th class="fit-cell-content text-center">Valeur</th>
+                            <th class="fit-cell-content">Valeur</th>
+                            <th class="fit-cell-content">Date de modification</th>
+                            <th class="fit-cell-content">Modifié par</th>
                             <th class="action fit-cell-content text-center" sec:authorize="hasRole('ADMIN')">Action</th>
                         </tr>
                     </thead>
@@ -27,6 +29,8 @@
                         <tr th:each="setting,iter: ${settings}" th:data-id="${setting.id}">
                             <td th:text="${setting.code?.name}"></td>
                             <td th:text="${setting.value}"></td>
+                            <td th:text="${#temporals.format(setting.lastModifiedDate, 'dd-MM-yyyy  HH:mm')}"></td>
+                            <td th:text="${setting.lastModifiedBy}"></td>
                             <td class="text-center" sec:authorize="hasRole('ADMIN')">
                                 <a class="lazy-link text-decoration-none" th:href="@{'/setting/save?id=' + ${setting.id}}"> <i class="fa fa-pencil-square-o"></i> </a>
                             </td>
@@ -36,6 +40,8 @@
                             <td class="text-center">
                                 <a class="text-decoration-none" th:href="@{/policy}"> <i class="fa fa-file-pdf-o"></i></a>
                             </td>
+                            <td></td>
+                            <td></td>
                             <td class="text-center" sec:authorize="hasRole('ADMIN')">
                                 <a class="text-decoration-none" href="#" onclick="document.getElementById('policy').click()"><i class="fa fa-pencil-square-o"></i></a>
                             </td>

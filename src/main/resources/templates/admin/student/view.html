@@ -71,8 +71,16 @@
                             <span class="pull-right"><em th:text="*{email}"></em></span>
                         </a>
                         <a class="list-group-item" href="#">
+                            <b>Créé par</b>
+                            <span class="pull-right"><em th:text="*{createdBy}"></em></span>
+                        </a>
+                        <a class="list-group-item" href="#">
                             <b>Date d'inscription</b>
                             <span class="pull-right"><em th:text="*{#temporals.format(creationDate, 'dd-MM-yyyy  HH:mm')}"></em></span>
+                        </a>
+                        <a class="list-group-item" href="#">
+                            <b>Modifié par</b>
+                            <span class="pull-right"><em th:text="*{lastModifiedBy}"></em></span>
                         </a>
                         <a class="list-group-item" href="#">
                             <b>Date de modification</b>
@@ -84,7 +92,7 @@
                             <i class="fa fa-plus-circle"></i>
                             &nbsp; Ajouter
                         </a>
-                        <a role="button" th:href="@{'/student/save?id=' + ${student?.id}}" class="btn btn-primary lazy-link">
+                        <a role="button" th:href="@{'/student/save?id=' + ${student.id}}" class="btn btn-primary lazy-link">
                             <i class="fa fa-pencil-square-o"></i>
                             &nbsp; Modifier
                         </a>
