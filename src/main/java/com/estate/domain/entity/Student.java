@@ -26,7 +26,8 @@ public class Student extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @OneToOne(optional = false)
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
     @Column(nullable = false)
     private String placeOfBirth = "BABADJOU";

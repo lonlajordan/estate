@@ -34,10 +34,10 @@ public class User extends Auditable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(nullable = false)
-    private String firstName = "";
-    private String lastName;
+    private String firstName = "LONLA";
+    private String lastName = "Gatien Jordan";
     @Column(nullable = false, unique = true)
-    private String email = "";
+    private String email = "jordan@gmail.com";
     @Column(nullable = false)
     private String password = "";
     @Column(nullable = false)
@@ -59,7 +59,7 @@ public class User extends Auditable {
     @OneToMany(mappedBy = "validator")
     private List<Payment> payments = new ArrayList<>();
 
-    @OneToOne(mappedBy = "user")
+    @OneToOne
     private Student student;
 
     public String getName(){
