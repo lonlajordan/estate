@@ -16,6 +16,7 @@ public class Log extends Auditable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
     private Long id;
+    @Convert(converter = Level.Converter.class)
     @Enumerated(EnumType.STRING)
     private Level level = Level.INFO;
     @Column(columnDefinition = "TEXT")

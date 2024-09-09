@@ -18,9 +18,10 @@ public class Setting extends Auditable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(nullable = false)
+    @Convert(converter = SettingCode.Converter.class)
     @Enumerated(EnumType.STRING)
     private SettingCode code;
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     private SettingType type = SettingType.INTEGER;
     private String value;
 

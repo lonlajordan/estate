@@ -1,5 +1,6 @@
 package com.estate.domain.enumaration;
 
+import com.estate.domain.converter.EnumConverter;
 import lombok.Getter;
 
 @Getter
@@ -15,5 +16,11 @@ public enum Grade {
 
     Grade(String name) {
         this.name = name;
+    }
+
+    public static class Converter extends EnumConverter<Grade> {
+        public Converter(Class<Grade> clazz) {
+            super(clazz);
+        }
     }
 }

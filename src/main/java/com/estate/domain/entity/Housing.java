@@ -25,6 +25,7 @@ public class Housing extends Auditable {
     private Student resident;
     @OneToOne
     private Student reservedBy;
+    @Convert(converter = Availability.Converter.class)
     @Enumerated(EnumType.STRING)
     private Availability status = Availability.FREE;
     private boolean active = true;

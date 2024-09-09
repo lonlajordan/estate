@@ -1,5 +1,6 @@
 package com.estate.domain.enumaration;
 
+import com.estate.domain.converter.EnumConverter;
 import lombok.Getter;
 
 @Getter
@@ -12,6 +13,12 @@ public enum Availability {
 
     Availability(String name) {
         this.name = name;
+    }
+
+    public static class Converter extends EnumConverter<Availability> {
+        public Converter(Class<Availability> clazz) {
+            super(clazz);
+        }
     }
 
 }

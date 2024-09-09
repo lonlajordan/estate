@@ -1,4 +1,4 @@
-package com.estate.configuration;
+package com.estate.domain.converter;
 
 import com.estate.domain.enumaration.Mode;
 import org.apache.commons.collections4.ListUtils;

@@ -45,6 +45,7 @@ public class Student extends Auditable {
     private String studentCard = ""; // Carte d'étudiant
     @Column(nullable = false)
     private String school = "ENSP";
+    @Convert(converter = Grade.Converter.class)
     @Enumerated(EnumType.STRING)
     private Grade grade = Grade.L1;
     @Column(nullable = false)
@@ -56,12 +57,14 @@ public class Student extends Auditable {
     @Column(nullable = false)
     private String phone;
     private String mobile;
+    @Convert(converter = Gender.Converter.class)
     @Enumerated(EnumType.STRING)
     private Gender gender = Gender.MALE;
     @ManyToOne
     private Housing housing;
 
     @Column(nullable = false)
+    @Convert(converter = Relationship.Converter.class)
     @Enumerated(EnumType.STRING)
     private Relationship firstParentRelation = Relationship.FATHER;
     @Column(nullable = false)
@@ -75,6 +78,7 @@ public class Student extends Auditable {
     private String firstParentEmail = "admin@gmail.com";
 
     @Column(nullable = false)
+    @Convert(converter = Relationship.Converter.class)
     @Enumerated(EnumType.STRING)
     private Relationship secondParentRelation = Relationship.MOTHER;
     @Column(nullable = false)

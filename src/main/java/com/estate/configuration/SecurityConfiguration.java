@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
 
 @Configuration
 @EnableWebSecurity
-public class BasicSecurityConfiguration {
+public class SecurityConfiguration {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -45,7 +45,7 @@ public class BasicSecurityConfiguration {
 
     @Bean
     protected WebSecurityCustomizer ignoringCustomizer(){
-        return (web) -> web.ignoring().antMatchers("/css/**", "/js/**", "/images/**", "/fonts/**");
+        return (web) -> web.ignoring().antMatchers("/css/**", "/js/**", "/images/**", "/fonts/**", "/assets/**");
     }
 
     @Bean
@@ -53,7 +53,7 @@ public class BasicSecurityConfiguration {
         http.csrf()
             .and()
                 .sessionManagement()
-                .maximumSessions(1).expiredUrl("/").and()
+                .maximumSessions(1).expiredUrl("/237in").and()
             .and()
                 .exceptionHandling()
                 .accessDeniedPage("/error/403")

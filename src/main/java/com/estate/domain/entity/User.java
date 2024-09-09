@@ -1,7 +1,7 @@
 package com.estate.domain.entity;
 
-import com.estate.configuration.ModeListConverter;
-import com.estate.configuration.RoleListConverter;
+import com.estate.domain.converter.ModeListConverter;
+import com.estate.domain.converter.RoleListConverter;
 import com.estate.domain.enumaration.Gender;
 import com.estate.domain.enumaration.Mode;
 import com.estate.domain.enumaration.Role;
@@ -44,6 +44,7 @@ public class User extends Auditable {
     private String phone = "";
     private String token;
     private LocalDateTime tokenExpirationDate = LocalDateTime.now();
+    @Convert(converter = Gender.Converter.class)
     private Gender gender = Gender.MALE;
     private boolean active = true;
     private LocalDateTime lastLogin;
