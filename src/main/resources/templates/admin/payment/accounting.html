@@ -43,7 +43,7 @@
                     <tbody>
                         <tr th:each="payment,iter: ${payments}" th:data-id="${payment.id}">
                             <td><a class="lazy-link" th:href="@{'/payment/view/' + ${payment.id}}" th:text="${payment.id}"></a></td>
-                            <td th:text="${payment.student?.name}"></td>
+                            <td th:text="${payment.student?.user?.name}"></td>
                             <td th:text="${#temporals.format(payment.creationDate, 'dd-MM-yyyy  HH:mm')}"></td>
                             <td th:text="${payment.mode?.name}"></td>
                             <td th:text="${payment.validator?.name}"></td>

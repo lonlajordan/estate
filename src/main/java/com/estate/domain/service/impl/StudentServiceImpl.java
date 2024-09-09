@@ -4,6 +4,7 @@ import com.estate.domain.entity.Log;
 import com.estate.domain.entity.Notification;
 import com.estate.domain.entity.Student;
 import com.estate.domain.enumaration.Level;
+import com.estate.domain.enumaration.Profil;
 import com.estate.domain.enumaration.Role;
 import com.estate.domain.form.StudentForm;
 import com.estate.domain.form.StudentSearch;
@@ -65,6 +66,7 @@ public class StudentServiceImpl implements StudentService {
         if(student == null) return Notification.error("Étudiant introuvable");
         student.getUser().setFirstName(form.getFirstName());
         student.getUser().setLastName(form.getLastName());
+        student.getUser().setProfil(Profil.STUDENT);
         student.setDateOfBirth(form.getDateOfBirth());
         student.setPlaceOfBirth(form.getPlaceOfBirth());
         student.getUser().setGender(form.getGender());
@@ -197,9 +199,9 @@ public class StudentServiceImpl implements StudentService {
         Student student = studentRepository.findById(id).orElse(null);
         if(student == null) return Notification.error("Étudiant introuvable");
         try {
-            student.setActive(!student.isActive());
+            student.getUser().setActive(!student.getUser().isActive());
             studentRepository.save(student);
-            notification.setMessage("L'étudiant <b>" + student.getUser().getName() + "</b> a été " + (student.isActive() ? "activé" : "désactivé") + " avec succès.");
+            notification.setMessage("L'étudiant <b>" + student.getUser().getName() + "</b> a été " + (student.getUser().isActive() ? "activé" : "désactivé") + " avec succès.");
             logRepository.save(Log.info(notification.getMessage()));
         } catch (Throwable e){
             notification = Notification.error("Erreur lors de la modification de l'étudiant <b>" + student.getUser().getName() + "</b>.");

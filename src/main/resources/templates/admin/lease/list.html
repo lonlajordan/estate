@@ -82,7 +82,7 @@
                     <tbody>
                         <tr th:each="lease,iter: ${leases}" th:data-id="${lease.id}">
                         <td th:text="${lease.id}"></td>
-                        <td th:text="${lease.payment?.student?.name}"></td>
+                        <td th:text="${lease.payment?.student?.user?.name}"></td>
                         <td>
                             <span th:text="${lease.housing?.name}"></span><span th:if="${lease.mutationHousing != null}" th:text="${' -> ' + lease.mutationHousing?.name}"></span>
                         </td>

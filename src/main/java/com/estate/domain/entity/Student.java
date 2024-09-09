@@ -82,8 +82,6 @@ public class Student extends Auditable {
     private String otp = "";
     @Column(nullable = false)
     private LocalDateTime otpExpiredAt = LocalDateTime.now();
-    @Column(nullable = false)
-    private boolean active = true;
     @OneToMany(mappedBy = "student", cascade = CascadeType.REMOVE, orphanRemoval = true)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Payment> payments = new ArrayList<>();

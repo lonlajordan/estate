@@ -4,6 +4,7 @@ import com.estate.domain.converter.ModeListConverter;
 import com.estate.domain.converter.RoleListConverter;
 import com.estate.domain.enumaration.Gender;
 import com.estate.domain.enumaration.Mode;
+import com.estate.domain.enumaration.Profil;
 import com.estate.domain.enumaration.Role;
 import com.estate.domain.form.Phone;
 import com.estate.domain.form.ProfilForm;
@@ -45,6 +46,9 @@ public class User extends Auditable {
     private String mobile;
     private String token;
     private LocalDateTime tokenExpirationDate = LocalDateTime.now();
+    @Convert(converter = Profil.Converter.class)
+    @Enumerated(EnumType.STRING)
+    private Profil profil = Profil.STAFF;
     @Convert(converter = Gender.Converter.class)
     @Enumerated(EnumType.STRING)
     private Gender gender = Gender.MALE;
