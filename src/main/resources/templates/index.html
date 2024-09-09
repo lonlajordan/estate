@@ -43,7 +43,7 @@
         <div class="row">
             <div class="col-12">
                 <nav class="navbar navbar-expand-lg navbar-light rounded">
-                    <a class="navbar-brand logo navbar-brand d-flex mr-auto" href="index.html">
+                    <a class="navbar-brand logo navbar-brand d-flex mr-auto" th:href="@{/}">
                         <img th:src="@{/assets/img/logos/black-logo.png}" alt="logo">
                     </a>
                     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -52,7 +52,7 @@
                     <div class="navbar-collapse collapse w-100" id="navbar">
                         <ul class="navbar-nav ml-auto">
                             <li class="nav-item">
-                                <a class="nav-link single" href="#top">Home</a>
+                                <a class="nav-link single" href="#top">Accueil</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link single" href="#featured-property">Property</a>
@@ -857,52 +857,52 @@
                 <div class="multi-carousel-inner">
                     <div class="item">
                         <div class="pad15">
-                            <img src="assets/img/brands/brand-1.png" alt="brand" class="img-fluid">
+                            <img th:src="@{/assets/img/brands/brand-1.png}" alt="brand" class="img-fluid">
                         </div>
                     </div>
                     <div class="item">
                         <div class="pad15">
-                            <img src="assets/img/brands/brand-2.png" alt="brand" class="img-fluid">
+                            <img th:src="@{/assets/img/brands/brand-2.png}" alt="brand" class="img-fluid">
                         </div>
                     </div>
                     <div class="item">
                         <div class="pad15">
-                            <img src="assets/img/brands/brand-3.png" alt="brand" class="img-fluid">
+                            <img th:src="@{/assets/img/brands/brand-3.png}" alt="brand" class="img-fluid">
                         </div>
                     </div>
                     <div class="item">
                         <div class="pad15">
-                            <img src="assets/img/brands/brand-4.png" alt="brand" class="img-fluid">
+                            <img th:src="@{/assets/img/brands/brand-4.png}" alt="brand" class="img-fluid">
                         </div>
                     </div>
                     <div class="item">
                         <div class="pad15">
-                            <img src="assets/img/brands/brand-5.png" alt="brand" class="img-fluid">
+                            <img th:src="@{/assets/img/brands/brand-5.png}" alt="brand" class="img-fluid">
                         </div>
                     </div>
                     <div class="item">
                         <div class="pad15">
-                            <img src="assets/img/brands/brand-1.png" alt="brand" class="img-fluid">
+                            <img th:src="@{/assets/img/brands/brand-1.png}" alt="brand" class="img-fluid">
                         </div>
                     </div>
                     <div class="item">
                         <div class="pad15">
-                            <img src="assets/img/brands/brand-2.png" alt="brand" class="img-fluid">
+                            <img th:src="@{/assets/img/brands/brand-2.png}" alt="brand" class="img-fluid">
                         </div>
                     </div>
                     <div class="item">
                         <div class="pad15">
-                            <img src="assets/img/brands/brand-3.png" alt="brand" class="img-fluid">
+                            <img th:src="@{/assets/img/brands/brand-3.png}" alt="brand" class="img-fluid">
                         </div>
                     </div>
                     <div class="item">
                         <div class="pad15">
-                            <img src="assets/img/brands/brand-4.png" alt="brand" class="img-fluid">
+                            <img th:src="@{/assets/img/brands/brand-4.png}" alt="brand" class="img-fluid">
                         </div>
                     </div>
                     <div class="item">
                         <div class="pad15">
-                            <img src="assets/img/brands/brand-5.png" alt="brand" class="img-fluid">
+                            <img th:src="@{/assets/img/brands/brand-5.png}" alt="brand" class="img-fluid">
                         </div>
                     </div>
                 </div>
@@ -1004,7 +1004,7 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-6 col-md-6">
-                <p>© LanDO. All Rights Reserved.</p>
+                <p>© MINI CITÉ CONCORDE - 2024. Tous droits réservés.</p>
             </div>
             <div class="col-lg-6 col-md-6">
                 <ul class="social-list clearfix">
@@ -1020,20 +1020,18 @@
 <!-- Footer end -->
 
 <!-- External JS libraries -->
-<script src="assets/js/jquery-2.2.0.min.js"></script>
-<script src="assets/js/popper.min.js"></script>
-<script src="assets/js/bootstrap.min.js"></script>
-<script src="assets/js/slick.min.js"></script>
-<script src="assets/js/jquery.magnific-popup.min.js"></script>
-<script src="assets/js/jquery.filterizr.js"></script>
-<script src="assets/js/wow.min.js"></script>
-<script src="assets/js/jquery.scrollUp.js"></script>
-<script src="assets/js/particles.min.js"></script>
-<script src="assets/js/typed.min.js"></script>
-<script src="assets/js/ie-emulation-modes-warning.js"></script>
+<script th:src="@{/js/jquery.min.js}"></script>
+<script th:src="@{/assets/js/popper.min.js}"></script>
+<script th:src="@{/assets/js/bootstrap.min.js}"></script>
+<script th:src="@{/assets/js/slick.min.js}"></script>
+<script th:src="@{/assets/js/jquery.magnific-popup.min.js}"></script>
+<script th:src="@{/assets/js/jquery.filterizr.js}"></script>
+<script th:src="@{/assets/js/wow.min.js}"></script>
+<script th:src="@{/assets/js/jquery.scrollUp.js}"></script>
+<script th:src="@{/assets/js/particles.min.js}"></script>
+<script th:src="@{/assets/js/typed.min.js}"></script>
+<script th:src="@{/assets/js/ie-emulation-modes-warning.js}"></script>
 <!-- Custom JS Script -->
-<script  src="assets/js/app.js"></script>
+<script th:src="@{/assets/js/app.js}"></script>
 </body>
-
-<!-- Mirrored from storage.googleapis.com/theme-vessel-items/checking-sites/lando-html/HTML/main/dashboard.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 09 Sep 2024 10:05:51 GMT -->
 </html>
