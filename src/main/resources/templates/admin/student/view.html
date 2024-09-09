@@ -24,11 +24,11 @@
                     <div class="list-group">
                         <a class="list-group-item" href="#">
                             <b>Nom</b>
-                            <span class="pull-right"><em th:text="*{firstName}"></em></span>
+                            <span class="pull-right"><em th:text="*{user.firstName}"></em></span>
                         </a>
                         <a class="list-group-item" href="#">
                             <b>Prénom</b>
-                            <span class="pull-right"><em th:text="*{lastName}"></em></span>
+                            <span class="pull-right"><em th:text="*{user.lastName}"></em></span>
                         </a>
                         <a class="list-group-item" href="#">
                             <b>Date de naissance</b>
@@ -64,11 +64,11 @@
                         </a>
                         <a class="list-group-item" href="#">
                             <b>Téléphone(s)</b>
-                            <span class="pull-right"><em th:text="*{phone}"></em><em th:if="${student.mobile != null}" th:text="${' / ' + student.mobile}"></em></span>
+                            <span class="pull-right"><em th:text="*{user.phone}"></em><em th:if="${student.user?.mobile != null}" th:text="${' / ' + student.user.mobile}"></em></span>
                         </a>
                         <a class="list-group-item" href="#">
                             <b>Adresse e-mail</b>
-                            <span class="pull-right"><em th:text="*{email}"></em></span>
+                            <span class="pull-right"><em th:text="*{user.email}"></em></span>
                         </a>
                         <a class="list-group-item" href="#">
                             <b>Créé par</b>

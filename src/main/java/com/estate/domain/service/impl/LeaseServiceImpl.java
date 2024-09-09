@@ -119,7 +119,7 @@ public class LeaseServiceImpl implements LeaseService {
             housing.setReservedBy(null);
             studentRepository.save(student);
             housingRepository.save(housing);
-            notification.setMessage("Le contract de bail de l'étudiant <b>" + lease.getPayment().getStudent().getName() + "</b> a été activé avec succès.");
+            notification.setMessage("Le contract de bail de l'étudiant <b>" + lease.getPayment().getStudent().getUser().getName() + "</b> a été activé avec succès.");
             logRepository.save(Log.info(notification.getMessage()));
         } catch (Throwable e){
             notification = Notification.error("Erreur lors de l'activation du contrat de bail.");
@@ -151,7 +151,7 @@ public class LeaseServiceImpl implements LeaseService {
             housingRepository.save(housing);
             student.setHousing(housing);
             studentRepository.save(student);
-            notification.setMessage("L'étudiant <b>" + student.getName() + "</b> a été transféré dans le logement <b>" + housing.getName() + "</b> avec succès.");
+            notification.setMessage("L'étudiant <b>" + student.getUser().getName() + "</b> a été transféré dans le logement <b>" + housing.getName() + "</b> avec succès.");
             housing = lease.getHousing();
             housing.setResident(null);
             housing.setStatus(Availability.FREE);

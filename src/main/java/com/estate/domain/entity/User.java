@@ -28,7 +28,7 @@ import java.util.stream.Stream;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "users")
+@Table(name = "users", uniqueConstraints = { @UniqueConstraint(name = "UK_EMAIL", columnNames = { "email"})})
 public class User extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,6 +42,7 @@ public class User extends Auditable {
     private String password = "";
     @Column(nullable = false)
     private String phone = "";
+    private String mobile;
     private String token;
     private LocalDateTime tokenExpirationDate = LocalDateTime.now();
     @Convert(converter = Gender.Converter.class)
@@ -58,8 +59,16 @@ public class User extends Auditable {
     @OneToMany(mappedBy = "validator")
     private List<Payment> payments = new ArrayList<>();
 
+    @OneToOne(mappedBy = "user")
+    private Student student;
+
     public String getName(){
         return Stream.of(firstName, lastName).filter(StringUtils::isNotBlank).collect(Collectors.joining(" "));
+    }
+
+    public String getOneName(){
+        String name = getName();
+        return name.substring(name.lastIndexOf(" ") + 1);
     }
 
     @PrePersist

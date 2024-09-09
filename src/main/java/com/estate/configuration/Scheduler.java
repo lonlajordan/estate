@@ -49,9 +49,9 @@ public class Scheduler {
         List<Student> students = studentRepository.findAllByDateOfBirthAndCurrentLeaseNotNull(LocalDate.now());
         String to, cc, name;
         for (Student student : students) {
-            to = student.getEmail();
+            to = student.getUser().getEmail();
             cc = Stream.of(student.getFirstParentEmail(), student.getSecondParentEmail()).distinct().filter(StringUtils::isNotBlank).collect(Collectors.joining(","));
-            name = student.getOneName();
+            name = student.getUser().getOneName();
             HashMap<String, Object> context = new HashMap<>();
             context.put("name", name);
             emailHelper.sendMail(to, cc, "JOYEUX ANNIVERSAIRE", "birthday.ftl", Locale.FRENCH, context, Collections.emptyList());
@@ -65,10 +65,10 @@ public class Scheduler {
                 continue;
             }
             Student student = lease.getPayment().getStudent();
-            name = student.getOneName();
+            name = student.getUser().getOneName();
             HashMap<String, Object> context = new HashMap<>();
             context.put("name", name);
-            emailHelper.sendMail(Stream.of(student.getFirstParentEmail(), student.getSecondParentEmail()).distinct().filter(StringUtils::isNotBlank).collect(Collectors.joining(",")), student.getEmail(), "RAPPEL DE PAIEMENT DU LOYER", "birthday.ftl", Locale.FRENCH, context, Collections.emptyList());
+            emailHelper.sendMail(Stream.of(student.getFirstParentEmail(), student.getSecondParentEmail()).distinct().filter(StringUtils::isNotBlank).collect(Collectors.joining(",")), student.getUser().getEmail(), "RAPPEL DE PAIEMENT DU LOYER", "birthday.ftl", Locale.FRENCH, context, Collections.emptyList());
             lease.setLastRememberDate(LocalDate.now());
             leaseRepository.save(lease);
         }

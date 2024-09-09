@@ -77,7 +77,7 @@ public class HousingServiceImpl implements HousingService {
         housing.setName(form.getName());
         housing.setStanding(standingRepository.getReferenceById(form.getStandingId()));
         housing.setStatus(form.getStatus());
-        if(!Availability.OCCUPIED.equals(housing.getStatus()) && housing.getResident() != null) return Notification.error("Ce logement est occupé par <b>" + housing.getResident().getName() + "</b>");
+        if(!Availability.OCCUPIED.equals(housing.getStatus()) && housing.getResident() != null) return Notification.error("Ce logement est occupé par <b>" + housing.getResident().getUser().getName() + "</b>");
 
         try {
             housingRepository.saveAndFlush(housing);
@@ -153,7 +153,7 @@ public class HousingServiceImpl implements HousingService {
         try {
             Student student = housing.getResident();
             if(student != null && student.getCurrentLease() != null) {
-                String name = student.getName();
+                String name = student.getUser().getName();
                 LocalDate expiration = student.getCurrentLease().getRealEndDate();
                 if(LocalDate.now().isBefore(student.getCurrentLease().getRealEndDate())) return Notification.warn("Ce logement est encore occupé par <b>" + name + "</b> dont le contrat de bail expire le <b>" + (new SimpleDateFormat("dd/MM/yyyy").format(expiration)) + "</b>.");
             }

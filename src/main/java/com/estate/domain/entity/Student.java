@@ -7,9 +7,7 @@ import com.estate.domain.form.Phone;
 import com.estate.domain.form.StudentForm;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -19,23 +17,17 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
 @Entity
 public class Student extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    /*@OneToOne(optional = false)
-    private User user;*/
-    @Column(nullable = false)
-    private String firstName = "LONLA";
-    private String lastName = "Gatien Jordan";
+    @OneToOne(optional = false)
+    private User user;
     @Column(nullable = false)
     private String placeOfBirth = "BABADJOU";
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
@@ -53,15 +45,6 @@ public class Student extends Auditable {
     @Column(nullable = false)
     private String specialities = "Informatique";
 
-    @Column(nullable = false)
-    private String email = "jordan@gmail.com";
-    private String password;
-    @Column(nullable = false)
-    private String phone;
-    private String mobile;
-    @Convert(converter = Gender.Converter.class)
-    @Enumerated(EnumType.STRING)
-    private Gender gender = Gender.MALE;
     @ManyToOne
     private Housing housing;
 
@@ -104,33 +87,28 @@ public class Student extends Auditable {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Payment> payments = new ArrayList<>();
 
+    public Student(){
+        this.user = new User();
+    }
+
     @OneToOne
     private Lease currentLease;
-
-    public String getName(){
-        return Stream.of(firstName, lastName).filter(StringUtils::isNotBlank).collect(Collectors.joining(" "));
-    }
-
-    public String getOneName(){
-        String name = getName();
-        return name.substring(name.lastIndexOf(" ") + 1);
-    }
 
     public StudentForm toForm(){
         StudentForm form = new StudentForm();
         form.setId(id);
-        form.setFirstName(firstName);
-        form.setLastName(lastName);
+        form.setFirstName(Optional.ofNullable(user).map(User::getFirstName).orElse(""));
+        form.setLastName(Optional.ofNullable(user).map(User::getLastName).orElse(""));
         form.setDateOfBirth(dateOfBirth);
         form.setPlaceOfBirth(placeOfBirth);
-        form.setGender(gender);
+        form.setGender(Optional.ofNullable(user).map(User::getGender).orElse(Gender.MALE));
 
         form.setSchool(school);
         form.setSpecialities(specialities);
         form.setGrade(grade);
-        form.setPhone(Phone.parse(phone));
-        form.setMobile(Phone.parse(mobile));
-        form.setEmail(email);
+        form.setPhone(Phone.parse(Optional.ofNullable(user).map(User::getPhone).orElse("")));
+        form.setMobile(Phone.parse(Optional.ofNullable(user).map(User::getMobile).orElse("")));
+        form.setEmail(Optional.ofNullable(user).map(User::getEmail).orElse(""));
 
         form.setFirstParentRelation(firstParentRelation);
         form.setFirstParentName(firstParentName);
@@ -151,10 +129,7 @@ public class Student extends Auditable {
     @PrePersist
     @PreUpdate
     public void beforeSave(){
-        if(this.firstName != null) this.firstName = this.firstName.trim().toUpperCase();
-        if(this.lastName != null) this.lastName = Arrays.stream(this.lastName.trim().toLowerCase().split("\\s+")).map(StringUtils::capitalize).collect(Collectors.joining(" "));
-        if(this.email != null) this.email = this.email.trim();
-        if(this.phone != null) this.phone = this.phone.trim();
+
     }
 
 }

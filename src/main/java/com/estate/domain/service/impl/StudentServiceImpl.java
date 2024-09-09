@@ -4,6 +4,7 @@ import com.estate.domain.entity.Log;
 import com.estate.domain.entity.Notification;
 import com.estate.domain.entity.Student;
 import com.estate.domain.enumaration.Level;
+import com.estate.domain.enumaration.Role;
 import com.estate.domain.form.StudentForm;
 import com.estate.domain.form.StudentSearch;
 import com.estate.domain.service.face.StudentService;
@@ -17,12 +18,14 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Optional;
 
 @Slf4j
@@ -31,6 +34,7 @@ import java.util.Optional;
 public class StudentServiceImpl implements StudentService {
     private final StudentRepository studentRepository;
     private final LogRepository logRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public long count() {
@@ -59,18 +63,18 @@ public class StudentServiceImpl implements StudentService {
         Notification notification = Notification.info();
         Student student = creation ? new Student() : studentRepository.findById(form.getId()).orElse(null);
         if(student == null) return Notification.error("Étudiant introuvable");
-        student.setFirstName(form.getFirstName());
-        student.setLastName(form.getLastName());
+        student.getUser().setFirstName(form.getFirstName());
+        student.getUser().setLastName(form.getLastName());
         student.setDateOfBirth(form.getDateOfBirth());
         student.setPlaceOfBirth(form.getPlaceOfBirth());
-        student.setGender(form.getGender());
+        student.getUser().setGender(form.getGender());
 
         student.setSchool(form.getSchool());
         student.setSpecialities(form.getSpecialities());
         student.setGrade(form.getGrade());
-        student.setPhone(form.getPhone().format());
-        student.setMobile(form.getMobile().format());
-        student.setEmail(form.getEmail());
+        student.getUser().setPhone(form.getPhone().format());
+        student.getUser().setMobile(form.getMobile().format());
+        student.getUser().setEmail(form.getEmail());
 
         student.setFirstParentRelation(form.getFirstParentRelation());
         student.setFirstParentName(form.getFirstParentName());
@@ -164,7 +168,9 @@ public class StudentServiceImpl implements StudentService {
 
         try {
             if(creation){
-                student.setActive(false);
+                student.getUser().setStudent(student);
+                student.getUser().setPassword(passwordEncoder.encode("12345"));
+                student.getUser().setRoles(Collections.singletonList(Role.ROLE_STUDENT));
                 // Send mail
             }
             studentRepository.saveAndFlush(student);
@@ -193,10 +199,10 @@ public class StudentServiceImpl implements StudentService {
         try {
             student.setActive(!student.isActive());
             studentRepository.save(student);
-            notification.setMessage("L'étudiant <b>" + student.getName() + "</b> a été " + (student.isActive() ? "activé" : "désactivé") + " avec succès.");
+            notification.setMessage("L'étudiant <b>" + student.getUser().getName() + "</b> a été " + (student.isActive() ? "activé" : "désactivé") + " avec succès.");
             logRepository.save(Log.info(notification.getMessage()));
         } catch (Throwable e){
-            notification = Notification.error("Erreur lors de la modification de l'étudiant <b>" + student.getName() + "</b>.");
+            notification = Notification.error("Erreur lors de la modification de l'étudiant <b>" + student.getUser().getName() + "</b>.");
             logRepository.save(Log.error(notification.getMessage(), ExceptionUtils.getStackTrace(e)));
         }
         return notification;

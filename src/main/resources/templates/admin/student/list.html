@@ -89,12 +89,12 @@
                     <tbody>
                         <tr th:each="student,iter: ${students}" th:data-id="${student.id}">
                             <td th:text="${student.id}"></td>
-                            <td th:text="${student.name}"></td>
-                            <td th:text="${student.gender.name}"></td>
-                            <td th:text="${student.email}"></td>
+                            <td th:text="${student.user?.name}"></td>
+                            <td th:text="${student.user?.gender.name}"></td>
+                            <td th:text="${student.user?.email}"></td>
                             <td>
-                                <span th:text="${student.phone}"></span><br>
-                                <span th:text="${student.mobile}"></span>
+                                <span th:text="${student.user?.phone}"></span><br>
+                                <span th:text="${student.user?.mobile}"></span>
                             </td>
                             <td th:text="${student.housing?.name}"></td>
                             <td th:text="${student.active ? 'ACTIF' : 'DÉSACTIVÉ'}"></td>

@@ -152,7 +152,7 @@ public class PaymentServiceImpl implements PaymentService {
             if(student.getCurrentLease() == null){
                 if(!housing.isActive()) return Notification.error("Le logement <b>" + housing.getName() + "</b> sollicité est désactivé");
                 if(Availability.OCCUPIED.equals(housing.getStatus())){
-                    return Notification.warn("Le logement <b>" + housing.getName() + "</b> est occupé par <b>" + housing.getResident().getName() + "</b>.");
+                    return Notification.warn("Le logement <b>" + housing.getName() + "</b> est occupé par <b>" + housing.getResident().getUser().getName() + "</b>.");
                 } else if(Availability.FREE.equals(housing.getStatus())){
                     lease.setHousing(housing);
                     lease.setStartDate(LocalDate.now());
@@ -165,7 +165,7 @@ public class PaymentServiceImpl implements PaymentService {
                     notification = Notification.info("Le paiement a été confirmé. Le contrat de bail a été enregistré et activé avec succès.");
                 } else if(Availability.LIBERATION.equals(housing.getStatus())){
                     lease.setHousing(housing);
-                    if(housing.getReservedBy() != null) return Notification.warn("Le logement <b>" + housing.getName() + "</b> a été réservé par <b>" + housing.getResident().getName() + "</b>.");
+                    if(housing.getReservedBy() != null) return Notification.warn("Le logement <b>" + housing.getName() + "</b> a été réservé par <b>" + housing.getResident().getUser().getName() + "</b>.");
                     housing.setReservedBy(student);
                     lease = leaseRepository.save(lease);
                     student.setHousing(housing);
