@@ -1,6 +1,6 @@
 package com.estate.domain.form;
 
-import com.estate.domain.enumaration.SettingType;
+import com.estate.domain.enumaration.SettingCode;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
@@ -10,9 +10,8 @@ import javax.validation.constraints.NotNull;
 public class SettingForm {
     @NotNull
     private Long id;
-    private String name;
     @NotNull
-    private SettingType type;
+    private SettingCode code;
     @NotBlank
     private String value;
 }

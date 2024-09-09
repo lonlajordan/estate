@@ -3,7 +3,6 @@ package com.estate.domain.service.impl;
 import com.estate.domain.entity.Setting;
 import com.estate.domain.entity.User;
 import com.estate.domain.enumaration.SettingCode;
-import com.estate.domain.enumaration.SettingType;
 import com.estate.repository.SettingRepository;
 import com.estate.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -37,14 +36,14 @@ public class InitDataService implements CommandLineRunner {
 
 
         List<Setting> settings = new ArrayList<>(Arrays.asList(
-            new Setting(SettingCode.ORANGE_MONEY_MERCHANT_CODE, SettingType.TEXT, ""),
-            new Setting(SettingCode.ORANGE_MONEY_MERCHANT_NAME, SettingType.TEXT, ""),
-            new Setting(SettingCode.MTN_MOBILE_MONEY_MERCHANT_CODE, SettingType.TEXT, ""),
-            new Setting(SettingCode.MTN_MOBILE_MONEY_MERCHANT_NAME, SettingType.TEXT, ""),
-            new Setting(SettingCode.BANK_NAME, SettingType.TEXT, ""),
-            new Setting(SettingCode.BANK_ACCOUNT_NAME, SettingType.TEXT, ""),
-            new Setting(SettingCode.BANK_ACCOUNT_NUMBER, SettingType.TEXT, ""),
-            new Setting(SettingCode.PAYPAL_LINK, SettingType.TEXT, "")
+            new Setting(SettingCode.ORANGE_MONEY_MERCHANT_CODE, ""),
+            new Setting(SettingCode.ORANGE_MONEY_MERCHANT_NAME, ""),
+            new Setting(SettingCode.MTN_MOBILE_MONEY_MERCHANT_CODE, ""),
+            new Setting(SettingCode.MTN_MOBILE_MONEY_MERCHANT_NAME, ""),
+            new Setting(SettingCode.BANK_NAME, ""),
+            new Setting(SettingCode.BANK_ACCOUNT_NAME, ""),
+            new Setting(SettingCode.BANK_ACCOUNT_NUMBER,""),
+            new Setting(SettingCode.PAYPAL_LINK, "")
         ));
         settingRepository.saveAll(settings.stream().filter(setting -> !settingRepository.existsByCode(setting.getCode())).collect(Collectors.toList()));
         List<SettingCode> codes = settings.stream().map(Setting::getCode).collect(Collectors.toList());

@@ -45,6 +45,7 @@ public class User extends Auditable {
     private String token;
     private LocalDateTime tokenExpirationDate = LocalDateTime.now();
     @Convert(converter = Gender.Converter.class)
+    @Enumerated(EnumType.STRING)
     private Gender gender = Gender.MALE;
     private boolean active = true;
     private LocalDateTime lastLogin;
