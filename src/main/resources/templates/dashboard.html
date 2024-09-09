@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+    <head th:replace="base.html :: head('Tableau de bord')"></head>
+    <body>
+        <div id="wrapper">
+            <div th:replace="header.html"></div>
+            <div id="page-wrapper">
+                <div class="row" style="margin-top: 16px">
+                    <div class="row">
+                        <div class="col-lg-3 col-md-3">
+                            <div class="panel panel-default">
+                                <div class="panel-body bg-success">
+                                    <div class="row">
+                                        <div class="col-xs-3">
+                                            <i class="fa fa-users fa-5x"></i>
+                                        </div>
+                                        <div class="col-xs-9 text-right">
+                                            <div class="h3" th:text="${students}"></div>
+                                            <div>Étudiants</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel-footer">
+                                    <a href="#">
+                                        <span class="pull-left"></span>
+                                    </a>
+                                    <a class="lazy-link" th:href="@{/student/list}">Détails ...</a>
+                                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-3">
+                            <div class="panel panel-default">
+                                <div class="panel-body bg-danger">
+                                    <div class="row">
+                                        <div class="col-xs-3">
+                                            <i class="fa fa-desktop fa-5x"></i>
+                                        </div>
+                                        <div class="col-xs-9 text-right">
+                                            <div class="h3" th:text="${users}"></div>
+                                            <div>Utilisateurs</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel-footer">
+                                    <a href="#">
+                                        <span class="pull-left"></span>
+                                    </a>
+                                    <a class="lazy-link" th:href="@{/user/list}">Détails ...</a>
+                                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-3">
+                            <div class="panel panel-default">
+                                <div class="panel-body bg-warning">
+                                    <div class="row">
+                                        <div class="col-xs-3">
+                                            <i class="fa fa-building-o fa-5x"></i>
+                                        </div>
+                                        <div class="col-xs-9 text-right">
+                                            <div class="h3" th:text="${housings}"></div>
+                                            <div>Logements</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel-footer">
+                                    <a href="#">
+                                        <span class="pull-left"></span>
+                                    </a>
+                                    <a class="lazy-link" th:href="@{/housing/list}">Détails ...</a>
+                                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-3">
+                            <div class="panel panel-default">
+                                <div class="panel-body bg-info" style="color: black">
+                                    <div class="row">
+                                        <div class="col-xs-3">
+                                            <i class="fa fa-money fa-5x"></i>
+                                        </div>
+                                        <div class="col-xs-9 text-right">
+                                            <div class="h3" th:text="${payments}"></div>
+                                            <div>Paiements</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel-footer">
+                                    <a href="#">
+                                        <span class="pull-left"></span>
+                                    </a>
+                                    <a class="lazy-link" th:href="@{/payment/list}">Détails ...</a>
+                                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <th:block th:insert="base.html :: scripts"></th:block>
+    </body>
+</html>

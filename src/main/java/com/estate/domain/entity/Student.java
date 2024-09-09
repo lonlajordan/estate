@@ -31,6 +31,8 @@ public class Student extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    /*@OneToOne(optional = false)
+    private User user;*/
     @Column(nullable = false)
     private String firstName = "LONLA";
     private String lastName = "Gatien Jordan";
