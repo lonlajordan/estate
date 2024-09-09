@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5" lang="en">
 <head th:replace="base.html :: head('Liste des paramètres')"></head>
 
 <body>
@@ -20,14 +20,14 @@
                         <tr>
                             <th>Paramètre</th>
                             <th class="fit-cell-content text-center">Valeur</th>
-                            <th class="action fit-cell-content text-center">Action</th>
+                            <th class="action fit-cell-content text-center" sec:authorize="hasRole('ADMIN')">Action</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr th:each="setting,iter: ${settings}" th:data-id="${setting.id}">
                             <td th:text="${setting.code?.name}"></td>
                             <td th:text="${setting.value}"></td>
-                            <td class="text-center">
+                            <td class="text-center" sec:authorize="hasRole('ADMIN')">
                                 <a class="lazy-link text-decoration-none" th:href="@{'/setting/save?id=' + ${setting.id}}"> <i class="fa fa-pencil-square-o"></i> </a>
                             </td>
                         </tr>
@@ -36,7 +36,7 @@
                             <td class="text-center">
                                 <a class="text-decoration-none" th:href="@{/policy}"> <i class="fa fa-file-pdf-o"></i></a>
                             </td>
-                            <td class="text-center">
+                            <td class="text-center" sec:authorize="hasRole('ADMIN')">
                                 <a class="text-decoration-none" href="#" onclick="document.getElementById('policy').click()"><i class="fa fa-pencil-square-o"></i></a>
                             </td>
                         </tr>
