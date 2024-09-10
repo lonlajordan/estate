@@ -4,10 +4,12 @@ import com.estate.domain.entity.Notification;
 import com.estate.domain.entity.*;
 import com.estate.domain.enumaration.Availability;
 import com.estate.domain.enumaration.Level;
+import com.estate.domain.enumaration.Profil;
 import com.estate.domain.enumaration.Status;
 import com.estate.domain.form.PaymentForm;
 import com.estate.domain.form.PaymentReject;
 import com.estate.domain.form.PaymentSearch;
+import com.estate.domain.mail.EmailHelper;
 import com.estate.domain.service.face.PaymentService;
 import com.estate.repository.*;
 import lombok.RequiredArgsConstructor;
@@ -43,6 +45,7 @@ public class PaymentServiceImpl implements PaymentService {
     private final UserRepository userRepository;
     private final LogRepository logRepository;
     private final LeaseRepository leaseRepository;
+    private final EmailHelper emailHelper;
 
     @Override
     public Page<Payment> findAll(int page){
@@ -163,6 +166,7 @@ public class PaymentServiceImpl implements PaymentService {
                     housing.setResident(student);
                     housing.setStatus(Availability.OCCUPIED);
                     notification = Notification.info("Le paiement a été confirmé. Le contrat de bail a été enregistré et activé avec succès.");
+                    notifyForPayment(payment.getStudent().getUser().getEmail(),payment,"validate.ftl",true,"RENOUVELLEMENT DE BAIL");
                 } else if(Availability.LIBERATION.equals(housing.getStatus())){
                     lease.setHousing(housing);
                     if(housing.getReservedBy() != null) return Notification.warn("Le logement <b>" + housing.getName() + "</b> a été réservé par <b>" + housing.getResident().getUser().getName() + "</b>.");
@@ -171,6 +175,8 @@ public class PaymentServiceImpl implements PaymentService {
                     student.setHousing(housing);
                     student.setCurrentLease(lease);
                     notification = Notification.info("Le paiement a été confirmé. Le contrat de bail a été enregistré et en attente d'activation.");
+                    notifyForPayment(payment.getStudent().getUser().getEmail(),payment,"validate.ftl",true,"RENOUVELLEMENT DE BAIL");
+
                 }
                 studentRepository.save(student);
                 housingRepository.save(housing);
@@ -194,6 +200,8 @@ public class PaymentServiceImpl implements PaymentService {
                 currentLease.setNextLease(lease);
                 leaseRepository.save(currentLease);
                 notification = Notification.info("Le paiement a été confirmé. Le contrat de bail a été renouvelé avec succès.");
+                notifyForPayment(payment.getStudent().getUser().getEmail(),payment,"validate.ftl",true,"RENOUVELLEMENT DE BAIL");
+
             }
             paymentRepository.save(payment);
         } catch (Exception e){
@@ -210,8 +218,8 @@ public class PaymentServiceImpl implements PaymentService {
         if(Status.INITIATED.equals(payment.getStatus())){
             payment.setStatus(Status.SUBMITTED);
             paymentRepository.save(payment);
-            String receiver = userRepository.findAll().stream().map(User::getEmail).collect(Collectors.joining(","));
-            // send mail to receiver if not empty
+            String receiver = userRepository.findByProfil(Profil.STAFF).stream().map(User::getEmail).collect(Collectors.joining(","));
+            notifyForPayment(receiver,payment,"payment.ftl",false,"NOTIFICATION DE PAIEMENT");
             log.info(receiver);
         } else {
             notification = Notification.warn("Le paiement ne peut être soumis dans son statut actuel");
@@ -231,6 +239,25 @@ public class PaymentServiceImpl implements PaymentService {
         if(validator == null || !validator.getModes().contains(payment.getMode())) return Notification.error("Vous n'êtes pas chargé de la vérification des paiement par <b>" + payment.getMode().name() + "</b>.");
         paymentRepository.save(payment);
         // Send mail here to the student
+        notifyForPayment(payment.getStudent().getUser().getEmail(),payment,"cancel.ftl",true,"ECHEC DE PAIEMENT");
         return notification;
+    }
+
+    public void notifyForPayment(String to,Payment payment,String template, boolean copy, String subject){
+        HashMap<String, Object> context = new HashMap<>();
+        context.put("name", payment.getStudent().getUser().getOneName());
+        context.put("amount", payment.getAmount());
+        context.put("rent",payment.getRent());
+        context.put("repair",payment.getRepair());
+        context.put("month",payment.getMonths());
+        context.put("caution",payment.getCaution());
+        context.put("mode",payment.getMode().toString());
+        context.put("motif",payment.getComment());
+        String cc = "";
+        if(copy){
+            cc = payment.getStudent().getFirstParentEmail() + ";" + payment.getStudent().getSecondParentEmail();
+        }
+        emailHelper.sendMail(to, cc, subject, template, Locale.FRENCH, context, Collections.emptyList());
+
     }
 }

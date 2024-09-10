@@ -127,15 +127,26 @@
                             <div class="col-lg-6 col-md-12 cf-4">
                                 <div class="contact-from">
                                     <h3>Ask For Special Offer</h3>
-                                    <form action="#" method="GET" enctype="multipart/form-data">
-                                        <div class="form-group name">
-                                            <input type="text" name="name" class="form-control" placeholder="Name">
+                                    <form th:object="${student}" th:action="@{/contact/info}" method="POST">
+                                        <div class="form-group name" th:classappend="${#fields.hasErrors('lastName') ? 'has-error' : ''}">
+                                            <label class="control-label" for="name">Nom</label>
+                                            <input id="name" th:field="*{name}" class="form-control" autocomplete="off">
+                                            <p th:if="${#fields.hasErrors('lastName')}" th:errors="*{name}" class="help-block"></p>
                                         </div>
-                                        <div class="form-group email">
-                                            <input type="email" name="email" class="form-control" placeholder="Email">
+                                        <div class="form-group email" th:classappend="${#fields.hasErrors('email') ? 'has-error' : ''}">
+                                            <label class="control-label" for="email">Adresse e-mail <span class="required-field">*</span></label>
+                                            <input id="email" type="email" th:field="*{email}" class="form-control" autocomplete="off" required>
+                                            <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="help-block"></p>
                                         </div>
-                                        <div class="form-group subject">
-                                            <input type="text" name="subject" class="form-control" placeholder="Phone Number">
+                                        <div class="form-group phone" th:classappend="${#fields.hasErrors('phone.number') ? 'has-error' : ''}">
+                                            <label for="phone" class="control-label">Numéro de téléphone <span class="required-field">*</span></label>
+                                            <div class="form-group input-group d-flex mb-0">
+                                                <select th:field="*{phone.code}" style="width: auto" class="form-control" required>
+                                                    <option th:each="code : ${countryCodes}" th:value="${code}" th:text="${code}"></option>
+                                                </select>
+                                                <input id="phone" th:field="*{phone.number}" placeholder="695463868" pattern="\d+" autocomplete="off" class="form-control" required>
+                                            </div>
+                                            <p th:if="${#fields.hasErrors('phone.number')}" th:errors="*{phone.number}" class="help-block"></p>
                                         </div>
                                         <div class="send-btn text-center">
                                             <button type="submit" class="btn btn-color btn-md btn-block">Send a message</button>

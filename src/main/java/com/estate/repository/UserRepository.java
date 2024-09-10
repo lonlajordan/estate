@@ -2,6 +2,7 @@ package com.estate.repository;
 
 
 import com.estate.domain.entity.User;
+import com.estate.domain.enumaration.Profil;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -11,4 +12,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByEmail(String email);
     Optional<User> findByToken(String token);
     List<User> findAllByOrderByLastLoginDesc();
+
+    List<User> findByProfil(Profil profil);
 }

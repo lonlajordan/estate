@@ -8,6 +8,7 @@ import com.estate.domain.enumaration.Profil;
 import com.estate.domain.enumaration.Role;
 import com.estate.domain.form.StudentForm;
 import com.estate.domain.form.StudentSearch;
+import com.estate.domain.mail.EmailHelper;
 import com.estate.domain.service.face.StudentService;
 import com.estate.repository.LogRepository;
 import com.estate.repository.StudentRepository;
@@ -23,10 +24,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
+import com.estate.utils.TextUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Locale;
 import java.util.Optional;
 
 @Slf4j
@@ -36,6 +40,7 @@ public class StudentServiceImpl implements StudentService {
     private final StudentRepository studentRepository;
     private final LogRepository logRepository;
     private final PasswordEncoder passwordEncoder;
+    private final EmailHelper emailHelper;
 
     @Override
     public long count() {
@@ -170,10 +175,19 @@ public class StudentServiceImpl implements StudentService {
 
         try {
             if(creation){
+                String password = TextUtils.generatePass(8);
                 student.getUser().setStudent(student);
-                student.getUser().setPassword(passwordEncoder.encode("12345"));
+                student.getUser().setPassword(passwordEncoder.encode(password));
                 student.getUser().setRoles(Collections.singletonList(Role.ROLE_STUDENT));
                 // Send mail
+                String name = student.getUser().getOneName();
+                HashMap<String, Object> context = new HashMap<>();
+                context.put("name", name);
+                context.put("login",student.getUser().getEmail());
+                context.put("password",password);
+                String cc = student.getFirstParentEmail() +";" + student.getSecondParentEmail();
+                emailHelper.sendMail(student.getUser().getEmail(), cc, "BIENVENU", "welcome.ftl", Locale.FRENCH, context, Collections.emptyList());
+
             }
             studentRepository.saveAndFlush(student);
             notification.setMessage("Un étudiant a été " + (creation ? "ajouté." : "modifié."));
