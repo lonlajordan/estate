@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
-    <!-- Google Tag Manager -->
+    <!-- Google Tag Manager
     <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
         new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='../../../../../../www.googletagmanager.com/gtm5445.html?id='+i+dl;f.parentNode.insertBefore(j,f);
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='www.googletagmanager.com/gtm5445.html?id='+i+dl;f.parentNode.insertBefore(j,f);
     })(window,document,'script','dataLayer','GTM-TAGCODE');</script>
-    <!-- End Google Tag Manager -->
+    End Google Tag Manager -->
     <title>MINI CITÉ CONCORDE</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="UTF-8">
@@ -19,20 +19,20 @@
     <link type="text/css" rel="stylesheet" th:href="@{/assets/fonts/flaticon/font/flaticon.css}">
 
     <!-- Favicon icon -->
-    <link rel="shortcut icon" th:href="@{/assets/img/favicon.ico}" type="image/x-icon" >
+    <link rel="shortcut icon" th:href="@{/images/favicon.png}" type="image/x-icon" >
 
-    <!-- Google fonts -->
+    <!-- Google fonts
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Raleway:300,400,500,600,300,700">
-
+    -->
     <!-- Custom Stylesheet -->
     <link type="text/css" rel="stylesheet" th:href="@{/assets/css/style.css}">
     <link rel="stylesheet" type="text/css" id="style_sheet" th:href="@{/assets/css/skins/default.css}">
 
 </head>
 <body id="top">
-<!-- Google Tag Manager (noscript) -->
+<!-- Google Tag Manager (noscript)
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TAGCODE" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<!-- End Google Tag Manager (noscript) -->
+End Google Tag Manager (noscript) -->
 <div class="page_loader"></div>
 
 <!-- main header start -->
@@ -56,7 +56,7 @@
                                 <a class="nav-link single" href="#featured-property">Logements</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link single" href="#agents">Agents</a>
+                                <a class="nav-link single" href="#agents">Administration</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link single" href="#gallery">Galerie</a>
@@ -93,8 +93,8 @@
                         <div class="row">
                             <div class="col-lg-6 col-md-12 align-self-center">
                                 <div class="text-l">
-                                    <h1>Trouver un logement étudiant</h1>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod</p>
+                                    <h1>Trouver un logement étudiant en un clic</h1>
+                                    <p class="text-justify">Nous offrons une expérience de vie étudiante exceptionnelle à la <b>MINI CITÉ CONCORDE</b>. Nos logements sont sécurisés, confortables et équipés de tout le nécessaire pour votre bien-être. Profitez d'un environnement calme et studieux, idéal pour réussir vos études.</p>
                                     <a href="#" class="btn btn-color btn-md r-btn">En savoir plus</a>
                                 </div>
                                 <div class="contact-from cf-2 cf-3">
@@ -102,12 +102,12 @@
                                         <div class="row">
                                             <div class="col-lg-3 col-md-6 pad-10">
                                                 <div class="form-group name">
-                                                    <input type="text" th:field="*{name}" class="form-control" placeholder="Name">
+                                                    <input type="text" th:field="*{name}" class="form-control" placeholder="Nom">
                                                 </div>
                                             </div>
                                             <div class="col-lg-3 col-md-6 pad-10">
                                                 <div class="form-group email">
-                                                    <input type="email" th:field="*{email}" class="form-control" placeholder="Email">
+                                                    <input type="email" th:field="*{email}" class="form-control" placeholder="Adresse e-mail">
                                                 </div>
                                             </div>
                                             <div class="col-lg-3 col-md-6 pad-10">
@@ -117,7 +117,7 @@
                                             </div>
                                             <div class="col-lg-3 col-md-6 pad-10">
                                                 <div class="send-btn text-center">
-                                                    <button type="submit" class="btn btn-color btn-md btn-block">Envoyer un message</button>
+                                                    <button type="submit" class="btn btn-color btn-md btn-block">Souscrire</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -126,7 +126,7 @@
                             </div>
                             <div class="col-lg-6 col-md-12 cf-4">
                                 <div class="contact-from">
-                                    <h3>Je veux intégrer la mini-cité</h3>
+                                    <h3>Recevoir des notifications pour les logements disponibles.</h3>
                                     <form th:object="${contact}" th:action="@{/contact}" method="post">
                                         <div class="form-group name" th:classappend="${#fields.hasErrors('name') ? 'has-error' : ''}">
                                             <input th:field="*{name}" class="form-control" placeholder="Nom" autocomplete="off">
@@ -138,7 +138,7 @@
                                             <input th:field="*{phone}" class="form-control" placeholder="Numéro de téléphone" autocomplete="off" required>
                                         </div>
                                         <div class="send-btn text-center">
-                                            <button type="submit" class="btn btn-color btn-md btn-block">Envoyer un message</button>
+                                            <button type="submit" class="btn btn-color btn-md btn-block">Souscrire</button>
                                         </div>
                                     </form>
                                 </div>
@@ -163,8 +163,8 @@
                             <i class="flaticon-empire-state-building"></i>
                         </div>
                         <div class="media-body">
-                            <h4>Logements de Qualité</h4>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing</p>
+                            <h4>Logements Spacieux</h4>
+                            <p>Espace et confort garantis pour votre bien-être</p>
                         </div>
                     </div>
                 </div>
@@ -175,7 +175,7 @@
                         </div>
                         <div class="media-body">
                             <h4>Bons Prix</h4>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing</p>
+                            <p>Tarifs abordables pour tous les budgets</p>
                         </div>
                     </div>
                 </div>
@@ -185,8 +185,8 @@
                             <i class="flaticon-sport-team"></i>
                         </div>
                         <div class="media-body">
-                            <h4>Assistance Gratuite</h4>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing</p>
+                            <h4>Service Client</h4>
+                            <p>Votre satisfaction est notre priorité</p>
                         </div>
                     </div>
                 </div>
@@ -200,8 +200,8 @@
 <div class="featured-property content-area content-area" id="featured-property">
     <div class="container">
         <div class="main-title wow_ fadeInDown delay-04s">
-            <h1>Nos logements disponibles</h1>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+            <h1>Nos logements</h1>
+            <p>Découvrez nos logements en cours de libération ou prêts à être occupés. Nous mettons à jour régulièrement nos disponibilités</p>
         </div>
         <div class="slick-slider-area">
             <div class="row slick-carousel" data-slick='{"slidesToShow": 3, "responsive":[{"breakpoint": 1024,"settings":{"slidesToShow": 2}}, {"breakpoint": 768,"settings":{"slidesToShow": 1}}]}'>
@@ -317,8 +317,8 @@
 <div class="agents content-area bg-grea" id="agents">
     <div class="container">
         <div class="main-title wow_ fadeInDown delay-04s">
-            <h1>Our Agents</h1>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+            <h1>Administration</h1>
+            <p>Rencontrez notre équipe et découvrez comment nous pouvons vous aider.</p>
         </div>
         <div class="slick-slider-area">
             <div class="row slick-carousel" data-slick='{"slidesToShow": 4, "responsive":[{"breakpoint": 1024,"settings":{"slidesToShow": 2}}, {"breakpoint": 768,"settings":{"slidesToShow": 1}}]}'>
@@ -422,12 +422,12 @@
 <div class="gallery portfolio-area content-area-4" id="gallery">
     <div class="container-fluid">
         <div class="main-title wow_ fadeInDown delay-04s">
-            <h1>Our Gallery</h1>
+            <h1>Notre Galerie</h1>
             <ul class="list-inline-listing filters filteriz-navigation">
-                <li class="active btn filtr-button filtr" data-filter="all">All</li>
-                <li data-filter="1" class="btn btn-inline filtr-button filtr">Apartment</li>
-                <li data-filter="2" class="btn btn-inline filtr-button filtr">House</li>
-                <li data-filter="3" class="btn btn-inline filtr-button filtr">Office</li>
+                <li class="active btn filtr-button filtr" data-filter="all">Tous</li>
+                <li data-filter="1" class="btn btn-inline filtr-button filtr">Studio</li>
+                <li data-filter="2" class="btn btn-inline filtr-button filtr">Chambre</li>
+                <li data-filter="3" class="btn btn-inline filtr-button filtr">Bureau</li>
             </ul>
         </div>
         <div class="row filter-portfolio wow_ fadeInUp delay-04s">
@@ -612,7 +612,7 @@
         <!-- Main title -->
         <div class="main-title wow_ fadeInDown delay-04s">
             <h1>Nos Prix</h1>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+            <p>Découvrez nos offres de logement à prix abordable. Nous avons des options pour tous les budgets.</p>
         </div>
         <div class="row">
             <div th:each="standing: ${standings}" class="col-xl-4 col-lg-4 col-md-12 wow_ fadeInLeft delay-04s">
@@ -650,8 +650,8 @@
             <div class="col-lg-12 wow_ fadeInDown delay-04s">
                 <div class="testimonial-inner">
                     <div class="main-title">
-                        <h1>Les témoignages</h1>
-                        <p>Quelques retours d'expérience des étudiants ayant résidé dans la MINI CITÉ CONCORDE.</p>
+                        <h1>Quelques témoignages</h1>
+                        <p>Nos clients sont notre priorité. Voici ce qu'ils disent de leur expérience avec nous.</p>
                     </div>
                     <div id="carouselExampleIndicators3" class="carousel slide" data-ride="carousel">
                         <ol class="carousel-indicators">
@@ -875,7 +875,7 @@
     <div class="container">
         <div class="main-title wow_ fadeInDown delay-04s">
             <h1>Contactez-Nous</h1>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+            <p>Vous avez une question ou une demande spécifique ? Utilisez notre formulaire de contact pour nous joindre.</p>
         </div>
         <div class="row">
             <div class="col-lg-7 wow_ fadeInLeft delay-04s">
@@ -919,28 +919,28 @@
                     <div class="media mb-25">
                         <i class="flaticon-phone"></i>
                         <div class="media-body">
-                            <h5>Téléphone:</h5>
+                            <h5>Téléphone</h5>
                             <p><a href="tel:0477-0477-8556-552">0477 8556 552</a></p>
                         </div>
                     </div>
                     <div class="media mb-25">
                         <i class="flaticon-mail"></i>
                         <div class="media-body">
-                            <h5>Email:</h5>
+                            <h5>Email</h5>
                             <p><a href="#">info@themevessel.com</a></p>
                         </div>
                     </div>
                     <div class="media mb-25">
-                        <i class="flaticon-internet"></i>
+                        <i class="flaticon-global"></i>
                         <div class="media-body">
-                            <h5>Web:</h5>
+                            <h5>Localisation</h5>
                             <p><a href="#">info@themevessel.com</a></p>
                         </div>
                     </div>
                     <div class="media mb-0">
                         <i class="flaticon-fax"></i>
                         <div class="media-body">
-                            <h5>Fax:</h5>
+                            <h5>Fax</h5>
                             <p><a href="#">0477 8556 552</a></p>
                         </div>
                     </div>
@@ -972,7 +972,7 @@
 <!-- Footer end -->
 
 <!-- External JS libraries -->
-<script th:src="@{/js/jquery.min.js}"></script>
+<script th:src="@{/assets/js/jquery.min.js}"></script>
 <script th:src="@{/assets/js/popper.min.js}"></script>
 <script th:src="@{/assets/js/bootstrap.min.js}"></script>
 <script th:src="@{/assets/js/slick.min.js}"></script>

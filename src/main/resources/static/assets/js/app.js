@@ -7,7 +7,7 @@ $(function () {
         populateColorPlates();
         setTimeout(function () {
             $(".page_loader").fadeOut("fast");
-            $('link[id="style_sheet"]').attr('href', 'assets/css/skins/default.css');
+            //$('link[id="style_sheet"]').attr('href', 'assets/css/skins/default.css');
             setDefaultPosition();
         }, 1000);
         if ($('body .filter-portfolio').length > 0) {
@@ -89,10 +89,9 @@ $(function () {
                 $('.sticky-header').addClass('header-shrink');
             }
             if($('.do-sticky').length < 1) {
-                $('.logo img').attr('src', 'assets/img/logos/black-logo.png');
+                $('.logo img').attr('src', 'images/logo.png');
             }
-        }
-        else {
+        } else {
             $('.sticky-header').removeClass('header-shrink');
             if($('.do-sticky').length < 1) {
                 $('.logo img').attr('src', 'assets/img/favicon.ico');
