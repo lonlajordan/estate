@@ -21,6 +21,7 @@ public interface PaymentRepository extends JpaRepository<Payment, Long>, JpaSpec
     void deleteAllByIdAndStatus(long id, Status status);
     long countAllByStatus(Status status);
 
+    Page<Payment> findAllByStudentUserIdOrderByCreationDateDesc(Long userId, Pageable pageable);
     List<Payment> findAllByStatusAndCreationDateBetweenOrderByCreationDateDesc(Status status, LocalDateTime startDate, LocalDateTime endDate);
 
     @Transactional

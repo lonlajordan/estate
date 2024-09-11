@@ -15,7 +15,7 @@
         </div>
         <div class="row">
             <div class="col mb-6">
-                <div class="panel-group" id="accordion">
+                <div class="panel-group" id="accordion" th:if="${T(com.estate.domain.enumaration.Profil).STAFF.equals(session?.user?.profil)}">
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             <h4 class="panel-title">
@@ -70,7 +70,7 @@
                     <thead>
                         <tr>
                             <th class="action fit-cell-content">ID</th>
-                            <th>Résident</th>
+                            <th th:if="${T(com.estate.domain.enumaration.Profil).STAFF.equals(session?.user?.profil)}">Résident</th>
                             <th class="fit-cell-content">Logement</th>
                             <th class="fit-cell-content">Standing</th>
                             <th class="fit-cell-content">Période de validité</th>
@@ -82,7 +82,7 @@
                     <tbody>
                         <tr th:each="lease,iter: ${leases}" th:data-id="${lease.id}">
                         <td th:text="${lease.id}"></td>
-                        <td th:text="${lease.payment?.student?.user?.name}"></td>
+                        <td th:text="${lease.payment?.student?.user?.name}" th:if="${T(com.estate.domain.enumaration.Profil).STAFF.equals(session?.user?.profil)}"></td>
                         <td>
                             <span th:text="${lease.housing?.name}"></span><span th:if="${lease.mutationHousing != null}" th:text="${' -> ' + lease.mutationHousing?.name}"></span>
                         </td>

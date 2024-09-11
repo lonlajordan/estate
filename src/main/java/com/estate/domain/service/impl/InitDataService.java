@@ -2,6 +2,7 @@ package com.estate.domain.service.impl;
 
 import com.estate.domain.entity.Setting;
 import com.estate.domain.entity.User;
+import com.estate.domain.enumaration.Profil;
 import com.estate.domain.enumaration.Role;
 import com.estate.domain.enumaration.SettingCode;
 import com.estate.repository.SettingRepository;
@@ -31,7 +32,8 @@ public class InitDataService implements CommandLineRunner {
             user.setEmail("admin@gmail.com");
             user.setFirstName("LONLA");
             user.setLastName("Gatien Jordan");
-            user.setPhone("695463868");
+            user.setPhone("+237 695463868");
+            user.setProfil(Profil.STAFF);
             user.setPassword(new BCryptPasswordEncoder().encode("admin"));
             user.setRoles(Collections.singletonList(Role.ROLE_ADMIN));
             userRepository.save(user);

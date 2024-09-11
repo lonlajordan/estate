@@ -52,6 +52,11 @@ public class LeaseServiceImpl implements LeaseService {
     }
 
     @Override
+    public Page<Lease> findAllByUserId(long userId, int page) {
+        return leaseRepository.findAllByPaymentStudentUserIdOrderByCreationDateDesc(userId, PageRequest.of(page - 1, 100));
+    }
+
+    @Override
     public Optional<Lease> findById(long id) {
         return leaseRepository.findById(id);
     }

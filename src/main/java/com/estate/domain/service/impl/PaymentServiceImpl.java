@@ -58,6 +58,11 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
+    public Page<Payment> findAllByUserId(long userId, int page) {
+        return paymentRepository.findAllByStudentUserIdOrderByCreationDateDesc(userId, PageRequest.of(page  - 1, 500));
+    }
+
+    @Override
     public Optional<Payment> findById(long id) {
         return paymentRepository.findById(id);
     }

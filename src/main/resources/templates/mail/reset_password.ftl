@@ -3,6 +3,7 @@
     <head>
         <meta charset="UTF-8">
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Réinitialisation de mot de passe</title>
     </head>
     <body>
         <p>Salut <i>${name}</i>,</p>
