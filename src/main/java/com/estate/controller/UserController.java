@@ -2,6 +2,7 @@ package com.estate.controller;
 
 import com.estate.domain.entity.Notification;
 import com.estate.domain.entity.User;
+import com.estate.domain.enumaration.Profil;
 import com.estate.domain.form.PasswordForm;
 import com.estate.domain.form.ProfilForm;
 import com.estate.domain.form.UserForm;
@@ -27,7 +28,7 @@ public class UserController {
 
     @GetMapping(value="list")
     public String findAll(Model model){
-        model.addAttribute("users", userService.findAll());
+        model.addAttribute("users", userService.findAllByProfil(Profil.STAFF));
         return "admin/user/list";
     }
 

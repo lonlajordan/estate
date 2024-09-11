@@ -23,6 +23,9 @@ public class UserForm {
     @NotNull
     @Valid
     private Phone phone;
+    @NotNull
+    @Valid
+    private Phone mobile;
     private List<@NotNull Mode> modes;
     @NotEmpty
     private List<@NotNull Role> roles;

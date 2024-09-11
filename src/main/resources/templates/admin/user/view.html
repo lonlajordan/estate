@@ -36,7 +36,7 @@
                         </a>
                         <a href="#" class="list-group-item">
                             <b>Numéro de téléphone</b>
-                            <span class="pull-right"><em th:text="*{phone}"></em></span>
+                            <span class="pull-right"><em th:text="*{phone}"></em><em th:if="${user?.mobile != null}" th:text="${' / ' + user.mobile}"></em></span>
                         </a>
                         <a href="#" class="list-group-item">
                             <b>Adresse email</b>

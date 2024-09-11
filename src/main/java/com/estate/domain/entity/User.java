@@ -94,6 +94,7 @@ public class User extends Auditable {
         form.setModes(modes);
         form.setRoles(roles);
         form.setPhone(Phone.parse(phone));
+        form.setMobile(Phone.parse(mobile));
         return form;
     }
 
@@ -105,6 +106,7 @@ public class User extends Auditable {
         form.setGender(gender);
         form.setEmail(email);
         form.setPhone(Phone.parse(phone));
+        form.setMobile(Phone.parse(mobile));
         return form;
     }
 }

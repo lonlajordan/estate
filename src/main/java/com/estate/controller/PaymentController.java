@@ -83,7 +83,7 @@ public class PaymentController {
     public String findById(@RequestParam(required = false) Long id, @RequestParam(required = false) Long standingId, @RequestParam(required = false) Long studentId, Model model, RedirectAttributes attributes){
         Payment payment = null;
         Standing standing = null;
-        Student student;
+        Student student = null;
         List<Housing> housings = new ArrayList<>();
         List<Standing> standings = standingService.findAll();
         if(id != null){
@@ -96,6 +96,12 @@ public class PaymentController {
             }
             payment = new Payment();
             payment.setStudent(student);
+        }
+        if(payment == null){
+            attributes.addFlashAttribute("notification", Notification.error("Paiement introuvable"));
+            return "redirect:/payment/list";
+        } else {
+            if(student == null) student = payment.getStudent();
             if(student.getHousing() != null){
                 payment.setDesiderata(student.getHousing());
                 standing = student.getHousing().getStanding();
@@ -103,7 +109,7 @@ public class PaymentController {
                     payment.setStanding(standing);
                     payment.setRent(standing.getRent());
                 }
-            }else {
+            } else {
                 if(standingId != null){
                     standing = standingService.findById(standingId).orElse(null);
                 } else if(!standings.isEmpty()) {
@@ -119,10 +125,6 @@ public class PaymentController {
                     }
                 }
             }
-        }
-        if(payment == null){
-            attributes.addFlashAttribute("notification", Notification.error("Paiement introuvable"));
-            return "redirect:/payment/list";
         }
 
         if(payment.getStanding() != null){

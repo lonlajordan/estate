@@ -97,13 +97,13 @@
                                 <i class="fa fa-ellipsis-h"></i>
                             </a>
                             <div th:id="${'popover-content-' + lease.id}" class="list-group" style="display: none">
-                                <a th:if="${lease.startDate == null}" class="list-group-item text-decoration-none text-left" th:href="@{'/lease/activate/' + ${lease.id}}">
+                                <a th:if="${lease.startDate == null && T(com.estate.domain.enumaration.Profil).STAFF.equals(session?.user?.profil)}" class="list-group-item text-decoration-none text-left" th:href="@{'/lease/activate/' + ${lease.id}}">
                                     <i class="fa fa-fw fa-toggle-on"></i> Activer
                                 </a>
                                 <a class="list-group-item text-decoration-none text-left" th:href="@{'/lease/view/' + ${lease.id}}">
                                     <i class="fa fa-eye fa-fw"></i> Détails
                                 </a>
-                                <a th:if="${lease.mutable}" class="list-group-item text-decoration-none text-left" th:href="@{'/lease/save?id=' + ${lease.id}}">
+                                <a th:if="${lease.mutable && T(com.estate.domain.enumaration.Profil).STAFF.equals(session?.user?.profil)}" class="list-group-item text-decoration-none text-left" th:href="@{'/lease/save?id=' + ${lease.id}}">
                                     <i class="fa fa-fw fa-pencil-square-o"></i> Modifier
                                 </a>
                                 <a th:if="${lease.startDate != null}" class="list-group-item text-decoration-none text-left" th:href="@{'/lease/download/' + ${lease.id}}">

@@ -38,7 +38,10 @@
                                 <a class="lazy-link" th:href="@{'/user/view/' + ${user.id}}" th:text="${user.name}"></a>
                             </td>
                             <td th:text="${user.gender?.name}"></td>
-                            <td th:text="${user.phone}"></td>
+                            <td>
+                                <span th:text="${user.phone}"></span><br>
+                                <span th:text="${user.mobile}"></span>
+                            </td>
                             <td th:text="${user.email}"></td>
                             <td th:text="${user.active ? 'ACTIF' : 'DÉSACTIVÉ'}"></td>
                             <td>

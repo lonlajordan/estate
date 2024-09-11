@@ -2,6 +2,7 @@ package com.estate.domain.service.face;
 
 import com.estate.domain.entity.Notification;
 import com.estate.domain.entity.User;
+import com.estate.domain.enumaration.Profil;
 import com.estate.domain.form.PasswordForm;
 import com.estate.domain.form.ProfilForm;
 import com.estate.domain.form.UserForm;
@@ -16,7 +17,7 @@ public interface UserService {
 
     long count();
 
-    List<User> findAll();
+    List<User> findAllByProfil(Profil profil);
 
     Optional<User> findById(long id);
 
