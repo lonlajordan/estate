@@ -686,7 +686,7 @@ $(function () {
             '        <i class="fa fa-gear"></i>\n' +
             '    </div>\n' +
             '</div>';
-        $('body').append(plateStings);
+        //$('body').append(plateStings);
     }
     $(document).on('click', '.color-plate', function () {
         var name = $(this).attr('data-color');

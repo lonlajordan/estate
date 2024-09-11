@@ -9,12 +9,11 @@ import javax.validation.constraints.NotBlank;
 
 @Data
 public class ContactForm {
-
     @NotBlank
     private String name;
     @NotBlank
     @Email
     private String email;
-    @Valid
-    private Phone phone;
+    @NotBlank
+    private String phone;
 }

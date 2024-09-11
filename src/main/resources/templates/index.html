@@ -53,19 +53,19 @@
                                 <a class="nav-link single" href="#top">Accueil</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link single" href="#featured-property">Property</a>
+                                <a class="nav-link single" href="#featured-property">Logements</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link single" href="#agents">Agents</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link single" href="#gallery">Gallery</a>
+                                <a class="nav-link single" href="#gallery">Galerie</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link single" href="#pricing">Pricing</a>
+                                <a class="nav-link single" href="#pricing">Prix</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link single" href="#reviews">Reviews</a>
+                                <a class="nav-link single" href="#reviews">Témoignages</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link single" href="#contact">Contact</a>
@@ -93,31 +93,31 @@
                         <div class="row">
                             <div class="col-lg-6 col-md-12 align-self-center">
                                 <div class="text-l">
-                                    <h1>Find Your Property</h1>
+                                    <h1>Trouver un logement étudiant</h1>
                                     <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod</p>
-                                    <a href="#" class="btn btn-color btn-md r-btn">Read More</a>
+                                    <a href="#" class="btn btn-color btn-md r-btn">En savoir plus</a>
                                 </div>
                                 <div class="contact-from cf-2 cf-3">
-                                    <form action="#" method="GET" enctype="multipart/form-data">
+                                    <form th:object="${contact}" action="#" method="post">
                                         <div class="row">
                                             <div class="col-lg-3 col-md-6 pad-10">
                                                 <div class="form-group name">
-                                                    <input type="text" name="name" class="form-control" placeholder="Name">
+                                                    <input type="text" th:field="*{name}" class="form-control" placeholder="Name">
                                                 </div>
                                             </div>
                                             <div class="col-lg-3 col-md-6 pad-10">
                                                 <div class="form-group email">
-                                                    <input type="email" name="email" class="form-control" placeholder="Email">
+                                                    <input type="email" th:field="*{email}" class="form-control" placeholder="Email">
                                                 </div>
                                             </div>
                                             <div class="col-lg-3 col-md-6 pad-10">
                                                 <div class="form-group subject">
-                                                    <input type="text" name="subject" class="form-control" placeholder="Phone Number">
+                                                    <input type="text" th:field="*{phone}" class="form-control" placeholder="Numéro de téléphone">
                                                 </div>
                                             </div>
                                             <div class="col-lg-3 col-md-6 pad-10">
                                                 <div class="send-btn text-center">
-                                                    <button type="submit" class="btn btn-color btn-md btn-block">Send a message</button>
+                                                    <button type="submit" class="btn btn-color btn-md btn-block">Envoyer un message</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -126,30 +126,19 @@
                             </div>
                             <div class="col-lg-6 col-md-12 cf-4">
                                 <div class="contact-from">
-                                    <h3>Ask For Special Offer</h3>
-                                    <form th:object="${student}" th:action="@{/contact/info}" method="POST">
-                                        <div class="form-group name" th:classappend="${#fields.hasErrors('lastName') ? 'has-error' : ''}">
-                                            <label class="control-label" for="name">Nom</label>
-                                            <input id="name" th:field="*{name}" class="form-control" autocomplete="off">
-                                            <p th:if="${#fields.hasErrors('lastName')}" th:errors="*{name}" class="help-block"></p>
+                                    <h3>Je veux intégrer la mini-cité</h3>
+                                    <form th:object="${contact}" th:action="@{/contact}" method="post">
+                                        <div class="form-group name" th:classappend="${#fields.hasErrors('name') ? 'has-error' : ''}">
+                                            <input th:field="*{name}" class="form-control" placeholder="Nom" autocomplete="off">
                                         </div>
                                         <div class="form-group email" th:classappend="${#fields.hasErrors('email') ? 'has-error' : ''}">
-                                            <label class="control-label" for="email">Adresse e-mail <span class="required-field">*</span></label>
-                                            <input id="email" type="email" th:field="*{email}" class="form-control" autocomplete="off" required>
-                                            <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="help-block"></p>
+                                            <input type="email" th:field="*{email}" class="form-control" placeholder="Adresse e-mail" autocomplete="off" required>
                                         </div>
-                                        <div class="form-group phone" th:classappend="${#fields.hasErrors('phone.number') ? 'has-error' : ''}">
-                                            <label for="phone" class="control-label">Numéro de téléphone <span class="required-field">*</span></label>
-                                            <div class="form-group input-group d-flex mb-0">
-                                                <select th:field="*{phone.code}" style="width: auto" class="form-control" required>
-                                                    <option th:each="code : ${countryCodes}" th:value="${code}" th:text="${code}"></option>
-                                                </select>
-                                                <input id="phone" th:field="*{phone.number}" placeholder="695463868" pattern="\d+" autocomplete="off" class="form-control" required>
-                                            </div>
-                                            <p th:if="${#fields.hasErrors('phone.number')}" th:errors="*{phone.number}" class="help-block"></p>
+                                        <div class="form-group phone" th:classappend="${#fields.hasErrors('phone') ? 'has-error' : ''}">
+                                            <input th:field="*{phone}" class="form-control" placeholder="Numéro de téléphone" autocomplete="off" required>
                                         </div>
                                         <div class="send-btn text-center">
-                                            <button type="submit" class="btn btn-color btn-md btn-block">Send a message</button>
+                                            <button type="submit" class="btn btn-color btn-md btn-block">Envoyer un message</button>
                                         </div>
                                     </form>
                                 </div>
@@ -174,7 +163,7 @@
                             <i class="flaticon-empire-state-building"></i>
                         </div>
                         <div class="media-body">
-                            <h4>Best Homes</h4>
+                            <h4>Logements de Qualité</h4>
                             <p>Lorem ipsum dolor sit amet, consectetur adipisicing</p>
                         </div>
                     </div>
@@ -185,7 +174,7 @@
                             <i class="flaticon-sale"></i>
                         </div>
                         <div class="media-body">
-                            <h4>Great Prices</h4>
+                            <h4>Bons Prix</h4>
                             <p>Lorem ipsum dolor sit amet, consectetur adipisicing</p>
                         </div>
                     </div>
@@ -196,7 +185,7 @@
                             <i class="flaticon-sport-team"></i>
                         </div>
                         <div class="media-body">
-                            <h4>Free Support</h4>
+                            <h4>Assistance Gratuite</h4>
                             <p>Lorem ipsum dolor sit amet, consectetur adipisicing</p>
                         </div>
                     </div>
@@ -211,7 +200,7 @@
 <div class="featured-property content-area content-area" id="featured-property">
     <div class="container">
         <div class="main-title wow_ fadeInDown delay-04s">
-            <h1>Featured Property</h1>
+            <h1>Nos logements disponibles</h1>
             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
         </div>
         <div class="slick-slider-area">
@@ -552,18 +541,18 @@
                     <div class="property-box mb-0">
                         <div class="property-thumbnail">
                             <a href="#" class="property-img">
-                                <img src="assets/img/portfolio/img-6.jpg" alt="portfolio" class="img-fluid">
+                                <img th:src="@{/assets/img/portfolio/img-6.jpg}" alt="portfolio" class="img-fluid">
                             </a>
                             <div class="property-overlay">
                                 <a href="#" class="overlay-link">
                                     <i class="fa fa-link"></i>
                                 </a>
                                 <div class="property-magnify-gallery">
-                                    <a href="assets/img/portfolio/img-6.jpg" class="overlay-link">
+                                    <a th:href="@{/assets/img/portfolio/img-6.jpg}" class="overlay-link">
                                         <i class="fa fa-search-plus"></i>
                                     </a>
-                                    <a href="assets/img/portfolio/img-7.jpg" class="hidden"></a>
-                                    <a href="assets/img/portfolio/img-8.jpg" class="hidden"></a>
+                                    <a th:href="@{/assets/img/portfolio/img-7.jpg}" class="hidden"></a>
+                                    <a th:href="@{/assets/img/portfolio/img-8.jpg}" class="hidden"></a>
                                 </div>
                             </div>
                         </div>
@@ -573,18 +562,18 @@
                     <div class="property-box mb-0">
                         <div class="property-thumbnail">
                             <a href="#" class="property-img">
-                                <img src="assets/img/portfolio/img-7.jpg" alt="portfolio" class="img-fluid">
+                                <img th:src="@{/assets/img/portfolio/img-7.jpg}" alt="portfolio" class="img-fluid">
                             </a>
                             <div class="property-overlay">
                                 <a href="#" class="overlay-link">
                                     <i class="fa fa-link"></i>
                                 </a>
                                 <div class="property-magnify-gallery">
-                                    <a href="assets/img/portfolio/img-7.jpg" class="overlay-link">
+                                    <a th:href="@{/assets/img/portfolio/img-7.jpg}" class="overlay-link">
                                         <i class="fa fa-search-plus"></i>
                                     </a>
-                                    <a href="assets/img/portfolio/img-8.jpg" class="hidden"></a>
-                                    <a href="assets/img/portfolio/img-1.jpg" class="hidden"></a>
+                                    <a th:href="@{/assets/img/portfolio/img-8.jpg}" class="hidden"></a>
+                                    <a th:href="@{/assets/img/portfolio/img-1.jpg}" class="hidden"></a>
                                 </div>
                             </div>
                         </div>
@@ -594,18 +583,18 @@
                     <div class="property-box mb-0">
                         <div class="property-thumbnail">
                             <a href="#" class="property-img">
-                                <img src="assets/img/portfolio/img-8.jpg" alt="portfolio" class="img-fluid">
+                                <img th:src="@{/assets/img/portfolio/img-8.jpg}" alt="portfolio" class="img-fluid">
                             </a>
                             <div class="property-overlay">
                                 <a href="#" class="overlay-link">
                                     <i class="fa fa-link"></i>
                                 </a>
                                 <div class="property-magnify-gallery">
-                                    <a href="assets/img/portfolio/img-8.jpg" class="overlay-link">
+                                    <a th:href="@{/assets/img/portfolio/img-8.jpg}" class="overlay-link">
                                         <i class="fa fa-search-plus"></i>
                                     </a>
-                                    <a href="assets/img/portfolio/img-1.jpg" class="hidden"></a>
-                                    <a href="assets/img/portfolio/img-2.jpg" class="hidden"></a>
+                                    <a th:href="@{/assets/img/portfolio/img-1.jpg}" class="hidden"></a>
+                                    <a th:href="@{/assets/img/portfolio/img-2.jpg}" class="hidden"></a>
                                 </div>
                             </div>
                         </div>
@@ -622,62 +611,16 @@
     <div class="container">
         <!-- Main title -->
         <div class="main-title wow_ fadeInDown delay-04s">
-            <h1>Pricing Tables</h1>
+            <h1>Nos Prix</h1>
             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
         </div>
         <div class="row">
-            <div class="col-xl-4 col-lg-4 col-md-12 wow_ fadeInLeft delay-04s">
+            <div th:each="standing: ${standings}" class="col-xl-4 col-lg-4 col-md-12 wow_ fadeInLeft delay-04s">
                 <div class="pricing-1 plan">
                     <div class="plan-header">
-                        <h5>Ultimate Plan</h5>
+                        <h5 th:text="${standing.name + ' STANDING'}">Ultimate Plan</h5>
                         <p>Plan short description</p>
-                        <div class="plan-price"><sup>$</sup>80<span>/month</span> </div>
-                    </div>
-                    <div class="plan-list">
-                        <ul>
-                            <li><i class="fa fa-globe"></i>Unlimited Websites</li>
-                            <li><i class="fa fa-thumbs-up"></i>Unlimited Storage</li>
-                            <li><i class="fa fa-signal"></i>Unlimited Bandwidth</li>
-                            <li><i class="fa fa-user"></i>1000 Email Addresses</li>
-                            <li><i class="fa fa-star"></i>Free domain with annual plan</li>
-                            <li><i class="fa fa-rocket"></i>4X Processing Power</li>
-                            <li><i class="fa fa-server"></i>Premium DNS</li>
-                        </ul>
-                        <div class="plan-button text-center">
-                            <a href="#" class="btn btn-outline pricing-btn">Get Started</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xl-4 col-lg-4 col-md-12 wow_ fadeInUp delay-04s">
-                <div class="pricing-1 plan">
-                    <div class="plan-header">
-                        <h5>Deluxe Plan</h5>
-                        <p>Plan short description</p>
-                        <div class="plan-price"><sup>$</sup>80<span>/month</span> </div>
-                    </div>
-                    <div class="plan-list">
-                        <ul>
-                            <li><i class="fa fa-globe"></i>Unlimited Websites</li>
-                            <li><i class="fa fa-thumbs-up"></i>Unlimited Storage</li>
-                            <li><i class="fa fa-signal"></i>Unlimited Bandwidth</li>
-                            <li><i class="fa fa-user"></i>1000 Email Addresses</li>
-                            <li><i class="fa fa-star"></i>Free domain with annual plan</li>
-                            <li><i class="fa fa-rocket"></i>4X Processing Power</li>
-                            <li><i class="fa fa-server"></i>Premium DNS</li>
-                        </ul>
-                        <div class="plan-button text-center">
-                            <a href="#" class="btn btn-outline pricing-btn button-theme">Get Started</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xl-4 col-lg-4 col-md-12 wow_ fadeInRight delay-04s">
-                <div class="pricing-1 plan">
-                    <div class="plan-header">
-                        <h5>Professional Plan</h5>
-                        <p>Plan short description</p>
-                        <div class="plan-price"><sup>$</sup>80<span>/month</span> </div>
+                        <div class="plan-price" th:utext="${standing.rent + '<span><sup> FCFA</sup> / mois</span>'}"></div>
                     </div>
                     <div class="plan-list">
                         <ul>
@@ -707,8 +650,8 @@
             <div class="col-lg-12 wow_ fadeInDown delay-04s">
                 <div class="testimonial-inner">
                     <div class="main-title">
-                        <h1>Our Client Reviews</h1>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                        <h1>Les témoignages</h1>
+                        <p>Quelques retours d'expérience des étudiants ayant résidé dans la MINI CITÉ CONCORDE.</p>
                     </div>
                     <div id="carouselExampleIndicators3" class="carousel slide" data-ride="carousel">
                         <ol class="carousel-indicators">
@@ -728,7 +671,7 @@
                                             </div>
                                             <div class="media mb-4">
                                                 <a class="pr-3" href="#">
-                                                    <img src="assets/img/avatar/avatar.jpg" alt="avator" class="img-fluid">
+                                                    <img th:src="@{/assets/img/avatar/avatar.jpg}" alt="avator" class="img-fluid">
                                                 </a>
                                                 <div class="media-body align-self-center">
                                                     <h5>
@@ -748,7 +691,7 @@
                                             </div>
                                             <div class="media mb-4">
                                                 <a class="pr-3" href="#">
-                                                    <img src="assets/img/avatar/avatar-2.jpg" alt="avator" class="img-fluid">
+                                                    <img th:src="@{/assets/img/avatar/avatar-2.jpg}" alt="avator" class="img-fluid">
                                                 </a>
                                                 <div class="media-body align-self-center">
                                                     <h5>
@@ -772,7 +715,7 @@
                                             </div>
                                             <div class="media mb-4">
                                                 <a class="pr-3" href="#">
-                                                    <img src="assets/img/avatar/avatar-2.jpg" alt="avator" class="img-fluid">
+                                                    <img th:src="@{/assets/img/avatar/avatar-2.jpg}" alt="avator" class="img-fluid">
                                                 </a>
                                                 <div class="media-body align-self-center">
                                                     <h5>
@@ -792,7 +735,7 @@
                                             </div>
                                             <div class="media mb-4">
                                                 <a class="pr-3" href="#">
-                                                    <img src="assets/img/avatar/avatar.jpg" alt="avator" class="img-fluid">
+                                                    <img th:src="@{/assets/img/avatar/avatar.jpg}" alt="avator" class="img-fluid">
                                                 </a>
                                                 <div class="media-body align-self-center">
                                                     <h5>
@@ -816,7 +759,7 @@
                                             </div>
                                             <div class="media mb-4">
                                                 <a class="pr-3" href="#">
-                                                    <img src="assets/img/avatar/avatar.jpg" alt="avator" class="img-fluid">
+                                                    <img th:src="@{/assets/img/avatar/avatar.jpg}" alt="avator" class="img-fluid">
                                                 </a>
                                                 <div class="media-body align-self-center">
                                                     <h5>
@@ -836,7 +779,7 @@
                                             </div>
                                             <div class="media mb-4">
                                                 <a class="pr-3" href="#">
-                                                    <img src="assets/img/avatar/avatar-2.jpg" alt="avator" class="img-fluid">
+                                                    <img th:src="@{/assets/img/avatar/avatar-2.jpg}" alt="avator" class="img-fluid">
                                                 </a>
                                                 <div class="media-body align-self-center">
                                                     <h5>
@@ -931,41 +874,41 @@
 <div class="contact content-area-2" id="contact">
     <div class="container">
         <div class="main-title wow_ fadeInDown delay-04s">
-            <h1>Contact Us</h1>
+            <h1>Contactez-Nous</h1>
             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
         </div>
         <div class="row">
             <div class="col-lg-7 wow_ fadeInLeft delay-04s">
-                <form action="#" method="GET" enctype="multipart/form-data">
+                <form action="#" method="post">
                     <div class="row">
                         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                             <div class="form-group name">
-                                <input type="text" name="name" class="form-control" placeholder="Name">
+                                <input type="text" name="name" class="form-control" placeholder="Nom">
                             </div>
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                             <div class="form-group email">
-                                <input type="email" name="email" class="form-control" placeholder="Email">
+                                <input type="email" name="email" class="form-control" placeholder="Adresse e-mail">
                             </div>
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                             <div class="form-group subject">
-                                <input type="text" name="subject" class="form-control" placeholder="Subject">
+                                <input type="text" name="subject" class="form-control" placeholder="Objet">
                             </div>
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                             <div class="form-group number">
-                                <input type="text" name="phone" class="form-control" placeholder="Number">
+                                <input type="text" name="phone" class="form-control" placeholder="Numéro de téléphone">
                             </div>
                         </div>
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <div class="form-group message">
-                                <textarea class="form-control" name="message" placeholder="Write message"></textarea>
+                                <textarea class="form-control" name="message" placeholder="Écrire un message"></textarea>
                             </div>
                         </div>
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <div class="send-btn text-center">
-                                <button type="submit" class="btn btn-color btn-md btn-message">Send a message</button>
+                                <button type="submit" class="btn btn-color btn-md btn-message">Envoyer</button>
                             </div>
                         </div>
                     </div>
@@ -976,7 +919,7 @@
                     <div class="media mb-25">
                         <i class="flaticon-phone"></i>
                         <div class="media-body">
-                            <h5>Phone:</h5>
+                            <h5>Téléphone:</h5>
                             <p><a href="tel:0477-0477-8556-552">0477 8556 552</a></p>
                         </div>
                     </div>

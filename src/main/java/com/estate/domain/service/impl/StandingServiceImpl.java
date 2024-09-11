@@ -37,6 +37,10 @@ public class StandingServiceImpl implements StandingService {
         return standingRepository.findAllByActiveTrueOrderByNameAsc();
     }
 
+    @Override
+    public List<Standing> findAllByActiveTrueOrderByRentAsc() {
+        return standingRepository.findAllByActiveTrueOrderByRentAsc();
+    }
 
     @Override
     public Optional<Standing> findById(long id) {
