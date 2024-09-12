@@ -20,14 +20,16 @@ public class HomeController {
 
     @GetMapping("/")
     public String home(Model model){
-        model.addAttribute("countryCodes", SmsHelper.countryCodes);
+        //model.addAttribute("countryCodes", SmsHelper.countryCodes);
         model.addAttribute("contact",new ContactForm());
         return "index";
     }
 
-    @PostMapping("contact/info")
-    public String notifyForContact(@Valid @ModelAttribute("student") ContactForm contact){
-
+    @PostMapping("/")
+    public String notifyForContact(@ModelAttribute ContactForm contact,Model model){
+        System.out.println("Dans le post");
+        model.addAttribute("contact",contact);
+        //System.out.println(contact.getName() + " ++++ " + contact.getEmail() + " +++++ " + contact.getPhone() );
         return "index";
     }
 }
