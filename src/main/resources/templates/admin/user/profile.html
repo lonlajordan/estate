@@ -22,7 +22,7 @@
                     <div class="panel-heading">
                         <b>Formulaire : </b> <span style="font-size: 13px">Les champs avec l'astérisque ( <span class="required-field">*</span> ) sont obligatoires</span>
                     </div>
-                    <form th:object="${user}" onsubmit="submitForm(event)" th:action="@{/user/profile}" autocomplete="off" method="post">
+                    <form th:object="${user}" onsubmit="submitMultipartForm(e)" th:action="@{/user/profile}" enctype="multipart/form-data" autocomplete="off" method="post">
                         <div class="panel-body">
                             <input th:field="*{id}" type="hidden">
                             <div class="row">
@@ -37,14 +37,7 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="form-group col-lg-3" th:classappend="${#fields.hasErrors('gender') ? 'has-error' : ''}">
-                                    <label for="gender" class="control-label">Sexe <span class="required-field">*</span></label>
-                                    <select id="gender" th:field="*{gender}" class="form-control" required>
-                                        <option th:each="gender: ${T(com.estate.domain.enumaration.Gender).values()}" th:value="${gender}" th:text="${gender.name}"></option>
-                                    </select>
-                                    <p th:if="${#fields.hasErrors('gender')}" th:errors="*{gender}" class="help-block"></p>
-                                </div>
-                                <div class="form-group col-lg-3" th:classappend="${#fields.hasErrors('email') ? 'has-error' : ''}">
+                                <div class="form-group col-lg-6" th:classappend="${#fields.hasErrors('email') ? 'has-error' : ''}">
                                     <label for="email" class="control-label">Adresse email <span class="required-field">*</span></label>
                                     <input id="email" th:field="*{email}" type="email" autocomplete="off" class="form-control" required>
                                     <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="help-block"></p>
@@ -68,6 +61,20 @@
                                         <input id="mobile" th:field="*{mobile.number}" placeholder="654762824" pattern="\d+" autocomplete="off" class="form-control">
                                     </div>
                                     <p th:if="${#fields.hasErrors('mobile.number')}" th:errors="*{mobile.number}" class="help-block"></p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-lg-6" th:classappend="${#fields.hasErrors('gender') ? 'has-error' : ''}">
+                                    <label for="gender" class="control-label">Sexe <span class="required-field">*</span></label>
+                                    <select id="gender" th:field="*{gender}" class="form-control" required>
+                                        <option th:each="gender: ${T(com.estate.domain.enumaration.Gender).values()}" th:value="${gender}" th:text="${gender.name}"></option>
+                                    </select>
+                                    <p th:if="${#fields.hasErrors('gender')}" th:errors="*{gender}" class="help-block"></p>
+                                </div>
+                                <div class="form-group col-lg-6" th:classappend="${#fields.hasErrors('picture') ? 'has-error' : ''}">
+                                    <label for="picture" class="control-label">Photo de profil <span class="required-field" th:if="${user.id == null}">*</span></label>
+                                    <input id="picture" th:field="*{picture}" type="file" autocomplete="off" class="form-control" th:required="${user.id == null}">
+                                    <p th:if="${#fields.hasErrors('picture')}" th:errors="*{picture}" class="help-block"></p>
                                 </div>
                             </div>
                         </div>

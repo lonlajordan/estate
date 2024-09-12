@@ -1,9 +1,11 @@
 package com.estate.domain.form;
 
+import com.estate.domain.annotation.FileSize;
 import com.estate.domain.enumaration.Gender;
 import com.estate.domain.enumaration.Mode;
 import com.estate.domain.enumaration.Role;
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import javax.validation.constraints.*;
@@ -29,4 +31,6 @@ public class UserForm {
     private List<@NotNull Mode> modes;
     @NotEmpty
     private List<@NotNull Role> roles;
+    @FileSize(extensions = {"png", "jpg", "jpeg"}, max = 2 * 1024 * 1024)
+    private MultipartFile picture;
 }

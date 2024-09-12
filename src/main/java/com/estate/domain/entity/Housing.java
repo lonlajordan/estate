@@ -20,6 +20,7 @@ public class Housing extends Auditable {
     private Long id;
     @Column(nullable = false)
     private String name;
+    private String picture;
     @ManyToOne(optional = false)
     private Standing standing;
     @OneToOne

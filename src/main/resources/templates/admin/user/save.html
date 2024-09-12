@@ -20,7 +20,7 @@
                     <div class="panel-heading">
                         <b>Formulaire : </b> <span style="font-size: 13px">Les champs avec l'astérisque ( <span class="required-field">*</span> ) sont obligatoires</span>
                     </div>
-                    <form th:object="${user}" onsubmit="submitForm(e)" th:action="@{/user/save}" autocomplete="off" method="post">
+                    <form th:object="${user}" onsubmit="submitMultipartForm(e)" th:action="@{/user/save}" enctype="multipart/form-data" autocomplete="off" method="post">
                         <div class="panel-body">
                             <input th:field="*{id}" type="hidden">
                             <div class="row">
@@ -69,6 +69,13 @@
                                     </select>
                                     <p th:if="${#fields.hasErrors('gender')}" th:errors="*{gender}" class="help-block"></p>
                                 </div>
+                                <div class="form-group col-lg-6" th:classappend="${#fields.hasErrors('picture') ? 'has-error' : ''}">
+                                    <label for="picture" class="control-label">Photo de profil <span class="required-field" th:if="${user.id == null}">*</span></label>
+                                    <input id="picture" th:field="*{picture}" type="file" autocomplete="off" class="form-control" th:required="${user.id == null}">
+                                    <p th:if="${#fields.hasErrors('picture')}" th:errors="*{picture}" class="help-block"></p>
+                                </div>
+                            </div>
+                            <div class="row">
                                 <div class="form-group col-lg-6" th:classappend="${#fields.hasErrors('roles') ? 'has-error' : ''}">
                                     <label for="user-roles" class="control-label">Rôles <span class="required-field">*</span></label>
                                     <select id="user-roles" class="form-control searchable-select-box" th:field="*{roles}" multiple required>
@@ -76,9 +83,7 @@
                                     </select>
                                     <p th:if="${#fields.hasErrors('roles')}" th:errors="*{roles}" class="help-block"></p>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="form-group col-lg-12" th:classappend="${#fields.hasErrors('modes') ? 'has-error' : ''}">
+                                <div class="form-group col-lg-6" th:classappend="${#fields.hasErrors('modes') ? 'has-error' : ''}">
                                     <label for="user-modes" class="control-label">En charge des modes de paiement</label>
                                     <select id="user-modes" class="form-control searchable-select-box" th:field="*{modes}" multiple>
                                         <option th:each="mode: ${T(com.estate.domain.enumaration.Mode).values()}" th:value="${mode}" th:text="${mode.name}"></option>
