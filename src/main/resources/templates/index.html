@@ -98,7 +98,7 @@ End Google Tag Manager (noscript) -->
                                     <a href="#" class="btn btn-color btn-md r-btn">En savoir plus</a>
                                 </div>
                                 <div class="contact-from cf-2 cf-3">
-                                    <form th:object="${contact}" action="#" method="post">
+                                    <form th:object="${visitor}" th:action="@{/subscribe}" method="post">
                                         <div class="row">
                                             <div class="col-lg-3 col-md-6 pad-10">
                                                 <div class="form-group name">
@@ -127,7 +127,7 @@ End Google Tag Manager (noscript) -->
                             <div class="col-lg-6 col-md-12 cf-4">
                                 <div class="contact-from">
                                     <h3>Recevoir des notifications pour les logements disponibles.</h3>
-                                    <form th:object="${contact}" th:action="@{/contact}" method="post">
+                                    <form th:object="${visitor}" th:action="@{/subscribe}" method="post">
                                         <div class="form-group name" th:classappend="${#fields.hasErrors('name') ? 'has-error' : ''}">
                                             <input th:field="*{name}" class="form-control" placeholder="Nom" autocomplete="off">
                                         </div>
@@ -729,31 +729,31 @@ End Google Tag Manager (noscript) -->
         </div>
         <div class="row">
             <div class="col-lg-7 wow_ fadeInLeft delay-04s">
-                <form action="#" method="post">
+                <form th:object="${contact}" th:action="@{/contact}" method="post">
                     <div class="row">
                         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                             <div class="form-group name">
-                                <input type="text" name="name" class="form-control" placeholder="Nom">
+                                <input type="text" th:field="*{name}" class="form-control" placeholder="Nom">
                             </div>
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                             <div class="form-group email">
-                                <input type="email" name="email" class="form-control" placeholder="Adresse e-mail">
+                                <input type="email" th:field="*{email}" class="form-control" placeholder="Adresse e-mail">
                             </div>
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                             <div class="form-group subject">
-                                <input type="text" name="subject" class="form-control" placeholder="Objet">
+                                <input type="text" th:field="*{subject}" class="form-control" placeholder="Objet">
                             </div>
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                             <div class="form-group number">
-                                <input type="text" name="phone" class="form-control" placeholder="Numéro de téléphone">
+                                <input type="text" th:field="*{phone}" class="form-control" placeholder="Numéro de téléphone">
                             </div>
                         </div>
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <div class="form-group message">
-                                <textarea class="form-control" name="message" placeholder="Écrire un message"></textarea>
+                                <textarea class="form-control" th:field="*{message}" placeholder="Écrire un message"></textarea>
                             </div>
                         </div>
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">

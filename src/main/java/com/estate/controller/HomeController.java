@@ -4,6 +4,7 @@ import com.estate.domain.entity.Setting;
 import com.estate.domain.enumaration.Profil;
 import com.estate.domain.enumaration.SettingCode;
 import com.estate.domain.form.ContactForm;
+import com.estate.domain.form.VisitorForm;
 import com.estate.domain.mail.SmsHelper;
 import com.estate.domain.service.face.HousingService;
 import com.estate.domain.service.face.SettingService;
@@ -26,15 +27,11 @@ public class HomeController {
     private final SettingService settingService;
     private final StandingService standingService;
 
-    @PostMapping("contact")
-    public String contact(){
-        return "index";
-    }
-
     @GetMapping("/")
     public String home(Model model){
         model.addAttribute("countryCodes", SmsHelper.countryCodes);
         model.addAttribute("contact",new ContactForm());
+        model.addAttribute("visitor",new VisitorForm());
         model.addAttribute("users", userService.findAllByProfil(Profil.STAFF));
         model.addAttribute("housings", housingService.findAll());
         model.addAttribute("standings", standingService.findAllByActiveTrueOrderByRentAsc());
@@ -44,9 +41,13 @@ public class HomeController {
         return "index";
     }
 
-    @PostMapping("contact/info")
-    public String notifyForContact(@Valid @ModelAttribute("student") ContactForm contact){
+    @PostMapping("contact")
+    public String contact(@Valid @ModelAttribute("contact") ContactForm contact){
+        return "index";
+    }
 
+    @PostMapping("subscribe")
+    public String subscribe(@Valid @ModelAttribute("visitor") VisitorForm visitor){
         return "index";
     }
 }
