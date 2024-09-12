@@ -94,7 +94,7 @@ $(function () {
         } else {
             $('.sticky-header').removeClass('header-shrink');
             if($('.do-sticky').length < 1) {
-                $('.logo img').attr('src', 'assets/img/favicon.ico');
+                $('.logo img').attr('src', 'assets/img/logo.png');
             }
         }
     }

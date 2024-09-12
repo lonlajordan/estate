@@ -11,6 +11,8 @@ public class StandingForm {
     private Long id;
     @NotBlank
     private String name;
+    @NotBlank
+    private String description;
     @Min(value = 1)
     private Integer rent;
     @PositiveOrZero

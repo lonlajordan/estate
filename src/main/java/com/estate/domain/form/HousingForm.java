@@ -1,6 +1,7 @@
 package com.estate.domain.form;
 
 import com.estate.domain.enumaration.Availability;
+import com.estate.domain.enumaration.Category;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
@@ -13,6 +14,8 @@ public class HousingForm {
     private String name;
     @NotNull
     private Long standingId;
+    @NotNull
+    private Category category;
     @NotNull
     private Availability status;
 }

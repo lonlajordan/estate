@@ -48,7 +48,10 @@ public class InitDataService implements CommandLineRunner {
             new Setting(SettingCode.BANK_NAME, ""),
             new Setting(SettingCode.BANK_ACCOUNT_NAME, ""),
             new Setting(SettingCode.BANK_ACCOUNT_NUMBER,""),
-            new Setting(SettingCode.PAYPAL_LINK, "")
+            new Setting(SettingCode.PAYPAL_LINK, ""),
+            new Setting(SettingCode.TELEPHONE_PUBLIC, "+237 695463868"),
+            new Setting(SettingCode.EMAIL_PUBLIC, "concorde@gmail.com"),
+            new Setting(SettingCode.ADDRESS_PUBLIC, "Cradat, Yaoundé, Centre - Cameroun")
         ));
         settingRepository.saveAll(settings.stream().filter(setting -> !settingRepository.existsByCode(setting.getCode())).collect(Collectors.toList()));
         List<SettingCode> codes = settings.stream().map(Setting::getCode).collect(Collectors.toList());

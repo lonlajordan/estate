@@ -1,6 +1,7 @@
 package com.estate.domain.entity;
 
 import com.estate.domain.enumaration.Availability;
+import com.estate.domain.enumaration.Category;
 import com.estate.domain.form.HousingForm;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,6 +26,9 @@ public class Housing extends Auditable {
     private Student resident;
     @OneToOne
     private Student reservedBy;
+    @Convert(converter = Category.Converter.class)
+    @Enumerated(EnumType.STRING)
+    private Category category = Category.ROOM;
     @Convert(converter = Availability.Converter.class)
     @Enumerated(EnumType.STRING)
     private Availability status = Availability.FREE;
@@ -38,6 +42,7 @@ public class Housing extends Auditable {
         form.setId(id);
         form.setName(name);
         form.setStandingId(Optional.ofNullable(standing).map(Standing::getId).orElse(null));
+        form.setCategory(category);
         form.setStatus(status);
         return form;
     }

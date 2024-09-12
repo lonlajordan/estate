@@ -34,6 +34,7 @@
                                 <div class="form-group col-lg-12" th:classappend="${#fields.hasErrors('value') ? 'has-error' : ''}">
                                     <label class="control-label">Valeur <span class="required-field">*</span></label>
                                     <input th:if="${T(com.estate.domain.enumaration.SettingType).TEXT.equals(setting.code.type)}" type="text" th:field="*{value}" class="form-control" autocomplete="off" required>
+                                    <input th:if="${T(com.estate.domain.enumaration.SettingType).EMAIL.equals(setting.code.type)}" type="email" th:field="*{value}" class="form-control" autocomplete="off" required>
                                     <input th:if="${T(com.estate.domain.enumaration.SettingType).SYSTEM.equals(setting.code.type)}" type="text" th:field="*{value}" class="form-control" autocomplete="off" required>
                                     <input th:if="${T(com.estate.domain.enumaration.SettingType).INTEGER.equals(setting.code.type)}" type="number" th:field="*{value}" step="1" class="form-control" autocomplete="off" required>
                                     <input th:if="${T(com.estate.domain.enumaration.SettingType).DECIMAL.equals(setting.code.type)}" type="number" th:field="*{value}" step="0.01" class="form-control" autocomplete="off" required>

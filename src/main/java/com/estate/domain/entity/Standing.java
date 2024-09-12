@@ -18,6 +18,8 @@ public class Standing extends Auditable {
     private Long id;
     @Column(nullable = false)
     private String name = "";
+    @Column(nullable = false, columnDefinition = "TEXT")
+    private String description = "";
     @Column(nullable = false)
     private int rent;
     @Column(nullable = false)
@@ -30,6 +32,7 @@ public class Standing extends Auditable {
         StandingForm form = new StandingForm();
         form.setId(id);
         form.setName(name);
+        form.setDescription(description);
         form.setRent(rent);
         form.setCaution(caution);
         form.setRepair(repair);

@@ -1256,7 +1256,7 @@ blockquote footer {
 }
 
 .pricing-1 .plan-header .plan-price sup {
-    font-size: 24px;
+    font-size: 15px;
     position: relative;
     top: -30px;
     color: #535353;
@@ -1264,7 +1264,7 @@ blockquote footer {
 }
 
 .pricing-1 .plan-header .plan-price {
-    font-size: 60px;
+    font-size: 40px;
     font-weight: 700;
     position: relative;
     text-align: center;

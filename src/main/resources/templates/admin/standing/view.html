@@ -70,6 +70,21 @@
                         </a>
                     </div>
                 </div>
+                <div class="panel-group" id="accordion">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <button data-toggle="collapse" data-parent="#accordion" href="#collapseBox" class="collapsed btn btn-primary">
+                                    <i class="fa fa-list"></i>
+                                    &nbsp; Plus de détails
+                                </button>
+                            </h4>
+                        </div>
+                        <div id="collapseBox" class="panel-collapse collapse">
+                            <div class="panel-body" th:text="*{description}"></div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

@@ -2,6 +2,7 @@ package com.estate.domain.service.face;
 
 import com.estate.domain.entity.Notification;
 import com.estate.domain.entity.Setting;
+import com.estate.domain.enumaration.SettingCode;
 import com.estate.domain.form.SettingForm;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -12,6 +13,8 @@ public interface SettingService {
     List<Setting> findAll();
 
     Optional<Setting> findById(long id);
+
+    Optional<Setting> findByCode(SettingCode code);
 
     Notification update(SettingForm form);
 

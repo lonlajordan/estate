@@ -76,6 +76,7 @@ public class HousingServiceImpl implements HousingService {
         if(housing == null) return Notification.error("Logement introuvable");
         housing.setName(form.getName());
         housing.setStanding(standingRepository.getReferenceById(form.getStandingId()));
+        housing.setCategory(form.getCategory());
         housing.setStatus(form.getStatus());
         if(!Availability.OCCUPIED.equals(housing.getStatus()) && housing.getResident() != null) return Notification.error("Ce logement est occupé par <b>" + housing.getResident().getUser().getName() + "</b>");
 

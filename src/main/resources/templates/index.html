@@ -42,7 +42,7 @@ End Google Tag Manager (noscript) -->
             <div class="col-12">
                 <nav class="navbar navbar-expand-lg navbar-light rounded">
                     <a class="navbar-brand logo navbar-brand d-flex mr-auto" th:href="@{/}">
-                        <img th:href="@{/assets/img/favicon.ico}" alt="logo">
+                        <img th:href="@{/assets/img/logo.png}" alt="logo">
                     </a>
                     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="fa fa-bars"></span>
@@ -71,7 +71,7 @@ End Google Tag Manager (noscript) -->
                                 <a class="nav-link single" href="#contact">Contact</a>
                             </li>
                             <li class="nav-item call">
-                                <a class="nav-link single" href="#"><i class="flaticon-headset"></i> +1 668 54871 345</a>
+                                <a class="nav-link single" href="#"><i class="flaticon-headset"></i> <span th:text="${telephone}"></span></a>
                             </li>
                         </ul>
                     </div>
@@ -164,7 +164,7 @@ End Google Tag Manager (noscript) -->
                         </div>
                         <div class="media-body">
                             <h4>Logements Spacieux</h4>
-                            <p>Espace et confort garantis pour votre bien-être</p>
+                            <p>Espace et confort pour votre bien-être</p>
                         </div>
                     </div>
                 </div>
@@ -205,97 +205,21 @@ End Google Tag Manager (noscript) -->
         </div>
         <div class="slick-slider-area">
             <div class="row slick-carousel" data-slick='{"slidesToShow": 3, "responsive":[{"breakpoint": 1024,"settings":{"slidesToShow": 2}}, {"breakpoint": 768,"settings":{"slidesToShow": 1}}]}'>
-                <div class="slick-slide-item">
+                <div th:each="housing : ${housings}" class="slick-slide-item">
                     <div class="property-box">
                         <div class="photo">
                             <a href="#">
                                 <img th:src="@{/assets/img/property-1.jpg}" alt="property" class="img-fluid">
-                                <div class="tag">For Sale</div>
+                                <div class="tag" th:text="${housing.status?.name}"></div>
                                 <div class="love"><i class="flaticon-heart"></i></div>
-                                <div class="plan-price"><sup>$</sup>600<span>/month</span> </div>
+                                <div class="plan-price" th:utext="${#numbers.formatInteger(housing.standing?.rent, 1, 'WHITESPACE') + '<sup>FCFA</sup><span> / mois</span>'}"></div>
                             </a>
                         </div>
                         <div class="detail clearfix">
                             <div class="float-left">
-                                <h3>
-                                    <a href="#">Modern Family Home</a>
-                                </h3>
+                                <h3 th:text="${housing.category?.name + ' ' + housing.name}"></h3>
                                 <div class="location">
-                                    <a href="#">
-                                        <i class="flaticon-pin"></i> 123 Kathal St. Tampa City
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="slick-slide-item">
-                    <div class="property-box">
-                        <div class="photo">
-                            <a href="#">
-                                <img th:src="@{/assets/img/property-2.jpg}" alt="property" class="img-fluid">
-                                <div class="tag">For Rent</div>
-                                <div class="love"><i class="flaticon-heart"></i></div>
-                                <div class="plan-price"><sup>$</sup>750<span>/month</span> </div>
-                            </a>
-                        </div>
-                        <div class="detail clearfix">
-                            <div class="float-left">
-                                <h3>
-                                    <a href="#">Relaxing Apartment</a>
-                                </h3>
-                                <div class="location">
-                                    <a href="#">
-                                        <i class="flaticon-pin"></i> 123 Kathal St. Tampa City
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="slick-slide-item">
-                    <div class="property-box">
-                        <div class="photo">
-                            <a href="#">
-                                <img th:src="@{/assets/img/property-3.jpg}" alt="property" class="img-fluid">
-                                <div class="tag">For Sale</div>
-                                <div class="love"><i class="flaticon-heart"></i></div>
-                                <div class="plan-price"><sup>$</sup>800<span>/month</span> </div>
-                            </a>
-                        </div>
-                        <div class="detail clearfix">
-                            <div class="float-left">
-                                <h3>
-                                    <a href="#">Real Luxury Villa</a>
-                                </h3>
-                                <div class="location">
-                                    <a href="#">
-                                        <i class="flaticon-pin"></i> 123 Kathal St. Tampa City
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="slick-slide-item">
-                    <div class="property-box">
-                        <div class="photo">
-                            <a href="#">
-                                <img th:src="@{/assets/img/property-3.jpg}" alt="property" class="img-fluid">
-                                <div class="tag">For Sale</div>
-                                <div class="love"><i class="flaticon-heart"></i></div>
-                                <div class="plan-price"><sup>$</sup>800<span>/month</span> </div>
-                            </a>
-                        </div>
-                        <div class="detail clearfix">
-                            <div class="float-left">
-                                <h3>
-                                    <a href="#">Real Luxury Villa</a>
-                                </h3>
-                                <div class="location">
-                                    <a href="#">
-                                        <i class="flaticon-pin"></i> 123 Kathal St. Tampa City
-                                    </a>
+                                    <span th:text="${housing.standing?.name}"></span> STANDING
                                 </div>
                             </div>
                         </div>
@@ -322,7 +246,7 @@ End Google Tag Manager (noscript) -->
         </div>
         <div class="slick-slider-area">
             <div class="row slick-carousel" data-slick='{"slidesToShow": 4, "responsive":[{"breakpoint": 1024,"settings":{"slidesToShow": 2}}, {"breakpoint": 768,"settings":{"slidesToShow": 1}}]}'>
-                <div class="slick-slide-item">
+                <div th:each="user : ${users}" class="slick-slide-item">
                     <div class="agent">
                         <div class="photo">
                             <a href="#">
@@ -335,80 +259,8 @@ End Google Tag Manager (noscript) -->
                             </div>
                         </div>
                         <div class="details">
-                            <h5><a href="#">Martin Smith</a></h5>
-                            <p>Web Developer</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="slick-slide-item">
-                    <div class="agent">
-                        <div class="photo">
-                            <a href="#">
-                                <img th:src="@{/assets/img/avatar/avatar-5.jpg}" alt="avatar" class="img-fluid">
-                            </a>
-                            <ul class="social-list clearfix">
-                                <li><a href="#" class="facebook"><i class="fa fa-facebook"></i></a></li>
-                                <li><a href="#" class="twitter"><i class="fa fa-twitter"></i></a></li>
-                                <li><a href="#" class="google"><i class="fa fa-google"></i></a></li>
-                            </ul>
-                        </div>
-                        <div class="details">
-                            <h5><a href="#">Office Manager</a></h5>
-                            <p>Support Manager</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="slick-slide-item">
-                    <div class="agent">
-                        <div class="photo">
-                            <a href="#">
-                                <img th:src="@{/assets/img/avatar/avatar-3.jpg}" alt="avatar" class="img-fluid">
-                            </a>
-                            <ul class="social-list clearfix">
-                                <li><a href="#" class="facebook"><i class="fa fa-facebook"></i></a></li>
-                                <li><a href="#" class="twitter"><i class="fa fa-twitter"></i></a></li>
-                                <li><a href="#" class="google"><i class="fa fa-google"></i></a></li>
-                            </ul>
-                        </div>
-                        <div class="details">
-                            <h5><a href="#">John Antony</a></h5>
-                            <p>Creative Director</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="slick-slide-item">
-                    <div class="agent">
-                        <div class="photo">
-                            <a href="#">
-                                <img th:src="@{/assets/img/avatar/avatar-4.jpg}" alt="avatar" class="img-fluid">
-                            </a>
-                            <ul class="social-list clearfix">
-                                <li><a href="#" class="facebook"><i class="fa fa-facebook"></i></a></li>
-                                <li><a href="#" class="twitter"><i class="fa fa-twitter"></i></a></li>
-                                <li><a href="#" class="google"><i class="fa fa-google"></i></a></li>
-                            </ul>
-                        </div>
-                        <div class="details">
-                            <h5><a href="#">Jonny Miche</a></h5>
-                            <p>Office Manager</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="slick-slide-item">
-                    <div class="agent">
-                        <div class="photo">
-                            <a href="#">
-                                <img th:src="@{/assets/img/avatar/avatar-5.jpg}" alt="avatar" class="img-fluid">
-                            </a>
-                            <ul class="social-list clearfix">
-                                <li><a href="#" class="facebook"><i class="fa fa-facebook"></i></a></li>
-                                <li><a href="#" class="twitter"><i class="fa fa-twitter"></i></a></li>
-                                <li><a href="#" class="google"><i class="fa fa-google"></i></a></li>
-                            </ul>
-                        </div>
-                        <div class="details">
-                            <h5><a href="#">Office Manager</a></h5>
-                            <p>Support Manager</p>
+                            <h5><a href="#" th:text="${user.name}"></a></h5>
+                            <p th:text="${user.function}"></p>
                         </div>
                     </div>
                 </div>
@@ -612,29 +464,27 @@ End Google Tag Manager (noscript) -->
         <!-- Main title -->
         <div class="main-title wow_ fadeInDown delay-04s">
             <h1>Nos Prix</h1>
-            <p>Découvrez nos offres de logement à prix abordable. Nous avons des options pour tous les budgets.</p>
+            <p class="text-justify">Découvrez nos offres de logement à prix abordable. Nous exigeons une caution et des frais de réhabilitation pour les nouveaux résidents, payable lors de la signature du contrat de location pour la première année. La caution est remboursable lors de la libération du logement après avoir fait un état des lieux. Les frais de réhabilitation prélevés sont destinés aux travaux de réparations (peinture, plomberie, etc...)</p>
         </div>
         <div class="row">
             <div th:each="standing: ${standings}" class="col-xl-4 col-lg-4 col-md-12 wow_ fadeInLeft delay-04s">
                 <div class="pricing-1 plan">
                     <div class="plan-header">
-                        <h5 th:text="${standing.name + ' STANDING'}">Ultimate Plan</h5>
-                        <p>Plan short description</p>
-                        <div class="plan-price" th:utext="${standing.rent + '<span><sup> FCFA</sup> / mois</span>'}"></div>
+                        <h5 th:text="${standing.name + ' STANDING'}"></h5>
+                        <p>Paiement annuel uniquement</p>
+                        <div class="plan-price" th:utext="${#numbers.formatInteger(standing.rent, 1, 'WHITESPACE') + '<span><sup>FCFA</sup>/ mois</span>'}"></div>
                     </div>
                     <div class="plan-list">
                         <ul>
-                            <li><i class="fa fa-globe"></i>Unlimited Websites</li>
-                            <li><i class="fa fa-thumbs-up"></i>Unlimited Storage</li>
-                            <li><i class="fa fa-signal"></i>Unlimited Bandwidth</li>
-                            <li><i class="fa fa-user"></i>1000 Email Addresses</li>
-                            <li><i class="fa fa-star"></i>Free domain with annual plan</li>
-                            <li><i class="fa fa-rocket"></i>4X Processing Power</li>
-                            <li><i class="fa fa-server"></i>Premium DNS</li>
+                            <li><i class="fa fa-star"></i>Caution <span style="float: right; font-weight: bold" th:text="${#numbers.formatInteger(standing.caution, 1, 'WHITESPACE') + ' FCFA'}"></span></li>
+                            <li><i class="fa fa-star"></i>Réhabilitation <span style="float: right; font-weight: bold" th:text="${#numbers.formatInteger(standing.repair, 1, 'WHITESPACE') + ' FCFA'}"></span></li>
+                            <li style="line-height: 30px; text-align: justify"><i class="fa fa-star"></i><span th:text="${standing.description}"></span></li>
                         </ul>
+                        <!--
                         <div class="plan-button text-center">
                             <a href="#" class="btn btn-outline pricing-btn">Get Started</a>
                         </div>
+                        -->
                     </div>
                 </div>
             </div>
@@ -920,21 +770,21 @@ End Google Tag Manager (noscript) -->
                         <i class="flaticon-phone"></i>
                         <div class="media-body">
                             <h5>Téléphone</h5>
-                            <p><a href="tel:0477-0477-8556-552">0477 8556 552</a></p>
+                            <p><a th:href="${'tel:' + telephone}" th:text="${telephone}"></a></p>
                         </div>
                     </div>
                     <div class="media mb-25">
                         <i class="flaticon-mail"></i>
                         <div class="media-body">
                             <h5>Email</h5>
-                            <p><a href="#">info@themevessel.com</a></p>
+                            <p><a th:href="${'mailto:' + email}" th:text="${email}"></a></p>
                         </div>
                     </div>
                     <div class="media mb-25">
-                        <i class="flaticon-global"></i>
+                        <i class="flaticon-pin-1"></i>
                         <div class="media-body">
                             <h5>Localisation</h5>
-                            <p><a href="#">info@themevessel.com</a></p>
+                            <p><a href="#" th:text="${localisation}"></a></p>
                         </div>
                     </div>
                     <div class="media mb-0">

@@ -3,6 +3,7 @@ package com.estate.domain.service.impl;
 import com.estate.domain.entity.Notification;
 import com.estate.domain.entity.Log;
 import com.estate.domain.entity.Setting;
+import com.estate.domain.enumaration.SettingCode;
 import com.estate.domain.form.SettingForm;
 import com.estate.domain.service.face.SettingService;
 import com.estate.repository.LogRepository;
@@ -28,6 +29,11 @@ public class SettingServiceImpl implements SettingService {
     @Override
     public Optional<Setting> findById(long id) {
         return settingRepository.findById(id);
+    }
+
+    @Override
+    public Optional<Setting> findByCode(SettingCode code) {
+        return settingRepository.findByCode(code);
     }
 
     @Override
