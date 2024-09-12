@@ -31,6 +31,13 @@
                                 </div>
                             </div>
                             <div class="row">
+                                <div class="form-group col-lg-12" th:classappend="${#fields.hasErrors('description') ? 'has-error' : ''}">
+                                    <label class="control-label" for="description">Description <span class="required-field">*</span></label>
+                                    <textarea id="description" th:field="*{description}" class="form-control" autocomplete="off" required></textarea>
+                                    <p th:if="${#fields.hasErrors('description')}" th:errors="*{description}" class="help-block"></p>
+                                </div>
+                            </div>
+                            <div class="row">
                                 <div class="col-lg-4">
                                     <div class="form-group input-group" th:classappend="${#fields.hasErrors('rent') ? 'has-error' : ''}">
                                         <label class="control-label" for="rent">Loyer par mois <span class="required-field">*</span></label>

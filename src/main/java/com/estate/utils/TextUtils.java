@@ -28,12 +28,6 @@ public class TextUtils {
                 .toString();
     }
 
-    public static String generateOTP(){
-        Random random = new Random();
-        int number = random.nextInt(999999);
-        return String.format("%06d", number);
-    }
-
     private static long get64LeastSignificantBitsForVersion1() {
         Random random = new Random();
         long random63BitLong = random.nextLong() & 0x3FFFFFFFFFFFFFFFL;

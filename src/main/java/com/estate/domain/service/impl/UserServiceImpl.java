@@ -4,6 +4,7 @@ import com.estate.domain.entity.Notification;
 import com.estate.domain.entity.Log;
 import com.estate.domain.entity.User;
 import com.estate.domain.enumaration.Level;
+import com.estate.domain.enumaration.Profil;
 import com.estate.domain.form.PasswordForm;
 import com.estate.domain.form.ProfilForm;
 import com.estate.domain.form.UserForm;
@@ -44,8 +45,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> findAll() {
-        return userRepository.findAllByOrderByLastLoginDesc();
+    public List<User> findAllByProfil(Profil profil) {
+        return userRepository.findAllByProfilOrderByLastLoginDesc(profil);
     }
 
     @Override
@@ -99,6 +100,7 @@ public class UserServiceImpl implements UserService {
         user.setFirstName(form.getFirstName());
         user.setLastName(form.getLastName());
         user.setPhone(form.getPhone().format());
+        user.setMobile(form.getMobile().format());
         user.setEmail(form.getEmail());
         user.setGender(form.getGender());
         user.setModes(form.getModes());
@@ -141,6 +143,7 @@ public class UserServiceImpl implements UserService {
         user.setFirstName(form.getFirstName());
         user.setLastName(form.getLastName());
         user.setPhone(form.getPhone().format());
+        user.setMobile(form.getMobile().format());
         user.setEmail(form.getEmail());
         user.setGender(form.getGender());
         try {

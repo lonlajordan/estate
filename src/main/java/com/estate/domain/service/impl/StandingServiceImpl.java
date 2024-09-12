@@ -37,6 +37,10 @@ public class StandingServiceImpl implements StandingService {
         return standingRepository.findAllByActiveTrueOrderByNameAsc();
     }
 
+    @Override
+    public List<Standing> findAllByActiveTrueOrderByRentAsc() {
+        return standingRepository.findAllByActiveTrueOrderByRentAsc();
+    }
 
     @Override
     public Optional<Standing> findById(long id) {
@@ -79,6 +83,7 @@ public class StandingServiceImpl implements StandingService {
         Standing standing = creation ? new Standing() : standingRepository.findById(form.getId()).orElse(null);
         if(standing == null) return Notification.error("Standing introuvable");
         standing.setName(form.getName());
+        standing.setDescription(form.getDescription());
         standing.setRent(form.getRent());
         standing.setCaution(form.getCaution());
         standing.setRepair(form.getRepair());

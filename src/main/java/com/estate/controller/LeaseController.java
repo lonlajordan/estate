@@ -1,9 +1,8 @@
 package com.estate.controller;
 
-import com.estate.domain.entity.Housing;
-import com.estate.domain.entity.Lease;
-import com.estate.domain.entity.Notification;
+import com.estate.domain.entity.*;
 import com.estate.domain.enumaration.Availability;
+import com.estate.domain.enumaration.Profil;
 import com.estate.domain.form.LeaseSearch;
 import com.estate.domain.form.MutationForm;
 import com.estate.domain.service.face.HousingService;
@@ -19,6 +18,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
@@ -32,7 +32,7 @@ public class LeaseController {
     private final HousingService housingService;
 
     @GetMapping("list")
-    public String findAll(Model model, @RequestParam(required = false, defaultValue = "1") int page, HttpServletRequest request){
+    public String findAll(Model model, @RequestParam(required = false, defaultValue = "1") int page, HttpSession session, HttpServletRequest request){
         LeaseSearch form = new LeaseSearch();
         Page<Lease> leases;
         Map<String, ?> attributes = RequestContextUtils.getInputFlashMap(request);
@@ -42,7 +42,12 @@ public class LeaseController {
             leases = leaseService.findAll(form);
             if(leases.isEmpty()) model.addAttribute("notification", Notification.info("Aucun résultat"));
         } else {
-            leases = leaseService.findAll(page);
+            User user = (User) session.getAttribute("user");
+            if(user != null && Profil.STUDENT.equals(user.getProfil())){
+                leases = leaseService.findAllByUserId(user.getId(), page);
+            } else {
+                leases = leaseService.findAll(page);
+            }
         }
         model.addAttribute("housings", housingService.findAll());
         model.addAttribute("leases", leases.toList());

@@ -1,14 +1,12 @@
 package com.estate.domain.form;
 
-
 import lombok.Data;
 
-import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
 @Data
-public class ContactForm {
+public class VisitorForm {
     @NotBlank
     private String name;
     @NotBlank
@@ -16,8 +14,4 @@ public class ContactForm {
     private String email;
     @NotBlank
     private String phone;
-    @NotBlank
-    private String subject;
-    @NotBlank
-    private String message;
 }

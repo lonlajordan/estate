@@ -11,7 +11,7 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByEmail(String email);
     Optional<User> findByToken(String token);
-    List<User> findAllByOrderByLastLoginDesc();
+    List<User> findAllByProfilOrderByLastLoginDesc(Profil profil);
 
     List<User> findByProfil(Profil profil);
 }

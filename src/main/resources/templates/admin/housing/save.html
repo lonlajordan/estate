@@ -38,6 +38,12 @@
                                         <p th:if="${#fields.hasErrors('standingId')}" th:errors="*{standingId}" class="help-block"></p>
                                     </div>
                                     <div class="form-group">
+                                        <label for="category" class="control-label">Catégorie <span class="required-field">*</span></label>
+                                        <select id="category" th:field="*{category}" class="form-control" required>
+                                            <option th:each="category: ${T(com.estate.domain.enumaration.Category).values()}" th:value="${category}" th:text="${category.name}"></option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
                                         <label for="status" class="control-label">Statut <span class="required-field">*</span></label>
                                         <select id="status" th:field="*{status}" class="form-control" required>
                                             <option th:each="status: ${T(com.estate.domain.enumaration.Availability).values()}" th:value="${status}" th:text="${status.name}"></option>

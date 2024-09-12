@@ -1,6 +1,7 @@
 package com.estate.controller;
 
 import com.estate.domain.entity.*;
+import com.estate.domain.enumaration.Profil;
 import com.estate.domain.enumaration.Status;
 import com.estate.domain.form.HousingSearch;
 import com.estate.domain.form.PaymentForm;
@@ -39,7 +40,7 @@ public class PaymentController {
     private final PaymentService paymentService;
 
     @GetMapping(value="list")
-    public String findAll(@RequestParam(required = false, defaultValue = "1") int page, Model model, HttpServletRequest request){
+    public String findAll(@RequestParam(required = false, defaultValue = "1") int page, Model model, HttpSession session, HttpServletRequest request){
         PaymentSearch form = new PaymentSearch();
         Page<Payment> payments;
         Map<String, ?> attributes = RequestContextUtils.getInputFlashMap(request);
@@ -49,7 +50,13 @@ public class PaymentController {
             payments = paymentService.findAll(form);
             if(payments.isEmpty()) model.addAttribute("notification", Notification.info("Aucun résultat"));
         } else {
-            payments = paymentService.findAll(page);
+            User user = (User) session.getAttribute("user");
+            if(user != null && Profil.STUDENT.equals(user.getProfil())){
+                payments = paymentService.findAllByUserId(user.getId(), page);
+            } else {
+                payments = paymentService.findAll(page);
+            }
+
         }
         model.addAttribute("payments", payments.toList());
         model.addAttribute("totalPages", payments.getTotalPages());
@@ -76,12 +83,12 @@ public class PaymentController {
     public String findById(@RequestParam(required = false) Long id, @RequestParam(required = false) Long standingId, @RequestParam(required = false) Long studentId, Model model, RedirectAttributes attributes){
         Payment payment = null;
         Standing standing = null;
-        Student student;
+        Student student = null;
         List<Housing> housings = new ArrayList<>();
         List<Standing> standings = standingService.findAll();
         if(id != null){
             payment = paymentService.findById(id).orElse(null);
-        }else if(studentId != null){
+        } else if(studentId != null){
             student = studentService.findById(studentId).orElse(null);
             if(student == null){
                 attributes.addFlashAttribute("notification", Notification.error("Étudiant introuvable"));
@@ -89,6 +96,12 @@ public class PaymentController {
             }
             payment = new Payment();
             payment.setStudent(student);
+        }
+        if(payment == null){
+            attributes.addFlashAttribute("notification", Notification.error("Paiement introuvable"));
+            return "redirect:/payment/list";
+        } else {
+            if(student == null) student = payment.getStudent();
             if(student.getHousing() != null){
                 payment.setDesiderata(student.getHousing());
                 standing = student.getHousing().getStanding();
@@ -96,7 +109,7 @@ public class PaymentController {
                     payment.setStanding(standing);
                     payment.setRent(standing.getRent());
                 }
-            }else {
+            } else {
                 if(standingId != null){
                     standing = standingService.findById(standingId).orElse(null);
                 } else if(!standings.isEmpty()) {
@@ -112,10 +125,6 @@ public class PaymentController {
                     }
                 }
             }
-        }
-        if(payment == null){
-            attributes.addFlashAttribute("notification", Notification.error("Paiement introuvable"));
-            return "redirect:/payment/list";
         }
 
         if(payment.getStanding() != null){

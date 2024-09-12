@@ -35,7 +35,7 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-lg-6" style="margin-bottom: 15px" th:classappend="${#fields.hasErrors('phone.number') ? 'has-error' : ''}">
+                                <div class="col-lg-3" style="margin-bottom: 15px" th:classappend="${#fields.hasErrors('phone.number') ? 'has-error' : ''}">
                                     <label for="phone" class="control-label">Numéro de téléphone <span class="required-field">*</span></label>
                                     <div class="form-group input-group d-flex mb-0">
                                         <select th:field="*{phone.code}" style="width: auto" class="form-control" required>
@@ -44,6 +44,16 @@
                                         <input id="phone" th:field="*{phone.number}" placeholder="695463868" pattern="\d+" autocomplete="off" class="form-control" required>
                                     </div>
                                     <p th:if="${#fields.hasErrors('phone.number')}" th:errors="*{phone.number}" class="help-block"></p>
+                                </div>
+                                <div class="col-lg-3" style="margin-bottom: 15px" th:classappend="${#fields.hasErrors('mobile.number') ? 'has-error' : ''}">
+                                    <label for="mobile" class="control-label">Numéro de téléphone secondaire</label>
+                                    <div class="form-group input-group d-flex mb-0">
+                                        <select th:field="*{mobile.code}" style="width: auto" class="form-control" required>
+                                            <option th:each="code : ${countryCodes}" th:value="${code}" th:text="${code}"></option>
+                                        </select>
+                                        <input id="mobile" th:field="*{mobile.number}" placeholder="654762824" pattern="\d+" autocomplete="off" class="form-control">
+                                    </div>
+                                    <p th:if="${#fields.hasErrors('mobile.number')}" th:errors="*{mobile.number}" class="help-block"></p>
                                 </div>
                                 <div class="form-group col-lg-6" th:classappend="${#fields.hasErrors('email') ? 'has-error' : ''}">
                                     <label for="email" class="control-label">Adresse email <span class="required-field">*</span></label>

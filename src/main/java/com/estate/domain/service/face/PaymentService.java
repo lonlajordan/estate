@@ -18,6 +18,8 @@ public interface PaymentService {
 
     Page<Payment> findAll(PaymentSearch form);
 
+    Page<Payment> findAllByUserId(long userId, int page);
+
     Optional<Payment> findById(long id);
 
     long countByStatus(Status status);

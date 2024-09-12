@@ -75,6 +75,22 @@ public class User extends Auditable {
         return name.substring(name.lastIndexOf(" ") + 1);
     }
 
+    public String getFunction(){
+        String function = "";
+        if(roles != null){
+            if(roles.contains(Role.ROLE_ADMIN)){
+                function = Role.ROLE_ADMIN.getName();
+            } else if(roles.contains(Role.ROLE_MANAGER)) {
+                function = Role.ROLE_MANAGER.getName();
+            } else if(roles.contains(Role.ROLE_JANITOR)) {
+                function = Role.ROLE_JANITOR.getName();
+            } else if(roles.contains(Role.ROLE_STUDENT)) {
+                function = Role.ROLE_STUDENT.getName();
+            }
+        }
+        return function;
+    }
+
     @PrePersist
     @PreUpdate
     public void beforeSave(){
@@ -94,6 +110,7 @@ public class User extends Auditable {
         form.setModes(modes);
         form.setRoles(roles);
         form.setPhone(Phone.parse(phone));
+        form.setMobile(Phone.parse(mobile));
         return form;
     }
 
@@ -105,6 +122,7 @@ public class User extends Auditable {
         form.setGender(gender);
         form.setEmail(email);
         form.setPhone(Phone.parse(phone));
+        form.setMobile(Phone.parse(mobile));
         return form;
     }
 }

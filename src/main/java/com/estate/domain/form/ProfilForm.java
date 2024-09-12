@@ -23,4 +23,7 @@ public class ProfilForm {
     @NotNull
     @Valid
     private Phone phone;
+    @NotNull
+    @Valid
+    private Phone mobile;
 }

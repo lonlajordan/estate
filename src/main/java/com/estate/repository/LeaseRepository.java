@@ -3,6 +3,7 @@ package com.estate.repository;
 import com.estate.domain.entity.Lease;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
@@ -14,6 +15,7 @@ import java.util.List;
 
 public interface LeaseRepository extends JpaRepository<Lease, Long>, JpaSpecificationExecutor<Lease> {
     List<Lease> findAllByEndDateBeforeAndLastRememberDateNull(LocalDate date);
+    Page<Lease> findAllByPaymentStudentUserIdOrderByCreationDateDesc(Long userId, Pageable pageable);
 
     @Transactional
     @Modifying(clearAutomatically = true)

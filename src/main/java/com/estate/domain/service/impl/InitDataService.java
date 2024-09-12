@@ -2,6 +2,7 @@ package com.estate.domain.service.impl;
 
 import com.estate.domain.entity.Setting;
 import com.estate.domain.entity.User;
+import com.estate.domain.enumaration.Profil;
 import com.estate.domain.enumaration.Role;
 import com.estate.domain.enumaration.SettingCode;
 import com.estate.repository.SettingRepository;
@@ -31,7 +32,8 @@ public class InitDataService implements CommandLineRunner {
             user.setEmail("admin@gmail.com");
             user.setFirstName("LONLA");
             user.setLastName("Gatien Jordan");
-            user.setPhone("695463868");
+            user.setPhone("+237 695463868");
+            user.setProfil(Profil.STAFF);
             user.setPassword(new BCryptPasswordEncoder().encode("admin"));
             user.setRoles(Collections.singletonList(Role.ROLE_ADMIN));
             userRepository.save(user);
@@ -46,7 +48,10 @@ public class InitDataService implements CommandLineRunner {
             new Setting(SettingCode.BANK_NAME, ""),
             new Setting(SettingCode.BANK_ACCOUNT_NAME, ""),
             new Setting(SettingCode.BANK_ACCOUNT_NUMBER,""),
-            new Setting(SettingCode.PAYPAL_LINK, "")
+            new Setting(SettingCode.PAYPAL_LINK, ""),
+            new Setting(SettingCode.TELEPHONE_PUBLIC, "+237 695463868"),
+            new Setting(SettingCode.EMAIL_PUBLIC, "concorde@gmail.com"),
+            new Setting(SettingCode.ADDRESS_PUBLIC, "Cradat, Yaoundé, Centre - Cameroun")
         ));
         settingRepository.saveAll(settings.stream().filter(setting -> !settingRepository.existsByCode(setting.getCode())).collect(Collectors.toList()));
         List<SettingCode> codes = settings.stream().map(Setting::getCode).collect(Collectors.toList());

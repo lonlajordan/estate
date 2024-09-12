@@ -16,6 +16,8 @@ public interface LeaseService {
 
     Page<Lease> findAll(LeaseSearch form);
 
+    Page<Lease> findAllByUserId(long userId, int page);
+
     Optional<Lease> findById(long id);
 
     ResponseEntity<?> download(long id);

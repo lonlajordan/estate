@@ -97,7 +97,7 @@
                                 <span th:text="${student.user?.mobile}"></span>
                             </td>
                             <td th:text="${student.housing?.name}"></td>
-                            <td th:text="${student.active ? 'ACTIF' : 'DÉSACTIVÉ'}"></td>
+                            <td th:text="${student.user?.active ? 'ACTIF' : 'DÉSACTIVÉ'}"></td>
                             <td th:text="${#temporals.format(student.creationDate, 'dd-MM-yyyy HH:mm')}"></td>
                             <td th:text="${#temporals.format(student.lastModifiedDate, 'dd-MM-yyyy HH:mm')}"></td>
                             <td class="fit-cell-content text-center">
@@ -115,7 +115,7 @@
                                         <i class="fa fa-fw fa-pencil-square-o"></i> Modifier
                                     </a>
                                     <a class="list-group-item text-decoration-none text-left" th:href="@{'/student/toggle/' + ${student.id}}">
-                                        <i class="fa fa-fw" th:classappend="${student.active ? 'fa-toggle-off' : 'fa-toggle-on'}"></i> <span th:text="${student.active ? 'Désactiver' : 'Activer'}"></span>
+                                        <i class="fa fa-fw" th:classappend="${student.user?.active ? 'fa-toggle-off' : 'fa-toggle-on'}"></i> <span th:text="${student.user?.active ? 'Désactiver' : 'Activer'}"></span>
                                     </a>
                                     <a class="list-group-item text-decoration-none text-left text-danger" th:data-student-id="${student.id}" onclick="deleteItem(this.getAttribute('data-student-id'), 'student/delete')" href="#">
                                         <i class="fa fa-fw fa-trash-o"></i> Supprimer

@@ -4,6 +4,7 @@ public enum SettingType {
     BOOLEAN,
     DATE,
     DECIMAL,
+    EMAIL,
     INTEGER,
     TEXT,
     SYSTEM

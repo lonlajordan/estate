@@ -40,7 +40,7 @@
                             <div class="row">
                                 <div class="form-group col-lg-6" th:classappend="${#fields.hasErrors('standingId') ? 'has-error' : ''}">
                                     <label for="standingId" class="control-label">Standing <span class="required-field">*</span></label>
-                                    <select id="standingId" th:field="*{standingId}" class="form-control searchable-select-box" th:data-id="*{id}" th:data-student-id="*{studentId}" onchange="toggleStanding(this.getAttribute('data-id'), this.getAttribute('data-student-id'), event.target.value, 'payment/save')" th:disabled="${student?.housing != null}" required>
+                                    <select id="standingId" th:field="*{standingId}" class="form-control searchable-select-box" th:data-id="*{id}" th:data-student-id="*{studentId}" onchange="toggleStanding(this.getAttribute('data-id'), this.getAttribute('data-student-id'), e.target.value, 'payment/save')" th:disabled="${student?.housing != null}" required>
                                         <option th:each="standing: ${standings}" th:value="${standing.id}" th:text="${standing.name}"></option>
                                     </select>
                                     <p th:if="${#fields.hasErrors('standingId')}" th:errors="*{standingId}" class="help-block"></p>
@@ -94,8 +94,8 @@
                                     <p th:if="${#fields.hasErrors('mode')}" th:errors="*{mode}" class="help-block"></p>
                                 </div>
                                 <div class="form-group col-lg-6" th:classappend="${#fields.hasErrors('proofFile') ? 'has-error' : ''}">
-                                    <label class="control-label" for="proofFile">Preuve de paiement</label>
-                                    <input id="proofFile" type="file" accept="application/pdf, image/png, image/jpg, image/jpeg" th:field="*{proofFile}" class="form-control" autocomplete="off">
+                                    <label class="control-label" for="proofFile">Preuve de paiement <span th:if="${payment.id == null}" class="required-field">*</span></label>
+                                    <input id="proofFile" type="file" accept="application/pdf, image/png, image/jpg, image/jpeg" th:field="*{proofFile}" th:required="${payment.id == null}" class="form-control" autocomplete="off">
                                     <p th:if="${#fields.hasErrors('proofFile')}" th:errors="*{proofFile}" class="help-block"></p>
                                 </div>
                             </div>

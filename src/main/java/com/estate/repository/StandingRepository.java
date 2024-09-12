@@ -11,4 +11,5 @@ import java.util.List;
 public interface StandingRepository extends JpaRepository<Standing, Long>, CrudRepository<Standing, Long> {
     List<Standing> findAllByOrderByNameAsc();
     List<Standing> findAllByActiveTrueOrderByNameAsc();
+    List<Standing> findAllByActiveTrueOrderByRentAsc();
 }

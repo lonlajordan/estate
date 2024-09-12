@@ -87,7 +87,7 @@
                             <td th:text="${housing.name}"></td>
                             <td th:text="${housing.standing?.name}"></td>
                             <td th:text="${housing.status?.name}"></td>
-                            <td th:text="${housing.resident?.name}"></td>
+                            <td th:text="${housing.resident?.user?.name}"></td>
                             <td th:classappend="${housing.resident?.currentLease?.background}">
                                 <span th:text="${#temporals.format(housing.resident?.currentLease?.startDate, 'dd/MM/yyyy')}"></span> - <span style="font-weight: bold" th:text="${#temporals.format(housing.resident?.currentLease?.realEndDate, 'dd/MM/yyyy')}"></span>
                             </td>
