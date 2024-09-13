@@ -2,17 +2,17 @@ package com.estate.domain.service.face;
 
 import com.estate.domain.entity.Notification;
 import com.estate.domain.entity.Visitor;
+import com.estate.domain.form.ContactForm;
 import com.estate.domain.form.VisitorForm;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface VisitorService {
     List<Visitor> findAll();
 
-    Optional<Visitor> findByEmail(String email);
+    Notification save(VisitorForm form);
 
-    Notification save(VisitorForm visitorForm);
+    Notification contact(ContactForm form);
 
-    void submitVisitor(VisitorForm visitor);
+    Notification subscribe(VisitorForm form);
 }
