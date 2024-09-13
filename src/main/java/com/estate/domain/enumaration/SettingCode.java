@@ -14,6 +14,7 @@ public enum SettingCode {
     BANK_ACCOUNT_NUMBER("Numéro du compte bancaire", SettingType.TEXT),
     PAYPAL_LINK("Lien de paiement PayPal", SettingType.TEXT),
     TELEPHONE_PUBLIC("Numéro de téléphone public", SettingType.TEXT),
+    WHATSAPP("Numéro de téléphone whatsapp", SettingType.TEXT),
     EMAIL_PUBLIC("Adresse e-mail publique", SettingType.EMAIL),
     ADDRESS_PUBLIC("Localisation", SettingType.TEXT);
 
