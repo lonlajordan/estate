@@ -44,3 +44,5 @@ file.xlsx
 /questions/
 /target/
 /documents/
+/src/main/resources/application.properties
+.gitignore

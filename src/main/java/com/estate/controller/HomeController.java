@@ -6,10 +6,8 @@ import com.estate.domain.enumaration.SettingCode;
 import com.estate.domain.form.ContactForm;
 import com.estate.domain.form.VisitorForm;
 import com.estate.domain.mail.SmsHelper;
-import com.estate.domain.service.face.HousingService;
-import com.estate.domain.service.face.SettingService;
-import com.estate.domain.service.face.StandingService;
-import com.estate.domain.service.face.UserService;
+import com.estate.domain.service.face.*;
+import com.estate.domain.service.impl.HomeServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,6 +24,8 @@ public class HomeController {
     private final HousingService housingService;
     private final SettingService settingService;
     private final StandingService standingService;
+    private final HomeServiceImpl homeService;
+    private final VisitorService visitorService;
 
     @GetMapping("/")
     public String home(Model model){
@@ -43,19 +43,21 @@ public class HomeController {
 
     @PostMapping("contact")
     public String contact(@Valid @ModelAttribute("contact") ContactForm contact){
+        homeService.notifyForContact(contact);
         return "index";
     }
 
-    @PostMapping("/")
+    /*@PostMapping("/")
     public String notifyForContact(@ModelAttribute ContactForm contact,Model model){
         System.out.println("Dans le post");
         model.addAttribute("contact",contact);
         //System.out.println(contact.getName() + " ++++ " + contact.getEmail() + " +++++ " + contact.getPhone() );
         return "index";
-    }
+    }*/
 
     @PostMapping("subscribe")
     public String subscribe(@Valid @ModelAttribute("visitor") VisitorForm visitor){
+        visitorService.submitVisitor(visitor);
         return "index";
     }
 }
