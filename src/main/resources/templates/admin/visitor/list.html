@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head th:replace="base.html :: head('Liste des étudiants')"></head>
+
+<body>
+<div id="wrapper">
+    <div th:replace="header.html"></div>
+    <div id="page-wrapper">
+        <div class="row mt-6">
+            <ol class="breadcrumb">
+                <li><i class="fa fa-home"></i> <a class="lazy-link" th:href="@{/dashboard}">Accueil</a></li>
+                <li>Visiteurs</li>
+            </ol>
+        </div>
+        <div class="row">
+            <div class="col mb-6">
+                <div class="panel-group" id="accordion">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <button data-toggle="collapse" data-parent="#accordion" href="#collapseBox" class="collapsed btn btn-primary">
+                                    <i class="fa fa-search"></i>
+                                    &nbsp; Rechercher
+                                </button>
+                            </h4>
+                        </div>
+                        <div id="collapseBox" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                <form th:object="${searchForm}" onsubmit="submitForm(event)" th:action="@{/student/search}" autocomplete="off" method="post">
+                                    <input name="page" type="hidden" id="current-page" th:value="${currentPage}">
+                                    <div class="row">
+                                        <div class="form-group col-lg-6">
+                                            <label for="firstName" class="control-label">Nom</label>
+                                            <input id="firstName" th:field="*{name}" class="form-control">
+                                        </div>
+                                        <div class="form-group col-lg-6">
+                                            <label for="email" class="control-label">Email</label>
+                                            <input id="email" th:field="*{email}" class="form-control">
+                                        </div>
+                                        <div class="form-group col-lg-6">
+                                            <label for="phone" class="control-label">Telephone</label>
+                                            <input id="phone" th:field="*{phone}" class="form-control">
+                                        </div>
+                                    </div>
+                                    <button type="submit" id="search-button-id" class="btn btn-success mr-2">
+                                        <i class="fa fa-search"></i>
+                                        &nbsp; Lancer la recherche
+                                    </button>
+                                    <button th:href="@{/visitor/list}" role="link" class="lazy-link btn btn-default">
+                                        <i class="fa fa-refresh"></i>
+                                        &nbsp; Réinitialiser
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="panel-footer">
+                            <b><u>NB:</u></b> &nbsp; Utilisez des critères précis lorsque c'est possible.
+                        </div>
+                    </div>
+                </div>
+                <!--button id="add-item" role="link" class="lazy-link d-none" th:href="@{/student/save}"></button-->
+                <div th:replace="base.html :: alert(${notification})"></div>
+                <table id="data-list" data-pdf-title="LISTE DES ÉTUDIANTS" data-pdf-name="Liste des étudiants" class="table table-striped table-bordered table-hover dataTable paging searching can-add">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nom</th>
+                            <th>Adresse e-mail</th>
+                            <th>Téléphone(s)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="visitor,iter: ${visitors}" th:data-id="${visitor.id}">
+                            <td th:text="${visitor.id}"></td>
+                            <td th:text="${visitor?.name}"></td>
+                            <td th:text="${visitor?.email}"></td>
+                            <td th:text="${visitor?.phone}"></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div th:if="${totalPages > 1}" class="mt-6" th:classappend="${search ? 'data-search' : ''}" id="pagination" th:title="${totalPages}" th:aria-placeholder="${currentPage}" aria-label="visitor/list"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<th:block th:insert="base.html :: scripts"></th:block>
+</body>
+
+</html>

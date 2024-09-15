@@ -8,6 +8,9 @@ import com.estate.domain.form.VisitorForm;
 import com.estate.domain.mail.SmsHelper;
 import com.estate.domain.service.face.*;
 import com.estate.domain.service.impl.HomeServiceImpl;
+import com.estate.domain.service.impl.PartnerServiceImpl;
+import com.estate.domain.service.impl.PictureServiceServiceImpl;
+import com.estate.domain.service.impl.TestimonialServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,6 +29,9 @@ public class HomeController {
     private final StandingService standingService;
     private final HomeServiceImpl homeService;
     private final VisitorService visitorService;
+    private final PartnerServiceImpl partnerService;
+    private final TestimonialServiceImpl testimonialService;
+    private final PictureServiceServiceImpl pictureService;
 
     @GetMapping("/")
     public String home(Model model){
@@ -38,6 +44,9 @@ public class HomeController {
         model.addAttribute("telephone", settingService.findByCode(SettingCode.TELEPHONE_PUBLIC).map(Setting::getValue).orElse(""));
         model.addAttribute("email", settingService.findByCode(SettingCode.EMAIL_PUBLIC).map(Setting::getValue).orElse(""));
         model.addAttribute("localisation", settingService.findByCode(SettingCode.ADDRESS_PUBLIC).map(Setting::getValue).orElse(""));
+        model.addAttribute("partners",partnerService.findAll());
+        model.addAttribute("testimonials",testimonialService.findAll());
+        model.addAttribute("pictures",pictureService.findAll());
         return "index";
     }
 

@@ -3,10 +3,13 @@ package com.estate.domain.service.impl;
 
 import com.estate.domain.entity.Visitor;
 import com.estate.domain.form.VisitorForm;
+import com.estate.domain.form.VisitorSearchForm;
 import com.estate.domain.mail.EmailHelper;
 import com.estate.domain.service.face.VisitorService;
 import com.estate.repository.VisitorRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import com.estate.domain.entity.Notification;
 
@@ -24,8 +27,13 @@ public class VisitorServiceImpl implements VisitorService {
     }
 
     @Override
-    public List<Visitor> findAll(){
-        return visitorRepository.findAll();
+    public Page<Visitor> findAll(int page) {
+        return visitorRepository.findAllByOrderByCreationDateDesc(PageRequest.of(page - 1, 100));
+    }
+
+    @Override
+    public Page<Visitor> findAll(VisitorSearchForm visitorSearchForm){
+        return visitorRepository.findAll(visitorSearchForm.toSpecification(), PageRequest.of(visitorSearchForm.getPage() == null ? 0 : (visitorSearchForm.getPage() - 1), 100));
     }
 
     @Override
