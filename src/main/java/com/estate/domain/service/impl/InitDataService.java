@@ -50,6 +50,7 @@ public class InitDataService implements CommandLineRunner {
             new Setting(SettingCode.BANK_ACCOUNT_NUMBER,""),
             new Setting(SettingCode.PAYPAL_LINK, ""),
             new Setting(SettingCode.TELEPHONE_PUBLIC, "+237 695463868"),
+            new Setting(SettingCode.WHATSAPP, "+237 654762824"),
             new Setting(SettingCode.EMAIL_PUBLIC, "concorde@gmail.com"),
             new Setting(SettingCode.ADDRESS_PUBLIC, "Cradat, Yaoundé, Centre - Cameroun")
         ));

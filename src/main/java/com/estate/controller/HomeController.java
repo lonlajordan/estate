@@ -1,5 +1,6 @@
 package com.estate.controller;
 
+import com.estate.domain.entity.Notification;
 import com.estate.domain.entity.Setting;
 import com.estate.domain.enumaration.Profil;
 import com.estate.domain.enumaration.SettingCode;
@@ -17,6 +18,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 
@@ -27,7 +29,6 @@ public class HomeController {
     private final HousingService housingService;
     private final SettingService settingService;
     private final StandingService standingService;
-    private final HomeServiceImpl homeService;
     private final VisitorService visitorService;
     private final PartnerServiceImpl partnerService;
     private final TestimonialServiceImpl testimonialService;
@@ -42,6 +43,7 @@ public class HomeController {
         model.addAttribute("housings", housingService.findAll());
         model.addAttribute("standings", standingService.findAllByActiveTrueOrderByRentAsc());
         model.addAttribute("telephone", settingService.findByCode(SettingCode.TELEPHONE_PUBLIC).map(Setting::getValue).orElse(""));
+        model.addAttribute("whatsapp", settingService.findByCode(SettingCode.WHATSAPP).map(Setting::getValue).orElse(""));
         model.addAttribute("email", settingService.findByCode(SettingCode.EMAIL_PUBLIC).map(Setting::getValue).orElse(""));
         model.addAttribute("localisation", settingService.findByCode(SettingCode.ADDRESS_PUBLIC).map(Setting::getValue).orElse(""));
         model.addAttribute("partners",partnerService.findAll());
@@ -51,22 +53,16 @@ public class HomeController {
     }
 
     @PostMapping("contact")
-    public String contact(@Valid @ModelAttribute("contact") ContactForm contact){
-        homeService.notifyForContact(contact);
-        return "index";
+    public String contact(@Valid @ModelAttribute("contact") ContactForm contact, RedirectAttributes attributes){
+        Notification notification = visitorService.contact(contact);
+        attributes.addFlashAttribute("notification", notification);
+        return "redirect:/";
     }
 
-    /*@PostMapping("/")
-    public String notifyForContact(@ModelAttribute ContactForm contact,Model model){
-        System.out.println("Dans le post");
-        model.addAttribute("contact",contact);
-        //System.out.println(contact.getName() + " ++++ " + contact.getEmail() + " +++++ " + contact.getPhone() );
-        return "index";
-    }*/
-
     @PostMapping("subscribe")
-    public String subscribe(@Valid @ModelAttribute("visitor") VisitorForm visitor){
-        visitorService.submitVisitor(visitor);
-        return "index";
+    public String subscribe(@Valid @ModelAttribute("visitor") VisitorForm visitor, RedirectAttributes attributes){
+        Notification notification = visitorService.subscribe(visitor);
+        attributes.addFlashAttribute("notification", notification);
+        return "redirect:/";
     }
 }

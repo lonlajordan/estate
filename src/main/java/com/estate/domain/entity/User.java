@@ -45,6 +45,7 @@ public class User extends Auditable {
     private String phone = "";
     private String mobile;
     private String token;
+    private String picture;
     private LocalDateTime tokenExpirationDate = LocalDateTime.now();
     @Convert(converter = Profil.Converter.class)
     @Enumerated(EnumType.STRING)

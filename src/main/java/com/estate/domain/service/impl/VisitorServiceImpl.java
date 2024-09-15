@@ -1,11 +1,15 @@
 package com.estate.domain.service.impl;
 
 
+import com.estate.domain.entity.User;
 import com.estate.domain.entity.Visitor;
+import com.estate.domain.enumaration.Profil;
+import com.estate.domain.form.ContactForm;
 import com.estate.domain.form.VisitorForm;
 import com.estate.domain.form.VisitorSearchForm;
 import com.estate.domain.mail.EmailHelper;
 import com.estate.domain.service.face.VisitorService;
+import com.estate.repository.UserRepository;
 import com.estate.repository.VisitorRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -14,17 +18,14 @@ import org.springframework.stereotype.Service;
 import com.estate.domain.entity.Notification;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class VisitorServiceImpl implements VisitorService {
     private final VisitorRepository visitorRepository;
+    private final UserRepository userRepository;
     private final EmailHelper emailHelper;
-
-    @Override
-    public Optional<Visitor> findByEmail(String email){
-        return visitorRepository.findByEmail(email);
-    }
 
     @Override
     public Page<Visitor> findAll(int page) {
@@ -37,36 +38,36 @@ public class VisitorServiceImpl implements VisitorService {
     }
 
     @Override
-    public Notification save(VisitorForm visitorForm){
-        Notification notification = Notification.info();
-        boolean create = false;
-        Optional<Visitor> visitor = visitorRepository.findByEmail(visitorForm.getEmail());
-        if(visitor.isPresent()){
-            Visitor visitor1 = visitor.get();
-            visitor1.setName(visitorForm.getName());
-            visitor1.setPhone(visitorForm.getPhone());
-            visitorRepository.save(visitor1);
-        } else {
-            Visitor visitor1 = new Visitor();
-            visitor1.setEmail(visitorForm.getEmail());
-            visitor1.setName(visitorForm.getName());
-            visitor1.setPhone(visitorForm.getPhone());
-            visitorRepository.save(visitor1);
-            create = true;
-
-        }
-
-        notification.setMessage("Le visiteur <b>" + visitorForm.getName() +"</b> a été " + (create ? "ajouté." : "modifié."));
-
-        return notification;
+    public Notification contact(ContactForm form){
+        HashMap<String, Object> context = new HashMap<>();
+        context.put("name",form.getName());
+        HashMap<String, Object> context1 = new HashMap<>();
+        context1.put("name",form.getName());
+        context1.put("message",form.getEmail());
+        context1.put("number",form.getPhone());
+        context1.put("email",form.getEmail());
+        String receiver = userRepository.findByProfil(Profil.STAFF).stream().map(User::getEmail).collect(Collectors.joining(","));
+        emailHelper.sendMail(form.getEmail(), "", "Votre demande sur la cité", "contact_user.ftl", Locale.FRENCH, context, Collections.emptyList());
+        emailHelper.sendMail(receiver,"",form.getSubject(),"contact_staff.ftl",Locale.FRENCH, context1, Collections.emptyList());
+        return Notification.info();
     }
 
     @Override
-    public void submitVisitor(VisitorForm visitorForm){
+    public Notification save(VisitorForm form){
+        Visitor visitor = visitorRepository.findByEmail(form.getEmail()).orElse(new Visitor());
+        visitor.setEmail(form.getEmail());
+        visitor.setName(form.getName());
+        visitor.setPhone(form.getPhone());
+        return Notification.info("Le visiteur <b>" + form.getName() +"</b> a été enregistré.");
+    }
+
+    @Override
+    public Notification subscribe(VisitorForm visitorForm){
         Notification notification = save(visitorForm);
         HashMap<String, Object> context = new HashMap<>();
         context.put("name",visitorForm.getName());
         emailHelper.sendMail(visitorForm.getEmail(),"","Visite de la mini cité","visitor.ftl", Locale.FRENCH, context, Collections.emptyList());
+        return notification;
     }
 
 }

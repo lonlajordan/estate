@@ -2,7 +2,6 @@ package com.estate.configuration;
 
 import com.estate.domain.entity.Lease;
 import com.estate.domain.entity.Student;
-import com.estate.domain.entity.Visitor;
 import com.estate.domain.mail.EmailHelper;
 import com.estate.repository.*;
 import lombok.RequiredArgsConstructor;
@@ -76,10 +75,9 @@ public class Scheduler {
         }
     }
 
-    @Scheduled(cron = "0 0 4 * * *", zone = "GMT+1")
+    @Scheduled(cron = "0 0 4 * * ?", zone = "GMT+1")
     public void deleteVisitors(){
-        List<Visitor> visitors = visitorRepository.findVisitorByCreationDateEquals(LocalDateTime.now().minusYears(1));
-        visitorRepository.deleteAll(visitors);
+        visitorRepository.deleteAllByCreationDateBefore(LocalDateTime.now().minusYears(1));
     }
 
 }

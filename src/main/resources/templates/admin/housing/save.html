@@ -20,7 +20,7 @@
                     <div class="panel-heading">
                         <b>Formulaire : </b> <span style="font-size: 13px">Les champs avec l'astérisque ( <span class="required-field">*</span> ) sont obligatoires</span>
                     </div>
-                    <form th:object="${housing}" onsubmit="submitForm(event)" th:action="@{/housing/save}" autocomplete="off" method="post">
+                    <form th:object="${housing}" onsubmit="submitMultipartForm(e)" th:action="@{/housing/save}" autocomplete="off" enctype="multipart/form-data" method="post">
                         <div class="panel-body">
                             <input name="id" th:value="${housing?.id}" type="hidden">
                             <div class="row">
@@ -42,6 +42,11 @@
                                         <select id="category" th:field="*{category}" class="form-control" required>
                                             <option th:each="category: ${T(com.estate.domain.enumaration.Category).values()}" th:value="${category}" th:text="${category.name}"></option>
                                         </select>
+                                    </div>
+                                    <div class="form-group" th:classappend="${#fields.hasErrors('picture') ? 'has-error' : ''}">
+                                        <label for="picture" class="control-label">Photo de profil <span class="required-field" th:if="${housing.id == null}">*</span></label>
+                                        <input id="picture" th:field="*{picture}" type="file" autocomplete="off" class="form-control" th:required="${housing.id == null}">
+                                        <p th:if="${#fields.hasErrors('picture')}" th:errors="*{picture}" class="help-block"></p>
                                     </div>
                                     <div class="form-group">
                                         <label for="status" class="control-label">Statut <span class="required-field">*</span></label>
