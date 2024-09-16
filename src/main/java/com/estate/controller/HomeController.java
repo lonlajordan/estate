@@ -8,7 +8,6 @@ import com.estate.domain.form.ContactForm;
 import com.estate.domain.form.VisitorForm;
 import com.estate.domain.mail.SmsHelper;
 import com.estate.domain.service.face.*;
-import com.estate.domain.service.impl.HomeServiceImpl;
 import com.estate.domain.service.impl.PartnerServiceImpl;
 import com.estate.domain.service.impl.PictureServiceServiceImpl;
 import com.estate.domain.service.impl.TestimonialServiceImpl;
@@ -64,5 +63,10 @@ public class HomeController {
         Notification notification = visitorService.subscribe(visitor);
         attributes.addFlashAttribute("notification", notification);
         return "redirect:/";
+    }
+
+    @GetMapping("contract")
+    public String contract(){
+        return "admin/contract/contract";
     }
 }

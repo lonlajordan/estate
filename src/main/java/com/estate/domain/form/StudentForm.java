@@ -85,5 +85,9 @@ public class StudentForm {
     @NotBlank
     @Email
     private String secondParentEmail;
+    @NotBlank
+    private String registrationNumber;
+    @NotBlank
+    private String cni;
 
 }

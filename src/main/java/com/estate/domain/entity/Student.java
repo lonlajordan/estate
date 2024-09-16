@@ -76,6 +76,8 @@ public class Student extends Auditable {
     private String secondParentMobile;
     @Column(nullable = false)
     private String secondParentEmail = "admin@gmail.com";
+    private String registrationNumber;
+    private String cni;
 
 
     @Column(nullable = false)
@@ -122,6 +124,8 @@ public class Student extends Auditable {
         form.setSecondParentPhone(Phone.parse(secondParentPhone));
         form.setSecondParentMobile(Phone.parse(secondParentMobile));
         form.setSecondParentEmail(secondParentEmail);
+        form.setCni(cni);
+        form.setRegistrationNumber(registrationNumber);
         return form;
     }
 
