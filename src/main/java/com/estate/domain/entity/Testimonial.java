@@ -13,7 +13,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Testimonial extends Auditable{
+public class Testimonial extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -21,17 +21,15 @@ public class Testimonial extends Auditable{
     private String name;
     private String profession;
     private String message;
-    @OneToOne
-    private Picture picture;
+    private String picture;
 
-
-    public Testimonial toTestimonial(TestimonialForm testimonialForm){
-        Testimonial testimonial = new Testimonial();
-        testimonial.setName(testimonialForm.getName());
-        testimonial.setMessage(testimonialForm.getName());
-        testimonial.setProfession(testimonialForm.getProfession());
-
-        return testimonial;
+    public TestimonialForm toForm(){
+        TestimonialForm form = new TestimonialForm();
+        form.setId(id);
+        form.setName(name);
+        form.setMessage(message);
+        form.setProfession(profession);
+        return form;
     }
 
 }

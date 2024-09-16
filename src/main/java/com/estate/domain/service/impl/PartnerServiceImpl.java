@@ -29,10 +29,12 @@ public class PartnerServiceImpl implements PartnerService {
     private final PartnerRepository partnerRepository;
     private final LogRepository logRepository;
 
+    @Override
     public List<Partner> findAll(){
         return partnerRepository.findAll();
     }
 
+    @Override
     public Notification save(PartnerForm form){
         boolean creation = form.getId() == null;
         Notification notification;
@@ -81,7 +83,7 @@ public class PartnerServiceImpl implements PartnerService {
     public Notification deleteById(long id, HttpServletRequest request) {
         Notification notification;
         Partner partner = partnerRepository.findById(id).orElse(null);
-        if(partner == null) return Notification.error("Logement introuvable");
+        if(partner == null) return Notification.error("Partenaire introuvable");
         try {
             partnerRepository.deleteById(id);
             if(StringUtils.isNotBlank(partner.getLogo())){
@@ -90,10 +92,10 @@ public class PartnerServiceImpl implements PartnerService {
                     if(picture.exists()) FileUtils.deleteQuietly(picture);
                 } catch (Exception ignored) {}
             }
-            notification = Notification.info("Le logement <b>" + partner.getName() + "</b> a été supprimé");
+            notification = Notification.info("Le partenaire <b>" + partner.getName() + "</b> a été supprimé");
             logRepository.save(Log.info(notification.getMessage()));
         }catch (Throwable e){
-            notification = Notification.error("Erreur lors de la suppression du logement <b>" + partner.getName() + "</b>.");
+            notification = Notification.error("Erreur lors de la suppression du partenaire <b>" + partner.getName() + "</b>.");
             logRepository.save(Log.error(notification.getMessage(), ExceptionUtils.getStackTrace(e)));
         }
         return notification;

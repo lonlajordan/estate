@@ -3,7 +3,6 @@ package com.estate.controller;
 import com.estate.domain.entity.Notification;
 import com.estate.domain.entity.Partner;
 import com.estate.domain.form.PartnerForm;
-import com.estate.domain.mail.SmsHelper;
 import com.estate.domain.service.face.PartnerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 @Controller
@@ -53,10 +51,7 @@ public class PartnerController {
 
     @PostMapping(value="save")
     public String save(@Valid @ModelAttribute("partner") PartnerForm partner, BindingResult result, @RequestParam(required = false, defaultValue = "false") boolean multiple, Model model, RedirectAttributes attributes){
-        if(result.hasErrors()){
-            model.addAttribute("countryCodes", SmsHelper.countryCodes);
-            return "admin/partner/save";
-        }
+        if(result.hasErrors()) return "admin/partner/save";
         Notification notification =  partnerService.save(partner);
         if(multiple || notification.hasError()){
             model.addAttribute("notification", notification);
