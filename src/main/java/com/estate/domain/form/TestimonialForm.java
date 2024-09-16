@@ -1,6 +1,8 @@
 package com.estate.domain.form;
 
+import com.estate.domain.annotation.FileSize;
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotBlank;
 
@@ -12,4 +14,6 @@ public class TestimonialForm {
     private String profession;
     @NotBlank
     private String message;
+    @FileSize(extensions = {"png", "jpg", "jpeg"}, max = 2 * 1024 * 1024)
+    private MultipartFile picture;
 }
