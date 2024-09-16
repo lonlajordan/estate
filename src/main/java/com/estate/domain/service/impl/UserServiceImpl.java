@@ -65,6 +65,12 @@ public class UserServiceImpl implements UserService {
         try {
             if(force) paymentRepository.setValidatorToNullByUserId(id);
             userRepository.deleteById(id);
+            if(StringUtils.isNotBlank(user.getPicture())){
+                File picture = new File(user.getPicture());
+                try {
+                    if(picture.exists()) FileUtils.deleteQuietly(picture);
+                } catch (Exception ignored) {}
+            }
             notification = Notification.info("L'utilisateur <b>" + user.getName() + "</b> a été supprimé");
             logRepository.save(Log.info(notification.getMessage()));
         }catch (Throwable e){
@@ -102,7 +108,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public Notification save(UserForm form, HttpSession session) {
         boolean creation = form.getId() == null;
-        Notification.info();
         Notification notification;
         User user = creation ? new User() : userRepository.findById(form.getId()).orElse(null);
         if(user == null) return Notification.error("Utilisateur introuvable");

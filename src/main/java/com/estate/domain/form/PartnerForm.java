@@ -8,6 +8,7 @@ import javax.validation.constraints.NotBlank;
 
 @Data
 public class PartnerForm {
+    private Long id;
     @NotBlank
     private String name;
     @FileSize(extensions = {"png", "jpg", "jpeg"}, max = 2 * 1024 * 1024)
