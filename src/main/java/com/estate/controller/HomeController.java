@@ -8,9 +8,7 @@ import com.estate.domain.form.ContactForm;
 import com.estate.domain.form.VisitorForm;
 import com.estate.domain.mail.SmsHelper;
 import com.estate.domain.service.face.*;
-import com.estate.domain.service.impl.PartnerServiceImpl;
 import com.estate.domain.service.impl.PictureServiceServiceImpl;
-import com.estate.domain.service.impl.TestimonialServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,8 +27,8 @@ public class HomeController {
     private final SettingService settingService;
     private final StandingService standingService;
     private final VisitorService visitorService;
-    private final PartnerServiceImpl partnerService;
-    private final TestimonialServiceImpl testimonialService;
+    private final PartnerService partnerService;
+    private final TestimonialService testimonialService;
     private final PictureServiceServiceImpl pictureService;
 
     @GetMapping("/")

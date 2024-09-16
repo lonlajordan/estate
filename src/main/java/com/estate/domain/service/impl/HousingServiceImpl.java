@@ -93,7 +93,7 @@ public class HousingServiceImpl implements HousingService {
                 picture = new File(housing.getPicture());
                 try {
                     if(picture.exists()) FileUtils.deleteQuietly(picture);
-                }catch (Exception ignored) {}
+                } catch (Exception ignored) {}
             }
             try {
                 extension = FilenameUtils.getExtension(form.getPicture().getOriginalFilename());
@@ -136,6 +136,12 @@ public class HousingServiceImpl implements HousingService {
                 paymentRepository.setDesiderataToNullByHousingId(id);
             }
             housingRepository.deleteById(id);
+            if(StringUtils.isNotBlank(housing.getPicture())){
+                File picture = new File(housing.getPicture());
+                try {
+                    if(picture.exists()) FileUtils.deleteQuietly(picture);
+                } catch (Exception ignored) {}
+            }
             notification = Notification.info("Le logement <b>" + housing.getName() + "</b> a été supprimé");
             logRepository.save(Log.info(notification.getMessage()));
         }catch (Throwable e){

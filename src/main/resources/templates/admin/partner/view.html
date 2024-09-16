@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5" lang="en">
+
+<head th:insert="base.html :: head('Détails du partenaire')"></head>
+
+<body>
+<div id="wrapper">
+    <div th:replace="header.html"></div>
+    <div id="page-wrapper" th:object="${partner}">
+        <div class="row mt-6">
+            <ol class="breadcrumb">
+                <li><i class="fa fa-home"></i> <a class="lazy-link" th:href="@{/dashboard}">Accueil</a></li>
+                <li><a class="lazy-link" th:href="@{/partner/list}">Partenaires</a></li>
+                <li th:utext="*{'Détails du partenaire <b>[ ' + name + ' ]</b>'}"></li>
+            </ol>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <i class="fa fa-info-circle fa-fw"></i>
+                        <b>Informations sur le partenaire</b>
+                    </div>
+                    <div class="list-group">
+                        <a href="#" class="list-group-item">
+                            <b>Nom</b>
+                            <span class="pull-right"><em th:text="*{name}"></em></span>
+                        </a>
+                        <div class="list-group-item">
+                            <b>Logo</b>
+                            <span class="pull-right">
+                                <em><a target="_blank" th:href="@{'/explorer/' + ${partner.logo}}">Voir</a></em>
+                            </span>
+                        </div>
+                        <a href="#" class="list-group-item">
+                            <b>Créé par</b>
+                            <span class="pull-right"><em th:text="*{createdBy}"></em></span>
+                        </a>
+                        <a href="#" class="list-group-item">
+                            <b>Date d'enregistrement</b>
+                            <span class="pull-right"><em th:text="*{#temporals.format(creationDate, 'dd-MM-yyyy  HH:mm')}"></em></span>
+                        </a>
+                        <a href="#" class="list-group-item">
+                            <b>Modifié par</b>
+                            <span class="pull-right"><em th:text="*{lastModifiedBy}"></em></span>
+                        </a>
+                        <a href="#" class="list-group-item">
+                            <b>Date de modification</b>
+                            <span class="pull-right"><em th:text="*{#temporals.format(lastModifiedDate, 'dd-MM-yyyy  HH:mm')}"></em></span>
+                        </a>
+                    </div>
+                    <div class="panel-footer" sec:authorize="hasRole('ADMIN')">
+                        <a role="button" th:href="@{/partner/save}" class="btn btn-success lazy-link mr-3">
+                            <i class="fa fa-plus-circle"></i>
+                            &nbsp; Ajouter
+                        </a>
+                        <a role="button" th:href="@{'/partner/save?id=' + ${partner.id}}" class="btn btn-primary lazy-link">
+                            <i class="fa fa-pencil-square-o"></i>
+                            &nbsp; Modifier
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<th:block th:insert="base.html :: scripts"></th:block>
+
+</body>
+
+</html>

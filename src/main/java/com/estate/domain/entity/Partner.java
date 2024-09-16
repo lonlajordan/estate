@@ -19,14 +19,13 @@ public class Partner extends Auditable{
     private Long id;
     @Column(nullable = false)
     private String name;
-    @OneToOne
-    private Picture logo;
+    private String logo;
 
 
-    public Partner toPartner(PartnerForm partnerForm){
-        Partner partner = new Partner();
-        partner.setName(partnerForm.getName());
-
-        return partner;
+    public PartnerForm toForm(){
+        PartnerForm form = new PartnerForm();
+        form.setId(id);
+        form.setName(name);
+        return form;
     }
 }
