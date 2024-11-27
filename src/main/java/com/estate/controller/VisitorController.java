@@ -54,5 +54,4 @@ public class VisitorController {
         return "redirect:/visitor/list";
     }
 
-
 }

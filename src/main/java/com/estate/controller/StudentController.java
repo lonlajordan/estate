@@ -70,13 +70,13 @@ public class StudentController {
 
     @PostMapping("save")
     public String save(@Valid @ModelAttribute("student") StudentForm student, BindingResult result, @RequestParam(required = false, defaultValue = "false") boolean multiple, Model model, RedirectAttributes attributes){
-        if(student.getId() == null) {
+        /*if(student.getId() == null) {
             String notNullMessage = "javax.validation.constraints.NotNull.message";
             String defaultMessage = "ne doit pas être nul";
             if(student.getCniRectoFile() == null || student.getCniRectoFile().isEmpty()) result.rejectValue("cniRectoFile", notNullMessage, defaultMessage);
             if(student.getCniVersoFile() == null || student.getCniVersoFile().isEmpty()) result.rejectValue("cniVersoFile", notNullMessage, defaultMessage);
             if(student.getBirthCertificateFile() == null || student.getBirthCertificateFile().isEmpty()) result.rejectValue("birthCertificateFile", notNullMessage, defaultMessage);
-        }
+        }*/
         if(result.hasErrors()){
             model.addAttribute("countryCodes", SmsHelper.countryCodes);
             return "admin/student/save";

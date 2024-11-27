@@ -1,8 +1,11 @@
 package com.estate.domain.form;
 
+import com.estate.domain.annotation.ConditionalValidation;
 import com.estate.domain.annotation.FileSize;
+import com.estate.domain.annotation.PaymentSequenceProvider;
 import com.estate.domain.enumaration.Mode;
 import lombok.Data;
+import org.hibernate.validator.group.GroupSequenceProvider;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.Min;
@@ -10,6 +13,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
 
 @Data
+@GroupSequenceProvider(PaymentSequenceProvider.class)
 public class PaymentForm {
     private Long id;
     @NotNull
@@ -28,7 +32,7 @@ public class PaymentForm {
     private Integer repair;
     @NotNull
     private Mode mode;
-    @FileSize(extensions = {"pdf", "png", "jpg", "jpeg"}, max = 2 * 1024 * 1024)
+    @FileSize(extensions = {"pdf", "png", "jpg", "jpeg"}, max = 2 * 1024 * 1024, groups = {ConditionalValidation.class})
     private MultipartFile proofFile;
 
     public Integer getAmount(){

@@ -1,10 +1,13 @@
 package com.estate.domain.form;
 
+import com.estate.domain.annotation.ConditionalValidation;
 import com.estate.domain.annotation.FileSize;
+import com.estate.domain.annotation.StudentSequenceProvider;
 import com.estate.domain.enumaration.Gender;
 import com.estate.domain.enumaration.Grade;
 import com.estate.domain.enumaration.Relationship;
 import lombok.Data;
+import org.hibernate.validator.group.GroupSequenceProvider;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -15,6 +18,7 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @Data
+@GroupSequenceProvider(StudentSequenceProvider.class)
 public class StudentForm {
     private Long id;
     @NotBlank
@@ -27,11 +31,11 @@ public class StudentForm {
     private String placeOfBirth;
     @NotNull
     private Gender gender;
-    @FileSize(extensions = {"pdf", "png", "jpg", "jpeg"}, max = 2 * 1024 * 1024)
+    @FileSize(extensions = {"pdf", "png", "jpg", "jpeg"}, max = 2 * 1024 * 1024, groups = {ConditionalValidation.class})
     private MultipartFile birthCertificateFile;
-    @FileSize(extensions = {"pdf", "png", "jpg", "jpeg"}, max = 2 * 1024 * 1024)
+    @FileSize(extensions = {"pdf", "png", "jpg", "jpeg"}, max = 2 * 1024 * 1024, groups = {ConditionalValidation.class})
     private MultipartFile cniRectoFile;
-    @FileSize(extensions = {"pdf", "png", "jpg", "jpeg"}, max = 2 * 1024 * 1024)
+    @FileSize(extensions = {"pdf", "png", "jpg", "jpeg"}, max = 2 * 1024 * 1024, groups = {ConditionalValidation.class})
     private MultipartFile cniVersoFile;
 
 
