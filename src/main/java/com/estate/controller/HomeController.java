@@ -65,6 +65,6 @@ public class HomeController {
 
     @GetMapping("contract")
     public String contract(){
-        return "admin/contract/contract";
+        return "contract";
     }
 }

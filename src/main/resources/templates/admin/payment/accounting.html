@@ -29,7 +29,7 @@
                         </div>
                     </div>
                 </div>
-                <table id="data-list" data-pdf-title="PAIEMENTS ENCAISSÉS" data-pdf-name="Paiements encaissés" data-columns-left="2" data-columns-right="2" class="table table-striped table-bordered table-hover searching landscape dataTable">
+                <table id="data-list" th:data-pdf-title="${'PAIEMENTS ENCAISSÉS EN ' + exercise}" th:data-pdf-name="${'Paiements encaissés en ' + exercise}" data-columns-left="2" data-columns-right="2" class="table table-striped table-bordered table-hover searching landscape dataTable">
                     <thead>
                         <tr>
                             <th class="action">ID</th>

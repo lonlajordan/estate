@@ -168,6 +168,7 @@ function initDataList() {
         {
             text: '<i class="fa fa-file-excel-o"></i> Excel',
             extend: 'excel',
+            footer: true,
             title: function () { return list.attr('data-pdf-title'); },
             filename: function () { return list.attr('data-pdf-name'); },
             exportOptions: {
@@ -178,6 +179,7 @@ function initDataList() {
         {
             text: '<i class="fa fa-file-pdf-o"></i> PDF',
             extend: 'pdfHtml5',
+            footer: true,
             title: function () { return list.attr('data-pdf-title'); },
             filename: function () { return list.attr('data-pdf-name'); },
             orientation: list.hasClass("landscape") ? 'landscape' : 'portrait',

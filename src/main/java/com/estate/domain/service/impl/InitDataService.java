@@ -52,7 +52,9 @@ public class InitDataService implements CommandLineRunner {
             new Setting(SettingCode.TELEPHONE_PUBLIC, "+237 695463868"),
             new Setting(SettingCode.WHATSAPP, "+237 654762824"),
             new Setting(SettingCode.EMAIL_PUBLIC, "concorde@gmail.com"),
-            new Setting(SettingCode.ADDRESS_PUBLIC, "Cradat, Yaoundé, Centre - Cameroun")
+            new Setting(SettingCode.ADDRESS_PUBLIC, "Cradat, Yaoundé, Centre - Cameroun"),
+            new Setting(SettingCode.SMS_API_BASE_URL, "https://obitsms.com/api/v2/bulksms"),
+            new Setting(SettingCode.SMS_API_KEY, "tjwfxuudg37hvoqr67uah2r5i0wt9cgw")
         ));
         settingRepository.saveAll(settings.stream().filter(setting -> !settingRepository.existsByCode(setting.getCode())).collect(Collectors.toList()));
         List<SettingCode> codes = settings.stream().map(Setting::getCode).collect(Collectors.toList());
