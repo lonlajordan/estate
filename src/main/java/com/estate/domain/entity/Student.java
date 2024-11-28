@@ -33,6 +33,7 @@ public class Student extends Auditable {
     private String placeOfBirth = "BABADJOU";
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate dateOfBirth = LocalDate.of(1998, Month.AUGUST, 1);
+    private String cniNumber = ""; // Numéro de la CNI
     @Column(nullable = false)
     private String cniRecto = ""; // CNI face recto
     private String cniVerso = ""; // CNI face verso
@@ -41,8 +42,8 @@ public class Student extends Auditable {
     @Column(nullable = false)
     private String school = "ENSP";
     @Convert(converter = Grade.Converter.class)
-    @Enumerated(EnumType.STRING)
     private Grade grade = Grade.L1;
+    private String matricule;
     @Column(nullable = false)
     private String specialities = "Informatique";
 
@@ -51,7 +52,6 @@ public class Student extends Auditable {
 
     @Column(nullable = false)
     @Convert(converter = Relationship.Converter.class)
-    @Enumerated(EnumType.STRING)
     private Relationship firstParentRelation = Relationship.FATHER;
     @Column(nullable = false)
     private String firstParentName = "LONLA EMMANUEL";
@@ -65,7 +65,6 @@ public class Student extends Auditable {
 
     @Column(nullable = false)
     @Convert(converter = Relationship.Converter.class)
-    @Enumerated(EnumType.STRING)
     private Relationship secondParentRelation = Relationship.MOTHER;
     @Column(nullable = false)
     private String secondParentName = "LONLA ANGELINE";
@@ -76,8 +75,6 @@ public class Student extends Auditable {
     private String secondParentMobile;
     @Column(nullable = false)
     private String secondParentEmail = "admin@gmail.com";
-    private String registrationNumber;
-    private String cni;
 
 
     @Column(nullable = false)
@@ -103,10 +100,12 @@ public class Student extends Auditable {
         form.setDateOfBirth(dateOfBirth);
         form.setPlaceOfBirth(placeOfBirth);
         form.setGender(Optional.ofNullable(user).map(User::getGender).orElse(Gender.MALE));
+        form.setCniNumber(cniNumber);
 
         form.setSchool(school);
         form.setSpecialities(specialities);
         form.setGrade(grade);
+        form.setMatricule(matricule);
         form.setPhone(Phone.parse(Optional.ofNullable(user).map(User::getPhone).orElse("")));
         form.setMobile(Phone.parse(Optional.ofNullable(user).map(User::getMobile).orElse("")));
         form.setEmail(Optional.ofNullable(user).map(User::getEmail).orElse(""));
@@ -124,8 +123,7 @@ public class Student extends Auditable {
         form.setSecondParentPhone(Phone.parse(secondParentPhone));
         form.setSecondParentMobile(Phone.parse(secondParentMobile));
         form.setSecondParentEmail(secondParentEmail);
-        form.setCni(cni);
-        form.setRegistrationNumber(registrationNumber);
+
         return form;
     }
 

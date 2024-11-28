@@ -25,7 +25,6 @@ public class Payment extends Auditable {
     @ManyToOne(optional = false)
     private Standing standing;
     @Convert(converter = Mode.Converter.class)
-    @Enumerated(EnumType.STRING)
     private Mode mode = Mode.CASH;
     @ManyToOne
     private User validator;
@@ -37,7 +36,6 @@ public class Payment extends Auditable {
     private String comment;
 
     @Convert(converter = Status.Converter.class)
-    @Enumerated(EnumType.STRING)
     private Status status = Status.INITIATED;
 
     @Transient

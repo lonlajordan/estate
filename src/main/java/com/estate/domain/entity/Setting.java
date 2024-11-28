@@ -17,7 +17,6 @@ public class Setting extends Auditable {
     private Long id;
     @Column(nullable = false)
     @Convert(converter = SettingCode.Converter.class)
-    @Enumerated(EnumType.STRING)
     private SettingCode code;
     private String value;
 

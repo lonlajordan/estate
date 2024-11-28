@@ -48,10 +48,8 @@ public class User extends Auditable {
     private String picture;
     private LocalDateTime tokenExpirationDate = LocalDateTime.now();
     @Convert(converter = Profil.Converter.class)
-    @Enumerated(EnumType.STRING)
     private Profil profil = Profil.STAFF;
     @Convert(converter = Gender.Converter.class)
-    @Enumerated(EnumType.STRING)
     private Gender gender = Gender.MALE;
     private boolean active = true;
     private LocalDateTime lastLogin;

@@ -12,6 +12,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.support.RequestContextUtils;
@@ -70,19 +72,25 @@ public class StudentController {
 
     @PostMapping("save")
     public String save(@Valid @ModelAttribute("student") StudentForm student, BindingResult result, @RequestParam(required = false, defaultValue = "false") boolean multiple, Model model, RedirectAttributes attributes){
-        /*if(student.getId() == null) {
+        if(student.getId() == null) {
             String notNullMessage = "javax.validation.constraints.NotNull.message";
             String defaultMessage = "ne doit pas être nul";
             if(student.getCniRectoFile() == null || student.getCniRectoFile().isEmpty()) result.rejectValue("cniRectoFile", notNullMessage, defaultMessage);
             if(student.getCniVersoFile() == null || student.getCniVersoFile().isEmpty()) result.rejectValue("cniVersoFile", notNullMessage, defaultMessage);
             if(student.getBirthCertificateFile() == null || student.getBirthCertificateFile().isEmpty()) result.rejectValue("birthCertificateFile", notNullMessage, defaultMessage);
-        }*/
+        }
         if(result.hasErrors()){
+            for(FieldError fieldError: result.getFieldErrors()){
+                System.out.println("Error Field = " + fieldError.getField());
+                System.out.println("Error Message = " + fieldError.getDefaultMessage());
+            }
             model.addAttribute("countryCodes", SmsHelper.countryCodes);
             return "admin/student/save";
         }
         Notification notification =  studentService.save(student);
         if(multiple || notification.hasError()){
+            System.out.println("Notification = " + notification.getMessage());
+            System.out.println("Notification TYPE = " + notification.getType());
             model.addAttribute("notification", notification);
             model.addAttribute("countryCodes", SmsHelper.countryCodes);
             model.addAttribute("student", notification.hasError() ? student : new StudentForm());

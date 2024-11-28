@@ -28,10 +28,8 @@ public class Housing extends Auditable {
     @OneToOne
     private Student reservedBy;
     @Convert(converter = Category.Converter.class)
-    @Enumerated(EnumType.STRING)
     private Category category = Category.ROOM;
     @Convert(converter = Availability.Converter.class)
-    @Enumerated(EnumType.STRING)
     private Availability status = Availability.FREE;
     private boolean active = true;
 

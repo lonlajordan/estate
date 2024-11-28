@@ -18,8 +18,8 @@ public enum Level {
     }
 
     public static class Converter extends EnumConverter<Level> {
-        public Converter(Class<Level> clazz) {
-            super(clazz);
+        public Converter() {
+            super(Level.class);
         }
     }
 

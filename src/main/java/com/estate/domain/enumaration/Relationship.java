@@ -19,8 +19,8 @@ public enum Relationship {
     }
 
     public static class Converter extends EnumConverter<Relationship> {
-        public Converter(Class<Relationship> clazz) {
-            super(clazz);
+        public Converter() {
+            super(Relationship.class);
         }
     }
 }

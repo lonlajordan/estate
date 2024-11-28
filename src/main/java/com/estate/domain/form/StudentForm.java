@@ -1,13 +1,10 @@
 package com.estate.domain.form;
 
-import com.estate.domain.annotation.ConditionalValidation;
 import com.estate.domain.annotation.FileSize;
-import com.estate.domain.annotation.StudentSequenceProvider;
 import com.estate.domain.enumaration.Gender;
 import com.estate.domain.enumaration.Grade;
 import com.estate.domain.enumaration.Relationship;
 import lombok.Data;
-import org.hibernate.validator.group.GroupSequenceProvider;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,7 +15,6 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @Data
-@GroupSequenceProvider(StudentSequenceProvider.class)
 public class StudentForm {
     private Long id;
     @NotBlank
@@ -31,11 +27,14 @@ public class StudentForm {
     private String placeOfBirth;
     @NotNull
     private Gender gender;
-    @FileSize(extensions = {"pdf", "png", "jpg", "jpeg"}, max = 2 * 1024 * 1024, groups = {ConditionalValidation.class})
+    @NotBlank
+    private String cniNumber;
+    @FileSize(extensions = {"pdf", "png", "jpg", "jpeg"}, max = 2 * 1024 * 1024)
     private MultipartFile birthCertificateFile;
-    @FileSize(extensions = {"pdf", "png", "jpg", "jpeg"}, max = 2 * 1024 * 1024, groups = {ConditionalValidation.class})
+    @FileSize(extensions = {"pdf", "png", "jpg", "jpeg"}, max = 2 * 1024 * 1024)
     private MultipartFile cniRectoFile;
-    @FileSize(extensions = {"pdf", "png", "jpg", "jpeg"}, max = 2 * 1024 * 1024, groups = {ConditionalValidation.class})
+    @NotNull
+    @FileSize(extensions = {"pdf", "png", "jpg", "jpeg"}, max = 2 * 1024 * 1024)
     private MultipartFile cniVersoFile;
 
 
@@ -45,6 +44,8 @@ public class StudentForm {
     private String specialities;
     @NotNull
     private Grade grade;
+    @NotBlank
+    private String matricule;
     @FileSize(extensions = {"pdf", "png", "jpg", "jpeg"}, max = 2 * 1024 * 1024)
     private MultipartFile studentCardFile;
 
@@ -89,9 +90,5 @@ public class StudentForm {
     @NotBlank
     @Email
     private String secondParentEmail;
-    @NotBlank
-    private String registrationNumber;
-    @NotBlank
-    private String cni;
 
 }
