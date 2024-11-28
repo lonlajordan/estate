@@ -58,7 +58,7 @@ End Google Tag Manager (noscript) -->
                             <li class="nav-item" th:unless="${#lists.isEmpty(users)}">
                                 <a class="nav-link single" href="#agents">Administration</a>
                             </li>
-                            <li class="nav-item">
+                            <li class="nav-item" th:unless="${#lists.isEmpty(pictures)}">
                                 <a class="nav-link single" href="#gallery">Galerie</a>
                             </li>
                             <li class="nav-item" th:unless="${#lists.isEmpty(standings)}">

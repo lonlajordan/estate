@@ -29,8 +29,8 @@ public enum SettingCode {
     }
 
     public static class Converter extends EnumConverter<SettingCode> {
-        public Converter(Class<SettingCode> clazz) {
-            super(clazz);
+        public Converter() {
+            super(SettingCode.class);
         }
     }
 }

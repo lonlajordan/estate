@@ -15,7 +15,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.Month;
 import java.util.*;
 
 @Getter
@@ -30,9 +29,9 @@ public class Student extends Auditable {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
     @Column(nullable = false)
-    private String placeOfBirth = "BABADJOU";
+    private String placeOfBirth = "";
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    private LocalDate dateOfBirth = LocalDate.of(1998, Month.AUGUST, 1);
+    private LocalDate dateOfBirth;
     private String cniNumber = ""; // Numéro de la CNI
     @Column(nullable = false)
     private String cniRecto = ""; // CNI face recto
@@ -40,12 +39,12 @@ public class Student extends Auditable {
     private String birthCertificate = ""; // Acte de naissance
     private String studentCard = ""; // Carte d'étudiant
     @Column(nullable = false)
-    private String school = "ENSP";
+    private String school = "";
     @Convert(converter = Grade.Converter.class)
     private Grade grade = Grade.L1;
     private String matricule;
     @Column(nullable = false)
-    private String specialities = "Informatique";
+    private String specialities = "";
 
     @ManyToOne
     private Housing housing;
@@ -54,27 +53,27 @@ public class Student extends Auditable {
     @Convert(converter = Relationship.Converter.class)
     private Relationship firstParentRelation = Relationship.FATHER;
     @Column(nullable = false)
-    private String firstParentName = "LONLA EMMANUEL";
+    private String firstParentName = "";
     @Column(nullable = false)
-    private String firstParentAddress = "MESSASSI";
+    private String firstParentAddress = "";
     @Column(nullable = false)
-    private String firstParentPhone = "677432413";
+    private String firstParentPhone = "";
     private String firstParentMobile;
     @Column(nullable = false)
-    private String firstParentEmail = "admin@gmail.com";
+    private String firstParentEmail = "";
 
     @Column(nullable = false)
     @Convert(converter = Relationship.Converter.class)
     private Relationship secondParentRelation = Relationship.MOTHER;
     @Column(nullable = false)
-    private String secondParentName = "LONLA ANGELINE";
+    private String secondParentName = "";
     @Column(nullable = false)
-    private String secondParentAddress = "MESSASSI";
+    private String secondParentAddress = "";
     @Column(nullable = false)
-    private String secondParentPhone = "677078633";
+    private String secondParentPhone = "";
     private String secondParentMobile;
     @Column(nullable = false)
-    private String secondParentEmail = "admin@gmail.com";
+    private String secondParentEmail = "";
 
 
     @Column(nullable = false)
@@ -130,7 +129,17 @@ public class Student extends Auditable {
     @PrePersist
     @PreUpdate
     public void beforeSave(){
-
+        if(this.placeOfBirth != null) this.placeOfBirth = this.placeOfBirth.trim().replaceAll("\\s+", " ");
+        if(this.school != null) this.school = this.school.toUpperCase().trim().replaceAll("\\s+", " ");
+        if(this.specialities != null) this.specialities = this.specialities.trim().replaceAll("\\s+", " ");
+        if(this.firstParentName != null) this.firstParentName = this.firstParentName.toUpperCase().trim().replaceAll("\\s+", " ");
+        if(this.firstParentAddress != null) this.firstParentAddress = this.firstParentAddress.trim().replaceAll("\\s+", " ");
+        if(this.firstParentEmail != null) this.firstParentEmail = this.firstParentEmail.trim();
+        if(this.secondParentName != null) this.secondParentName = this.secondParentName.toUpperCase().trim().replaceAll("\\s+", " ");
+        if(this.secondParentAddress != null) this.secondParentAddress = this.secondParentAddress.trim().replaceAll("\\s+", " ");
+        if(this.secondParentEmail != null) this.secondParentEmail = this.secondParentEmail.trim();
+        if(this.cniNumber != null) this.cniNumber = this.cniNumber.toUpperCase().replaceAll(" ", "");
+        if(this.matricule != null) this.matricule = this.matricule.toUpperCase().replaceAll(" ", "");
     }
 
 }

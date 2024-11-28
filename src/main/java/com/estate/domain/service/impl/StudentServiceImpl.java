@@ -74,11 +74,13 @@ public class StudentServiceImpl implements StudentService {
         student.getUser().setProfil(Profil.STUDENT);
         student.setDateOfBirth(form.getDateOfBirth());
         student.setPlaceOfBirth(form.getPlaceOfBirth());
+        student.setCniNumber(form.getCniNumber());
         student.getUser().setGender(form.getGender());
 
         student.setSchool(form.getSchool());
         student.setSpecialities(form.getSpecialities());
         student.setGrade(form.getGrade());
+        student.setMatricule(form.getMatricule());
         student.getUser().setPhone(form.getPhone().format());
         student.getUser().setMobile(form.getMobile().format());
         student.getUser().setEmail(form.getEmail());
@@ -179,7 +181,6 @@ public class StudentServiceImpl implements StudentService {
                 student.getUser().setStudent(student);
                 student.getUser().setPassword(passwordEncoder.encode(password));
                 student.getUser().setRoles(Collections.singletonList(Role.ROLE_STUDENT));
-                // Send mail
                 String name = student.getUser().getOneName();
                 HashMap<String, Object> context = new HashMap<>();
                 context.put("name", name);

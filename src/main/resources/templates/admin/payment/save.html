@@ -20,7 +20,7 @@
                     <div class="panel-heading">
                         <b>Formulaire</b>
                     </div>
-                    <form th:object="${payment}" onsubmit="return submitMultipartForm(event)" th:action="@{/payment/save}" enctype="multipart/form-data" autocomplete="off" method="post">
+                    <form th:object="${payment}" onsubmit="submitMultipartForm(e)" th:action="@{/payment/save}" enctype="multipart/form-data" autocomplete="off" method="post">
                         <div class="panel-body">
                             <input th:field="*{id}" type="hidden">
                             <input th:field="*{studentId}" type="hidden">
