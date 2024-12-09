@@ -31,6 +31,13 @@
                                 </div>
                             </div>
                             <div class="row">
+                                <div class="form-group col-lg-12" th:classappend="${#fields.hasErrors('picture') ? 'has-error' : ''}">
+                                    <label for="picture" class="control-label">Photo de profil <span class="required-field" th:if="${standing.id == null}">*</span></label>
+                                    <input id="picture" th:field="*{picture}" type="file" autocomplete="off" class="form-control" th:required="${standing.id == null}">
+                                    <p th:if="${#fields.hasErrors('picture')}" th:errors="*{picture}" class="help-block"></p>
+                                </div>
+                            </div>
+                            <div class="row">
                                 <div class="form-group col-lg-12" th:classappend="${#fields.hasErrors('description') ? 'has-error' : ''}">
                                     <label class="control-label" for="description">Description <span class="required-field">*</span></label>
                                     <textarea id="description" th:field="*{description}" class="form-control" autocomplete="off" required></textarea>

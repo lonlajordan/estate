@@ -9,11 +9,15 @@ import com.estate.domain.service.face.StandingService;
 import com.estate.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -59,6 +63,12 @@ public class StandingServiceImpl implements StandingService {
                 housingRepository.deleteAllByStandingId(id);
             }
             standingRepository.deleteById(id);
+            if(StringUtils.isNotBlank(standing.getPicture())){
+                File picture = new File(standing.getPicture());
+                try {
+                    if(picture.exists()) FileUtils.deleteQuietly(picture);
+                } catch (Exception ignored) {}
+            }
             notification = Notification.info("Le <b>" + standing.getName() + "</b> standing a été supprimé");
             logRepository.save(Log.info(notification.getMessage()));
         }catch (Throwable e){
@@ -87,7 +97,28 @@ public class StandingServiceImpl implements StandingService {
         standing.setRent(form.getRent());
         standing.setCaution(form.getCaution());
         standing.setRepair(form.getRepair());
-
+        long date = System.currentTimeMillis();
+        String extension;
+        File root = new File("documents");
+        if (!root.exists() && !root.mkdirs()) return Notification.error("Impossible de créer le dossier de sauvegarde des documents.");
+        if(form.getPicture() != null && !form.getPicture().isEmpty()){
+            File picture;
+            if(StringUtils.isNotBlank(standing.getPicture())){
+                picture = new File(standing.getPicture());
+                try {
+                    if(picture.exists()) FileUtils.deleteQuietly(picture);
+                } catch (Exception ignored) {}
+            }
+            try {
+                extension = FilenameUtils.getExtension(form.getPicture().getOriginalFilename());
+                picture = new File(root.getAbsolutePath() + File.separator + "housing-" + date + "." + extension);
+                form.getPicture().transferTo(picture);
+                standing.setPicture(root.getName() + File.separator + picture.getName());
+            } catch (IOException e) {
+                log.error("unable to write standing picture file", e);
+                return Notification.error("Impossible d'enregistrer une image du standing.");
+            }
+        }
         try {
             standingRepository.saveAndFlush(standing);
             notification.setMessage("Un standing a été " + (creation ? "ajouté." : "modifié."));

@@ -8,7 +8,7 @@
 <body>
     <p>Bonjour <i>${name}</i>,</p>
     <p>Le paiement que vous avez initié a été annulé pour le motif <i>${motif}</i>. </p>
-    <p>Détail du paiement:</p>
+    <p>Détail du paiement :</p>
     <ul>
         <li>Montant : <i>${amount}</i></li>
         <li>Loyer : <i>${rent}</i></li>

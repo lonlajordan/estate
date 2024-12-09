@@ -1,6 +1,8 @@
 package com.estate.domain.form;
 
+import com.estate.domain.annotation.FileSize;
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
@@ -19,4 +21,6 @@ public class StandingForm {
     private Integer caution;
     @PositiveOrZero
     private Integer repair;
+    @FileSize(extensions = {"png", "jpg", "jpeg"}, max = 2 * 1024 * 1024)
+    private MultipartFile picture;
 }

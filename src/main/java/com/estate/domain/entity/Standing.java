@@ -20,6 +20,7 @@ public class Standing extends Auditable {
     private String name = "";
     @Column(nullable = false, columnDefinition = "TEXT")
     private String description = "";
+    private String picture;
     @Column(nullable = false)
     private int rent;
     @Column(nullable = false)

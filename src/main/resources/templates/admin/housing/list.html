@@ -105,7 +105,7 @@
                                     <a class="list-group-item text-decoration-none text-left" th:href="@{'/housing/view/' + ${housing.id}}">
                                         <i class="fa fa-eye fa-fw"></i> Détails
                                     </a>
-                                    <a class="list-group-item text-decoration-none text-left" th:href="@{'/housing/liberate/' + ${housing.id}}">
+                                    <a th:if="${!T(com.estate.domain.enumaration.Availability).FREE.equals(housing.status)}" class="list-group-item text-decoration-none text-left" th:href="@{'/housing/liberate/' + ${housing.id}}">
                                         <i class="fa fa-truck fa-fw"></i> Libérer
                                     </a>
                                     <a class="list-group-item text-decoration-none text-left" th:href="@{'/housing/save?id=' + ${housing.id}}">

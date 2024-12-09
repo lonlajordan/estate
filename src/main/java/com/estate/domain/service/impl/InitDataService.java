@@ -26,15 +26,15 @@ public class InitDataService implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        User user = userRepository.findByEmail("admin@gmail.com").orElse(new User());
+        User user = userRepository.findByEmail("gatienjordanlonlaep@gmail.com").orElse(new User());
         if(user.getId() == null){
             user = new User();
-            user.setEmail("admin@gmail.com");
+            user.setEmail("gatienjordanlonlaep@gmail.com");
             user.setFirstName("LONLA");
             user.setLastName("Gatien Jordan");
             user.setPhone("+237 695463868");
             user.setProfil(Profil.STAFF);
-            user.setPassword(new BCryptPasswordEncoder().encode("admin"));
+            user.setPassword(new BCryptPasswordEncoder().encode("springBOOT@2024"));
             user.setRoles(Collections.singletonList(Role.ROLE_ADMIN));
             userRepository.save(user);
         }
@@ -49,12 +49,12 @@ public class InitDataService implements CommandLineRunner {
             new Setting(SettingCode.BANK_ACCOUNT_NAME, ""),
             new Setting(SettingCode.BANK_ACCOUNT_NUMBER,""),
             new Setting(SettingCode.PAYPAL_LINK, ""),
-            new Setting(SettingCode.TELEPHONE_PUBLIC, "+237 695463868"),
-            new Setting(SettingCode.WHATSAPP, "+237 654762824"),
-            new Setting(SettingCode.EMAIL_PUBLIC, "concorde@gmail.com"),
-            new Setting(SettingCode.ADDRESS_PUBLIC, "Cradat, Yaoundé, Centre - Cameroun"),
-            new Setting(SettingCode.SMS_API_BASE_URL, "https://obitsms.com/api/v2/bulksms"),
-            new Setting(SettingCode.SMS_API_KEY, "tjwfxuudg37hvoqr67uah2r5i0wt9cgw")
+            new Setting(SettingCode.TELEPHONE_PUBLIC, ""),
+            new Setting(SettingCode.WHATSAPP, ""),
+            new Setting(SettingCode.EMAIL_PUBLIC, ""),
+            new Setting(SettingCode.ADDRESS_PUBLIC, ""),
+            new Setting(SettingCode.SMS_API_BASE_URL, ""),
+            new Setting(SettingCode.SMS_API_KEY, "")
         ));
         settingRepository.saveAll(settings.stream().filter(setting -> !settingRepository.existsByCode(setting.getCode())).collect(Collectors.toList()));
         List<SettingCode> codes = settings.stream().map(Setting::getCode).collect(Collectors.toList());

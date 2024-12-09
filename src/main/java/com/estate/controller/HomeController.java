@@ -8,7 +8,6 @@ import com.estate.domain.form.ContactForm;
 import com.estate.domain.form.VisitorForm;
 import com.estate.domain.mail.SmsHelper;
 import com.estate.domain.service.face.*;
-import com.estate.domain.service.impl.PictureServiceServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,9 +26,6 @@ public class HomeController {
     private final SettingService settingService;
     private final StandingService standingService;
     private final VisitorService visitorService;
-    private final PartnerService partnerService;
-    private final TestimonialService testimonialService;
-    private final PictureServiceServiceImpl pictureService;
 
     @GetMapping("/")
     public String home(Model model){
@@ -43,9 +39,6 @@ public class HomeController {
         model.addAttribute("whatsapp", settingService.findByCode(SettingCode.WHATSAPP).map(Setting::getValue).orElse(""));
         model.addAttribute("email", settingService.findByCode(SettingCode.EMAIL_PUBLIC).map(Setting::getValue).orElse(""));
         model.addAttribute("localisation", settingService.findByCode(SettingCode.ADDRESS_PUBLIC).map(Setting::getValue).orElse(""));
-        model.addAttribute("partners",partnerService.findAll());
-        model.addAttribute("testimonials",testimonialService.findAll());
-        model.addAttribute("pictures",pictureService.findAll());
         return "index";
     }
 
@@ -61,10 +54,5 @@ public class HomeController {
         Notification notification = visitorService.subscribe(visitor);
         attributes.addFlashAttribute("notification", notification);
         return "redirect:/";
-    }
-
-    @GetMapping("contract")
-    public String contract(){
-        return "contract";
     }
 }
