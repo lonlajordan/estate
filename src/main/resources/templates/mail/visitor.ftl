@@ -8,7 +8,7 @@
     <body>
         <p>Bonjour <i>${name}</i>,</p>
         <p>Nous vous remercions d'avoir visité notre plateforme</p>
-        <p>Vous serez notifié toutes les fois un logement sera disponible pour occupation pendant un an à partir de ce jour</p>
+        <p>Vous serez notifié toutes les fois qu'un logement sera disponible pour occupation pendant un an à partir de ce jour</p>
         <p>Merci,</p>
         <p>L'équipe support</p>
     </body>

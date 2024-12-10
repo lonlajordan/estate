@@ -6,9 +6,9 @@
         <title>Confirmation de paiement</title>
     </head>
     <body>
-        <p>Bonjour <i>${name}</i>.,</p>
+        <p>Bonjour <i>${name}</i>,</p>
         <p>Nous vous remercions pour la confiance renouvelée </p>
-        <p>Les détails du paiement sont les suivants:</p>
+        <p>Les détails du paiement sont les suivants :</p>
         <ul>
             <li>Montant : <i>${amount}</i></li>
             <li>Loyer : <i>${rent}</i></li>
