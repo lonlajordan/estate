@@ -52,7 +52,7 @@
                         </a>
                         <a class="list-group-item" href="#">
                             <b>Statut</b>
-                            <span class="pull-right"><em th:text="${student.active ? 'ACTIF' : 'DÉSACTIVÉ'}"></em></span>
+                            <span class="pull-right"><em th:text="${student.user?.active ? 'ACTIF' : 'DÉSACTIVÉ'}"></em></span>
                         </a>
                         <a class="list-group-item" href="#">
                             <b>Nom de l'établissement fréquenté</b>
@@ -127,10 +127,10 @@
                 </tr>
                 <tr>
                     <th>Téléphone(s)</th>
-                    <td th:colspan="${student.firstParentMobile == null ? 2 : 1}" th:text="*{firstParentPhone}"></td>
-                    <td th:if="${student.firstParentMobile != null}" th:text="*{firstParentMobile}"></td>
-                    <td th:colspan="${student.secondParentMobile == null ? 2 : 1}" th:text="*{secondParentPhone}"></td>
-                    <td th:if="${student.secondParentMobile != null}" th:text="*{secondParentMobile}"></td>
+                    <td th:colspan="${#strings.isEmpty(student.firstParentMobile) ? 2 : 1}" th:text="*{firstParentPhone}"></td>
+                    <td th:unless="${#strings.isEmpty(student.firstParentMobile)}" th:text="*{firstParentMobile}"></td>
+                    <td th:colspan="${#strings.isEmpty(student.secondParentMobile) ? 2 : 1}" th:text="*{secondParentPhone}"></td>
+                    <td th:unless="${#strings.isEmpty(student.secondParentMobile)}" th:text="*{secondParentMobile}"></td>
                 </tr>
                 <tr>
                     <th>Adresse e-mail</th>

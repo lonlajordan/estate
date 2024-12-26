@@ -85,6 +85,8 @@ public class LoginController {
                 user.setPassword(passwordEncoder.encode(password));
                 userRepository.save(user);
                 notification = Notification.info("votre mot de passe a été modifié.");
+                attributes.addFlashAttribute("email", user.getEmail());
+                attributes.addFlashAttribute("password", password);
             }else{
                notification = Notification.error("ce lien a expiré");
             }

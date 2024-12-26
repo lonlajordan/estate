@@ -6,7 +6,6 @@ import com.estate.domain.entity.Visitor;
 import com.estate.domain.enumaration.Profil;
 import com.estate.domain.form.ContactForm;
 import com.estate.domain.form.VisitorForm;
-import com.estate.domain.form.VisitorSearchForm;
 import com.estate.domain.mail.EmailHelper;
 import com.estate.domain.service.face.VisitorService;
 import com.estate.repository.UserRepository;
@@ -26,16 +25,6 @@ public class VisitorServiceImpl implements VisitorService {
     private final VisitorRepository visitorRepository;
     private final UserRepository userRepository;
     private final EmailHelper emailHelper;
-
-    @Override
-    public Page<Visitor> findAll(int page) {
-        return visitorRepository.findAllByOrderByCreationDateDesc(PageRequest.of(page - 1, 100));
-    }
-
-    @Override
-    public Page<Visitor> findAll(VisitorSearchForm visitorSearchForm){
-        return visitorRepository.findAll(visitorSearchForm.toSpecification(), PageRequest.of(visitorSearchForm.getPage() == null ? 0 : (visitorSearchForm.getPage() - 1), 100));
-    }
 
     @Override
     public Notification contact(ContactForm form){
@@ -62,11 +51,11 @@ public class VisitorServiceImpl implements VisitorService {
     }
 
     @Override
-    public Notification subscribe(VisitorForm visitorForm){
-        Notification notification = save(visitorForm);
+    public Notification subscribe(VisitorForm form){
+        Notification notification = save(form);
         HashMap<String, Object> context = new HashMap<>();
-        context.put("name",visitorForm.getName());
-        emailHelper.sendMail(visitorForm.getEmail(),"","Visite de la mini cité","visitor.ftl", Locale.FRENCH, context, Collections.emptyList());
+        context.put("name",form.getName());
+        emailHelper.sendMail(form.getEmail(),"","Visite de la mini cité","visitor.ftl", Locale.FRENCH, context, Collections.emptyList());
         return notification;
     }
 
