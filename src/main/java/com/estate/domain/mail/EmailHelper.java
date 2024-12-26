@@ -5,10 +5,8 @@ import freemarker.template.TemplateException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -30,16 +28,11 @@ import java.util.stream.Collectors;
 public class EmailHelper {
     private final JavaMailSender mailSender;
     private final FreeMarkerConfigurer freeMarkerConfigurer;
-    @Value("${app.base.url}")
-    private String baseUrl;
-    @Value("classpath:/static/images/logo.png")
-    Resource resourceFile;
 
     @Async
     public void sendMail(String to, String cc, String subject, String templateName, Locale locale, Map<String, Object> model, List<String> attachments) {
         try {
             Template freemarkerTemplate = freeMarkerConfigurer.getConfiguration().getTemplate(templateName, locale);
-            model.put("logo", baseUrl + "/images/logo.png");
             String body = FreeMarkerTemplateUtils.processTemplateIntoString(freemarkerTemplate, model);
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true,"UTF-8");

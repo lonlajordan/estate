@@ -26,7 +26,8 @@
                         <img width="100" tabindex="-1" th:src="@{/images/logo.png}" alt="">
                     </a>
                 </div>
-                <form method="post" autocomplete="off" onsubmit="confirmPassword(event)" th:action="@{'/password/reset/' + ${token}}">
+                <form method="post" autocomplete="off" onsubmit="confirmPassword(event)" th:action="@{/password/renew}">
+                    <input type="hidden" name="token" th:value="${token}">
                     <div class="panel-body">
                         <div class="form-group my-4">
                             <label class="form-control-label" for="password">Nouveau mot de passe <span class="required-field">*</span></label>
