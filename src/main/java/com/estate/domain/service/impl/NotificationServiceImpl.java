@@ -38,7 +38,7 @@ public class NotificationServiceImpl implements NotificationService {
             HttpUrl.Builder urlBuilder = HttpUrl.parse(baseUrl).newBuilder();
             urlBuilder.addQueryParameter("key_api", apiKey);
             urlBuilder.addQueryParameter("sender", sender);
-            urlBuilder.addQueryParameter("destination", destination);
+            urlBuilder.addQueryParameter("destination", destination.replaceAll(" ", "").replace("+", ""));
             urlBuilder.addQueryParameter("message", message);
             String url = urlBuilder.build().toString();
             Request request = new Request.Builder().url(url).build();

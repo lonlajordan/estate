@@ -9,7 +9,7 @@
     <p>Bonjour <i>${name}</i>,</p>
     <p>Bienvenu dans notre cité. </p>
     <p>Votre nom d'utilisateur est <i>${login}</i> et votre mot de passe est <i>${password}</i></p>
-    <p>Connectez-vous à partir du lien suivant : <b>${link}</b></p>
+    <p>Connectez-vous à partir du lien suivant : <b><a href="${link}">Connexion</a></b></p>
     <p>Merci,</p>
     <p>L'équipe support</p>
 </body>

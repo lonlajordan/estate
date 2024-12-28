@@ -29,6 +29,7 @@ import java.util.Optional;
 public class HousingServiceImpl implements HousingService {
     private final HousingRepository housingRepository;
     private final StandingRepository standingRepository;
+    private final StudentRepository studentRepository;
     private final PaymentRepository paymentRepository;
     private final LeaseRepository leaseRepository;
     private final LogRepository logRepository;
@@ -156,7 +157,11 @@ public class HousingServiceImpl implements HousingService {
                 String name = student.getUser().getName();
                 LocalDate expiration = student.getCurrentLease().getRealEndDate();
                 if(LocalDate.now().isBefore(student.getCurrentLease().getRealEndDate())) return Notification.warn("Ce logement est encore occupé par <b>" + name + "</b> dont le contrat de bail expire le <b>" + (DateTimeFormatter.ofPattern("dd/MM/yyyy").format(expiration)) + "</b>.");
+                student.setHousing(null);
+                student.setCurrentLease(null);
+                studentRepository.save(student);
             }
+            housing.setResident(null);
             housing.setStatus(Availability.FREE);
             housingRepository.save(housing);
             notification.setMessage("Le logement <b>" + housing.getName() + "</b> a été libéré avec succès.");
