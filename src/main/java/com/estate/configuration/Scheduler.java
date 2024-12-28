@@ -7,6 +7,7 @@ import com.estate.domain.enumaration.Gender;
 import com.estate.domain.enumaration.SettingCode;
 import com.estate.domain.helper.EmailHelper;
 import com.estate.domain.service.face.NotificationService;
+import com.estate.domain.service.face.SettingService;
 import com.estate.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -32,7 +33,7 @@ public class Scheduler {
     private final NotificationService notificationService;
     private final LogRepository logRepository;
     private final StudentRepository studentRepository;
-    private final SettingRepository settingRepository;
+    private final SettingService settingService;
     private final LeaseRepository leaseRepository;
     private final VisitorRepository visitorRepository;
 
@@ -54,7 +55,7 @@ public class Scheduler {
 
     @Scheduled(cron = "0 0 8 * * ?", zone = "GMT+1")
     public void rememberBirthday(){
-        String sender = settingRepository.findByCode(SettingCode.SMS_SENDER).map(Setting::getValue).orElse("CONCORDE");
+        String sender = settingService.findByCode(SettingCode.SMS_SENDER).map(Setting::getValue).orElse("CONCORDE");
         String to, cc, name, date, messageStudent, messageFirstParent, messageSecondParent, countryCode = "+237";
 
         List<Student> students = studentRepository.findAllByDateOfBirthAndCurrentLeaseNotNull(LocalDate.now());

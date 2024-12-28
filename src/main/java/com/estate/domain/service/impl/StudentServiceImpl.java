@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import com.estate.domain.helper.TextUtils;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.File;
 import java.io.IOException;
@@ -186,9 +187,9 @@ public class StudentServiceImpl implements StudentService {
                 context.put("name", name);
                 context.put("login",student.getUser().getEmail());
                 context.put("password",password);
+                context.put("link", ServletUriComponentsBuilder.fromCurrentRequestUri().replacePath("/237in").build());
                 String cc = student.getFirstParentEmail() +";" + student.getSecondParentEmail();
                 emailHelper.sendMail(student.getUser().getEmail(), cc, "BIENVENU", "welcome.ftl", Locale.FRENCH, context, Collections.emptyList());
-
             }
             studentRepository.saveAndFlush(student);
             notification.setMessage("Un étudiant a été " + (creation ? "ajouté." : "modifié."));
