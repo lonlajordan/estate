@@ -6,13 +6,11 @@ import com.estate.domain.entity.Visitor;
 import com.estate.domain.enumaration.Profil;
 import com.estate.domain.form.ContactForm;
 import com.estate.domain.form.VisitorForm;
-import com.estate.domain.mail.EmailHelper;
+import com.estate.domain.helper.EmailHelper;
 import com.estate.domain.service.face.VisitorService;
 import com.estate.repository.UserRepository;
 import com.estate.repository.VisitorRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import com.estate.domain.entity.Notification;
 

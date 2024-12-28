@@ -20,7 +20,7 @@
                     <div class="panel-heading">
                         <b>Formulaire : </b> <span style="font-size: 13px">Les champs avec l'astérisque ( <span class="required-field">*</span> ) sont obligatoires</span>
                     </div>
-                    <form th:object="${user}" onsubmit="submitMultipartForm(e)" th:action="@{/user/save}" enctype="multipart/form-data" autocomplete="off" method="post">
+                    <form th:object="${user}" onsubmit="submitMultipartForm(event)" th:action="@{/user/save}" enctype="multipart/form-data" autocomplete="off" method="post">
                         <div class="panel-body">
                             <input th:field="*{id}" type="hidden">
                             <div class="row">

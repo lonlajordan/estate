@@ -9,7 +9,7 @@ import com.estate.domain.enumaration.Status;
 import com.estate.domain.form.PaymentForm;
 import com.estate.domain.form.PaymentReject;
 import com.estate.domain.form.PaymentSearch;
-import com.estate.domain.mail.EmailHelper;
+import com.estate.domain.helper.EmailHelper;
 import com.estate.domain.service.face.PaymentService;
 import com.estate.repository.*;
 import lombok.RequiredArgsConstructor;

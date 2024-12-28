@@ -8,7 +8,7 @@ import com.estate.domain.enumaration.Profil;
 import com.estate.domain.enumaration.Role;
 import com.estate.domain.form.StudentForm;
 import com.estate.domain.form.StudentSearch;
-import com.estate.domain.mail.EmailHelper;
+import com.estate.domain.helper.EmailHelper;
 import com.estate.domain.service.face.StudentService;
 import com.estate.repository.LogRepository;
 import com.estate.repository.StudentRepository;
@@ -24,7 +24,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
-import com.estate.utils.TextUtils;
+import com.estate.domain.helper.TextUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -177,7 +177,7 @@ public class StudentServiceImpl implements StudentService {
 
         try {
             if(creation){
-                String password = TextUtils.generatePass(8);
+                String password = TextUtils.generatePassword(8);
                 student.getUser().setStudent(student);
                 student.getUser().setPassword(passwordEncoder.encode(password));
                 student.getUser().setRoles(Collections.singletonList(Role.ROLE_STUDENT));

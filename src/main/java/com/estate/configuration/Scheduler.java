@@ -2,7 +2,7 @@ package com.estate.configuration;
 
 import com.estate.domain.entity.Lease;
 import com.estate.domain.entity.Student;
-import com.estate.domain.mail.EmailHelper;
+import com.estate.domain.helper.EmailHelper;
 import com.estate.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;

@@ -1,10 +1,10 @@
 package com.estate.controller;
 
-import com.estate.domain.mail.EmailHelper;
+import com.estate.domain.helper.EmailHelper;
 import com.estate.domain.entity.Notification;
 import com.estate.domain.entity.User;
 import com.estate.repository.UserRepository;
-import com.estate.utils.TextUtils;
+import com.estate.domain.helper.TextUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;

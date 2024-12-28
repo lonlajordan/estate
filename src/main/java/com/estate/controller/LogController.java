@@ -14,8 +14,7 @@ import org.springframework.web.servlet.support.RequestContextUtils;
 import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 @RequiredArgsConstructor
@@ -59,6 +58,11 @@ public class LogController {
     public String search(LogSearch form, RedirectAttributes attributes){
         attributes.addFlashAttribute("searchForm", form);
         return "redirect:/log/list";
+    }
+
+    @RequestMapping(value="remove")
+    public RedirectView deleteById(@RequestParam Long id, RedirectAttributes attributes){
+        return logService.deleteAllByIds(Collections.singletonList(id), attributes);
     }
 
     @RequestMapping(value="delete")

@@ -19,7 +19,7 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpSession;
 import java.security.Principal;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -44,7 +44,7 @@ public class LogServiceImpl implements LogService {
     }
 
     @Override
-    public RedirectView deleteAllByIds(ArrayList<Long> ids, RedirectAttributes attributes){
+    public RedirectView deleteAllByIds(List<Long> ids, RedirectAttributes attributes){
         Notification notification = Notification.info();
         try {
             int n = ids.size();

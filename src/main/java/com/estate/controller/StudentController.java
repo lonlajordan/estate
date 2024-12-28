@@ -4,7 +4,7 @@ import com.estate.domain.entity.Notification;
 import com.estate.domain.entity.Student;
 import com.estate.domain.form.StudentForm;
 import com.estate.domain.form.StudentSearch;
-import com.estate.domain.mail.SmsHelper;
+import com.estate.domain.helper.SmsHelper;
 import com.estate.domain.service.face.HousingService;
 import com.estate.domain.service.face.StudentService;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +12,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.support.RequestContextUtils;
@@ -79,17 +78,11 @@ public class StudentController {
             if(student.getBirthCertificateFile() == null || student.getBirthCertificateFile().isEmpty()) result.rejectValue("birthCertificateFile", notNullMessage, defaultMessage);
         }
         if(result.hasErrors()){
-            for(FieldError fieldError: result.getFieldErrors()){
-                System.out.println("Error Field = " + fieldError.getField());
-                System.out.println("Error Message = " + fieldError.getDefaultMessage());
-            }
             model.addAttribute("countryCodes", SmsHelper.countryCodes);
             return "admin/student/save";
         }
         Notification notification =  studentService.save(student);
         if(multiple || notification.hasError()){
-            System.out.println("Notification = " + notification.getMessage());
-            System.out.println("Notification TYPE = " + notification.getType());
             model.addAttribute("notification", notification);
             model.addAttribute("countryCodes", SmsHelper.countryCodes);
             model.addAttribute("student", notification.hasError() ? student : new StudentForm());

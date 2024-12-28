@@ -54,10 +54,10 @@ public class StudentForm {
     private String email;
     @NotNull
     @Valid
-    private Phone phone;
+    private Phone phone = new Phone();
     @NotNull
     @Valid
-    private Phone mobile;
+    private Phone mobile = new Phone();
 
     @NotNull
     private Relationship firstParentRelation;
@@ -67,10 +67,10 @@ public class StudentForm {
     private String firstParentAddress;
     @NotNull
     @Valid
-    private Phone firstParentPhone;
+    private Phone firstParentPhone = new Phone();
     @NotNull
     @Valid
-    private Phone firstParentMobile;
+    private Phone firstParentMobile = new Phone();
     @NotBlank
     @Email
     private String firstParentEmail;
@@ -83,10 +83,10 @@ public class StudentForm {
     private String secondParentAddress;
     @NotNull
     @Valid
-    private Phone secondParentPhone;
+    private Phone secondParentPhone = new Phone();
     @NotNull
     @Valid
-    private Phone secondParentMobile;
+    private Phone secondParentMobile = new Phone();
     @NotBlank
     @Email
     private String secondParentEmail;

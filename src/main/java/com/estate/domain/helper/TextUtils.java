@@ -1,4 +1,4 @@
-package com.estate.utils;
+package com.estate.domain.helper;
 
 import org.apache.commons.lang3.RandomStringUtils;
 
@@ -50,15 +50,14 @@ public class TextUtils {
         return new UUID(most64SigBits, least64SigBits);
     }
 
-    public static String generatePass(Integer length){
-        String SALTCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
-        StringBuilder salt = new StringBuilder();
-        Random rnd = new Random();
-        while (salt.length() < length) { // length of the random string.
-            int index = (int) (rnd.nextFloat() * SALTCHARS.length());
-            salt.append(SALTCHARS.charAt(index));
+    public static String generatePassword(Integer length){
+        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+        StringBuilder password = new StringBuilder();
+        Random random = new Random();
+        while (password.length() < length) { // length of the random string.
+            int index = (int) (random.nextFloat() * characters.length());
+            password.append(characters.charAt(index));
         }
-        String saltStr = salt.toString();
-        return saltStr;
+        return password.toString();
     }
 }

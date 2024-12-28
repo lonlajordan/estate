@@ -18,8 +18,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -155,7 +155,7 @@ public class HousingServiceImpl implements HousingService {
             if(student != null && student.getCurrentLease() != null) {
                 String name = student.getUser().getName();
                 LocalDate expiration = student.getCurrentLease().getRealEndDate();
-                if(LocalDate.now().isBefore(student.getCurrentLease().getRealEndDate())) return Notification.warn("Ce logement est encore occupé par <b>" + name + "</b> dont le contrat de bail expire le <b>" + (new SimpleDateFormat("dd/MM/yyyy").format(expiration)) + "</b>.");
+                if(LocalDate.now().isBefore(student.getCurrentLease().getRealEndDate())) return Notification.warn("Ce logement est encore occupé par <b>" + name + "</b> dont le contrat de bail expire le <b>" + (DateTimeFormatter.ofPattern("dd/MM/yyyy").format(expiration)) + "</b>.");
             }
             housing.setStatus(Availability.FREE);
             housingRepository.save(housing);

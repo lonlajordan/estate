@@ -6,7 +6,7 @@ import com.estate.domain.enumaration.Profil;
 import com.estate.domain.form.PasswordForm;
 import com.estate.domain.form.ProfilForm;
 import com.estate.domain.form.UserForm;
-import com.estate.domain.mail.SmsHelper;
+import com.estate.domain.helper.SmsHelper;
 import com.estate.domain.service.face.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;

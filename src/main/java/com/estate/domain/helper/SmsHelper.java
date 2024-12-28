@@ -1,4 +1,4 @@
-package com.estate.domain.mail;
+package com.estate.domain.helper;
 
 import java.util.Arrays;
 import java.util.List;
