@@ -1,9 +1,7 @@
 package com.estate.domain.form;
 
-import com.estate.domain.annotation.FileSize;
 import com.estate.domain.enumaration.Gender;
 import lombok.Data;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Email;
@@ -24,10 +22,8 @@ public class ProfilForm {
     private String email;
     @NotNull
     @Valid
-    private Phone phone;
+    private Phone phone = new Phone();
     @NotNull
     @Valid
-    private Phone mobile;
-    @FileSize(extensions = {"png", "jpg", "jpeg"}, max = 2 * 1024 * 1024)
-    private MultipartFile picture;
+    private Phone mobile = new Phone();
 }

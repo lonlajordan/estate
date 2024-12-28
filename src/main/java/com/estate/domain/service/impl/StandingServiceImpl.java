@@ -111,7 +111,7 @@ public class StandingServiceImpl implements StandingService {
             }
             try {
                 extension = FilenameUtils.getExtension(form.getPicture().getOriginalFilename());
-                picture = new File(root.getAbsolutePath() + File.separator + "housing-" + date + "." + extension);
+                picture = new File(root.getAbsolutePath() + File.separator + "standing-" + date + "." + extension);
                 form.getPicture().transferTo(picture);
                 standing.setPicture(root.getName() + File.separator + picture.getName());
             } catch (IOException e) {

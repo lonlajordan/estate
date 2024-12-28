@@ -24,13 +24,11 @@ public class UserForm {
     private String email;
     @NotNull
     @Valid
-    private Phone phone;
+    private Phone phone = new Phone();
     @NotNull
     @Valid
-    private Phone mobile;
+    private Phone mobile = new Phone();
     private List<@NotNull Mode> modes;
     @NotEmpty
     private List<@NotNull Role> roles;
-    @FileSize(extensions = {"png", "jpg", "jpeg"}, max = 2 * 1024 * 1024)
-    private MultipartFile picture;
 }

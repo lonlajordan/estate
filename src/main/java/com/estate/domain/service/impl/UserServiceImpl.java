@@ -16,9 +16,6 @@ import com.estate.repository.UserRepository;
 import com.estate.domain.helper.TextUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -26,12 +23,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.io.File;
-import java.io.IOException;
 import java.security.Principal;
 import java.util.Locale;
 import java.util.*;
@@ -65,12 +59,6 @@ public class UserServiceImpl implements UserService {
         try {
             if(force) paymentRepository.setValidatorToNullByUserId(id);
             userRepository.deleteById(id);
-            if(StringUtils.isNotBlank(user.getPicture())){
-                File picture = new File(user.getPicture());
-                try {
-                    if(picture.exists()) FileUtils.deleteQuietly(picture);
-                } catch (Exception ignored) {}
-            }
             notification = Notification.info("L'utilisateur <b>" + user.getName() + "</b> a été supprimé");
             logRepository.save(Log.info(notification.getMessage()));
         }catch (Throwable e){
@@ -108,7 +96,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Notification save(UserForm form, HttpSession session) {
         boolean creation = form.getId() == null;
-        Notification notification;
+        Notification notification = Notification.info();
         User user = creation ? new User() : userRepository.findById(form.getId()).orElse(null);
         if(user == null) return Notification.error("Utilisateur introuvable");
         user.setFirstName(form.getFirstName());
@@ -119,8 +107,6 @@ public class UserServiceImpl implements UserService {
         user.setGender(form.getGender());
         user.setModes(form.getModes());
         user.setRoles(form.getRoles());
-        notification = setPicture(user, form.getPicture());
-        if(notification.hasError()) return notification;
         try {
             if(creation){
                 HashMap<String, Object> context = new HashMap<>();
@@ -153,7 +139,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Notification updateProfile(ProfilForm form, HttpSession session) {
-        Notification notification;
+        Notification notification = Notification.info();
         User user = userRepository.findById(form.getId()).orElse(null);
         if(user == null) return Notification.error("Utilisateur introuvable");
         user.setFirstName(form.getFirstName());
@@ -162,8 +148,6 @@ public class UserServiceImpl implements UserService {
         user.setMobile(form.getMobile().format());
         user.setEmail(form.getEmail());
         user.setGender(form.getGender());
-        notification = setPicture(user, form.getPicture());
-        if(notification.hasError()) return notification;
         try {
             user = userRepository.save(user);
             notification.setMessage("L'utilisateur <b>" + user.getName() +"</b> a été modifié.");
@@ -199,31 +183,5 @@ public class UserServiceImpl implements UserService {
             logRepository.save(Log.info("L'utilisateur <b>" + user.getName() + "</b> a modifié son mot de passe."));
         }
         return notification;
-    }
-
-    Notification setPicture(User user, MultipartFile photo){
-        if(photo != null && !photo.isEmpty()){
-            long date = System.currentTimeMillis();
-            String extension;
-            File root = new File("documents");
-            if (!root.exists() && !root.mkdirs()) return Notification.error("Impossible de créer le dossier de sauvegarde des documents.");
-            File picture;
-            if(StringUtils.isNotBlank(user.getPicture())){
-                picture = new File(user.getPicture());
-                try {
-                    if(picture.exists()) FileUtils.deleteQuietly(picture);
-                }catch (Exception ignored) {}
-            }
-            try {
-                extension = FilenameUtils.getExtension(photo.getOriginalFilename());
-                picture = new File(root.getAbsolutePath() + File.separator + "user-" + date + "." + extension);
-                photo.transferTo(picture);
-                user.setPicture(root.getName() + File.separator + picture.getName());
-            } catch (IOException e) {
-                log.error("unable to write user picture file", e);
-                return Notification.error("Impossible d'enregistrer la photo de profil de l'utilisateur.");
-            }
-        }
-        return Notification.info();
     }
 }

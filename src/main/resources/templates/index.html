@@ -238,7 +238,7 @@
                             <li style="line-height: 30px; text-align: justify"><i class="fa fa-star"></i><span th:text="${standing.description}"></span></li>
                         </ul>
                         <div class="plan-button text-center">
-                            <a target="_blank" th:href="@{'/explorer/' + ${standing.picture}}" class="btn btn-outline pricing-btn">Voir</a>
+                            <a target="_blank" th:href="@{'/explorer/' + ${standing.picture}}" th:classappend="${#strings.isEmpty(standing.picture) ? 'disabled' : ''}" class="btn btn-outline pricing-btn">Voir</a>
                         </div>
                     </div>
                 </div>

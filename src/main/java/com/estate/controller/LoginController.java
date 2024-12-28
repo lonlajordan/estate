@@ -35,7 +35,7 @@ public class LoginController {
 
     @GetMapping("/237in")
     public String login() {
-        return  isAuthenticated() ? "redirect:home" : "login" ;
+        return  isAuthenticated() ? "redirect:dashboard" : "login" ;
     }
 
     @PostMapping("/password/reset")

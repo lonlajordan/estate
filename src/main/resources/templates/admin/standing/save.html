@@ -20,7 +20,7 @@
                     <div class="panel-heading">
                         <b>Formulaire : </b> <span style="font-size: 13px">Les champs avec l'astérisque ( <span class="required-field">*</span> ) sont obligatoires</span>
                     </div>
-                    <form th:object="${standing}" onsubmit="submitForm(event)" th:action="@{/standing/save}" autocomplete="off" method="post">
+                    <form th:object="${standing}" onsubmit="submitMultipartForm(event)" th:action="@{/standing/save}" autocomplete="off" method="post">
                         <div class="panel-body">
                             <input th:field="*{id}" type="hidden">
                             <div class="row">
@@ -32,7 +32,7 @@
                             </div>
                             <div class="row">
                                 <div class="form-group col-lg-12" th:classappend="${#fields.hasErrors('picture') ? 'has-error' : ''}">
-                                    <label for="picture" class="control-label">Photo de profil <span class="required-field" th:if="${standing.id == null}">*</span></label>
+                                    <label for="picture" class="control-label">Aperçu photo <span class="required-field" th:if="${standing.id == null}">*</span></label>
                                     <input id="picture" th:field="*{picture}" type="file" autocomplete="off" class="form-control" th:required="${standing.id == null}">
                                     <p th:if="${#fields.hasErrors('picture')}" th:errors="*{picture}" class="help-block"></p>
                                 </div>

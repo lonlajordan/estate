@@ -17,6 +17,7 @@ public enum SettingCode {
     WHATSAPP("Numéro de téléphone whatsapp", SettingType.TEXT),
     EMAIL_PUBLIC("Adresse e-mail publique", SettingType.EMAIL),
     ADDRESS_PUBLIC("Localisation", SettingType.TEXT),
+    SMS_SENDER("Nom de l'émetteur SMS", SettingType.TEXT),
     SMS_API_BASE_URL("URL de l'API SMS",  SettingType.TEXT),
     SMS_API_KEY("Clé privée pour l'API SMS",  SettingType.TEXT);
 

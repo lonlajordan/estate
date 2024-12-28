@@ -1,8 +1,10 @@
 package com.estate.configuration;
 
 import com.estate.domain.entity.Lease;
+import com.estate.domain.entity.Setting;
 import com.estate.domain.entity.Student;
 import com.estate.domain.enumaration.Gender;
+import com.estate.domain.enumaration.SettingCode;
 import com.estate.domain.helper.EmailHelper;
 import com.estate.domain.service.face.NotificationService;
 import com.estate.repository.*;
@@ -30,6 +32,7 @@ public class Scheduler {
     private final NotificationService notificationService;
     private final LogRepository logRepository;
     private final StudentRepository studentRepository;
+    private final SettingRepository settingRepository;
     private final LeaseRepository leaseRepository;
     private final VisitorRepository visitorRepository;
 
@@ -51,8 +54,10 @@ public class Scheduler {
 
     @Scheduled(cron = "0 0 8 * * ?", zone = "GMT+1")
     public void rememberBirthday(){
+        String sender = settingRepository.findByCode(SettingCode.SMS_SENDER).map(Setting::getValue).orElse("CONCORDE");
+        String to, cc, name, date, messageStudent, messageFirstParent, messageSecondParent, countryCode = "+237";
+
         List<Student> students = studentRepository.findAllByDateOfBirthAndCurrentLeaseNotNull(LocalDate.now());
-        String to, cc, name, date;
         for (Student student : students) {
             to = student.getUser().getEmail();
             cc = Stream.of(student.getFirstParentEmail(), student.getSecondParentEmail()).distinct().filter(StringUtils::isNotBlank).collect(Collectors.joining(","));
@@ -60,9 +65,12 @@ public class Scheduler {
             HashMap<String, Object> context = new HashMap<>();
             context.put("name", name);
             emailHelper.sendMail(to, cc, "JOYEUX ANNIVERSAIRE", "birthday.ftl", Locale.FRENCH, context, Collections.emptyList());
+            messageStudent = String.format("%1$s %2$s, la MINI CITÉ CONCORDE vous souhaite un joyeux anniversaire ! Que le bonheur et la réussite vous accompagne.", Gender.MALE.equals(student.getUser().getGender()) ? "Cher" : "Chère", name);
+            if(StringUtils.startsWith(student.getUser().getPhone(), countryCode)) notificationService.sendSMS(sender, student.getUser().getPhone(), messageStudent);
+            if(StringUtils.startsWith(student.getUser().getMobile(), countryCode)) notificationService.sendSMS(sender, student.getUser().getMobile(), messageStudent);
         }
 
-        String sender = "CONCORDE";
+
         List<Lease> leases = leaseRepository.findAllByEndDateBeforeAndLastRememberDateNull(LocalDate.now().plusDays(30));
         for (Lease lease : leases) {
             if(lease.getNextLease() != null){
@@ -78,16 +86,16 @@ public class Scheduler {
             context.put("date", date);
             emailHelper.sendMail(Stream.of(student.getFirstParentEmail(), student.getSecondParentEmail()).distinct().filter(StringUtils::isNotBlank).collect(Collectors.joining(",")), student.getUser().getEmail(), "RAPPEL :: RENOUVELLEMENT DE CONTRAT DE BAIL - CONCORDE", "lease_renewal.ftl", Locale.FRENCH, context, Collections.emptyList());
             lease.setLastRememberDate(LocalDate.now());
-            String messageStudent = String.format("%1$s %2$s, votre contrat de bail arrive à échéance le %3$s. Nous vous proposons de le renouveler. Merci.", Gender.MALE.equals(student.getUser().getGender()) ? "Cher" : "Chère", name, date);
-            String messageFirstParent = String.format("Cher parent, le contrat de bail de votre %1$s %2$s arrive à échéance le %3$s. Nous vous proposons de le renouveler. Merci.", Gender.MALE.equals(student.getUser().getGender()) ? student.getFirstParentRelation().getBoy() : student.getFirstParentRelation().getGirl() ,  name, date);
-            String messageSecondParent = String.format("Cher parent, le contrat de bail de votre %1$s %2$s arrive à échéance le %3$s. Nous vous proposons de le renouveler. Merci.", Gender.MALE.equals(student.getUser().getGender()) ? student.getSecondParentRelation().getBoy() : student.getSecondParentRelation().getGirl() ,  name, date);
+            messageStudent = String.format("%1$s %2$s, votre contrat de bail arrive à échéance le %3$s. Nous vous proposons de le renouveler. Merci.", Gender.MALE.equals(student.getUser().getGender()) ? "Cher" : "Chère", name, date);
+            messageFirstParent = String.format("Cher parent, le contrat de bail de votre %1$s %2$s arrive à échéance le %3$s. Nous vous proposons de le renouveler. Merci.", Gender.MALE.equals(student.getUser().getGender()) ? student.getFirstParentRelation().getBoy() : student.getFirstParentRelation().getGirl() ,  name, date);
+            messageSecondParent = String.format("Cher parent, le contrat de bail de votre %1$s %2$s arrive à échéance le %3$s. Nous vous proposons de le renouveler. Merci.", Gender.MALE.equals(student.getUser().getGender()) ? student.getSecondParentRelation().getBoy() : student.getSecondParentRelation().getGirl() ,  name, date);
             leaseRepository.save(lease);
-            notificationService.sendSMS(sender, student.getUser().getPhone(), messageStudent);
-            notificationService.sendSMS(sender, student.getFirstParentPhone(), messageFirstParent);
-            notificationService.sendSMS(sender, student.getSecondParentPhone(), messageSecondParent);
-            if(StringUtils.isNotBlank(student.getUser().getMobile())) notificationService.sendSMS(sender, student.getUser().getMobile(), messageStudent);
-            if(StringUtils.isNotBlank(student.getFirstParentMobile())) notificationService.sendSMS(sender, student.getFirstParentMobile(), messageFirstParent);
-            if(StringUtils.isNotBlank(student.getSecondParentMobile())) notificationService.sendSMS(sender, student.getSecondParentMobile(), messageSecondParent);
+            if(StringUtils.startsWith(student.getUser().getPhone(), countryCode)) notificationService.sendSMS(sender, student.getUser().getPhone(), messageStudent);
+            if(StringUtils.startsWith(student.getFirstParentPhone(), countryCode)) notificationService.sendSMS(sender, student.getFirstParentPhone(), messageFirstParent);
+            if(StringUtils.startsWith(student.getSecondParentPhone(), countryCode)) notificationService.sendSMS(sender, student.getSecondParentPhone(), messageSecondParent);
+            if(StringUtils.startsWith(student.getUser().getMobile(), countryCode)) notificationService.sendSMS(sender, student.getUser().getMobile(), messageStudent);
+            if(StringUtils.startsWith(student.getFirstParentMobile(), countryCode)) notificationService.sendSMS(sender, student.getFirstParentMobile(), messageFirstParent);
+            if(StringUtils.startsWith(student.getSecondParentMobile(), countryCode)) notificationService.sendSMS(sender, student.getSecondParentMobile(), messageSecondParent);
         }
     }
 

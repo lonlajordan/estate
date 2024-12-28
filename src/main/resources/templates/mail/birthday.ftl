@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <title></title>
+    <title>Anniversaire</title>
 </head>
 <body>
     <p>Bonjour <i>${name}</i>,</p>
-    <p>Veuillez trouver ci-joint le résultat du jeu initié par vos soins. </p>
-    <p>Merci,</p>
+    <p>La MINI CITE CONCORDE vous souhaite un joyeux anniversaire. </p>
+    <p>Cordialement,</p>
     <p>L'équipe support</p>
 </body>
 </html>
