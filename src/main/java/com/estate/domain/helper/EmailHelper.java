@@ -33,11 +33,12 @@ public class EmailHelper {
     public void sendMail(String to, String cc, String subject, String templateName, Locale locale, Map<String, Object> model, List<String> attachments) {
         try {
             Template freemarkerTemplate = freeMarkerConfigurer.getConfiguration().getTemplate(templateName, locale);
+            String sender = Objects.requireNonNull(((JavaMailSenderImpl) mailSender).getUsername());
             String body = FreeMarkerTemplateUtils.processTemplateIntoString(freemarkerTemplate, model);
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true,"UTF-8");
-            helper.setFrom(Objects.requireNonNull(((JavaMailSenderImpl) mailSender).getUsername()));
-            helper.setTo(InternetAddress.parse(purge(to)));
+            helper.setFrom(sender);
+            helper.setTo(InternetAddress.parse(purge(StringUtils.defaultIfBlank(to, sender))));
             if(StringUtils.isNotEmpty(cc)) helper.setCc(InternetAddress.parse(purge(cc)));
             helper.setSubject(subject);
             helper.setText(body, true);

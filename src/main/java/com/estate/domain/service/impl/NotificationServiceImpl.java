@@ -1,23 +1,32 @@
 package com.estate.domain.service.impl;
 
+import com.estate.domain.entity.Log;
 import com.estate.domain.entity.Setting;
 import com.estate.domain.enumaration.SettingCode;
 import com.estate.domain.form.ObitResponse;
+import com.estate.domain.helper.EmailHelper;
 import com.estate.domain.service.face.NotificationService;
 import com.estate.domain.service.face.SettingService;
+import com.estate.repository.LogRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.squareup.okhttp.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Locale;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class NotificationServiceImpl implements NotificationService {
     private final SettingService settingService;
+    private final LogRepository logRepository;
+    private final EmailHelper emailHelper;
 
     @Override
     public ObitResponse sendSMS(String sender, String destination, String message) {
@@ -37,15 +46,15 @@ public class NotificationServiceImpl implements NotificationService {
                 Response response = client.newCall(request).execute();
                 try (ResponseBody obitResponseBody = response.body()) {
                     obitResponse = new ObjectMapper().readValue(obitResponseBody.string(), ObitResponse.class);
-                    /* -----------------------------------
-                        if(obitResponse.getCode() == 901) {
-                            // EMAIL RECHARGE EMAIL
-                        }
-                    */
+                    if(obitResponse.getCode() == 901) {
+                        emailHelper.sendMail("", "gatienjordanlonlaep@gmail.com", "SOLDE SMS INSUFFISANT", "insufficient_balance.ftl", Locale.FRENCH, new HashMap<>(), new ArrayList<>());
+                    }
                 } catch (IOException e) {
+                    logRepository.save(Log.error("Unable to read SMS API response body", ExceptionUtils.getStackTrace(e)));
                     log.error("Unable to read SMS API response body", e);
                 }
             } catch (IOException e) {
+                logRepository.save(Log.error("Unable to send SMS API request", ExceptionUtils.getStackTrace(e)));
                 log.error("Unable to send SMS API request", e);
             }
         }
