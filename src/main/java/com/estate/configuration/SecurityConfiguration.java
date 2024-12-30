@@ -74,7 +74,7 @@ public class SecurityConfiguration {
             .and()
                 .authorizeRequests()
                     .antMatchers("/237in", "/error", "/error/**", "/password/reset/**", "/", "/contact").permitAll()
-                    .anyRequest().permitAll();
+                    .anyRequest().authenticated();
         return http.build();
     }
 
