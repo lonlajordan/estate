@@ -3,6 +3,7 @@ package com.estate.domain.service.impl;
 import com.estate.domain.entity.Log;
 import com.estate.domain.entity.Notification;
 import com.estate.domain.entity.Student;
+import com.estate.domain.entity.User;
 import com.estate.domain.enumaration.Level;
 import com.estate.domain.enumaration.Profil;
 import com.estate.domain.enumaration.Role;
@@ -12,6 +13,7 @@ import com.estate.domain.helper.EmailHelper;
 import com.estate.domain.service.face.StudentService;
 import com.estate.repository.LogRepository;
 import com.estate.repository.StudentRepository;
+import com.estate.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
@@ -42,6 +44,7 @@ public class StudentServiceImpl implements StudentService {
     private final LogRepository logRepository;
     private final PasswordEncoder passwordEncoder;
     private final EmailHelper emailHelper;
+    private final UserRepository userRepository;
 
     @Override
     public long count() {
@@ -70,6 +73,8 @@ public class StudentServiceImpl implements StudentService {
         Notification notification = Notification.info();
         Student student = creation ? new Student() : studentRepository.findById(form.getId()).orElse(null);
         if(student == null) return Notification.error("Étudiant introuvable");
+        User user = userRepository.findByEmail(form.getEmail().trim()).orElse(null);
+        if(user != null && !user.getId().equals(Optional.ofNullable(student.getUser()).map(User::getId).orElse(null))) return Notification.error("Adresse e-mail existante");
         student.getUser().setFirstName(form.getFirstName());
         student.getUser().setLastName(form.getLastName());
         student.getUser().setProfil(Profil.STUDENT);
@@ -185,11 +190,10 @@ public class StudentServiceImpl implements StudentService {
                 String name = student.getUser().getOneName();
                 HashMap<String, Object> context = new HashMap<>();
                 context.put("name", name);
-                context.put("login",student.getUser().getEmail());
-                context.put("password",password);
+                context.put("password", password);
                 context.put("link", ServletUriComponentsBuilder.fromCurrentRequestUri().replacePath("/237in").build());
                 String cc = student.getFirstParentEmail() +";" + student.getSecondParentEmail();
-                emailHelper.sendMail(student.getUser().getEmail(), cc, "BIENVENU", "welcome.ftl", Locale.FRENCH, context, Collections.emptyList());
+                emailHelper.sendMail(student.getUser().getEmail(), cc, "BIENVENUE DANS LA MINI CITÉ CONCORDE", "welcome.ftl", Locale.FRENCH, context, Collections.emptyList());
             }
             studentRepository.saveAndFlush(student);
             notification.setMessage("Un étudiant a été " + (creation ? "ajouté." : "modifié."));

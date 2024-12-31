@@ -75,8 +75,8 @@ public class UserController {
 
     @PostMapping(value="profile")
     public String saveProfile(@Valid @ModelAttribute("user") ProfilForm user, BindingResult result, Model model, HttpSession session){
+        model.addAttribute("countryCodes", SmsHelper.countryCodes);
         if(result.hasErrors()){
-            model.addAttribute("countryCodes", SmsHelper.countryCodes);
             return "admin/user/profile";
         }
         Notification notification =  userService.updateProfile(user, session);

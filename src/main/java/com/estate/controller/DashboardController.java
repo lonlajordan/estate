@@ -36,7 +36,7 @@ public class DashboardController {
         model.addAttribute("users", userService.count());
         model.addAttribute("students", studentService.count());
         model.addAttribute("housings", housingService.count());
-        model.addAttribute("payments", paymentService.countByStatus(Status.INITIATED));
+        model.addAttribute("payments", paymentService.countByStatus(Status.SUBMITTED));
         return "dashboard";
     }
 
