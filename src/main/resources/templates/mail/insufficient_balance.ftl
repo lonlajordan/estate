@@ -5,7 +5,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>Bienvenue</title>
 </head>
-<body>
+<body style="line-height: 1.8">
     <p>Bonjour,</p>
     <p>Bien vouloir recharger votre solde SMS pour l'application de gestion de la MINI CITE CONCORDE. </p>
     <p>Merci,</p>

@@ -5,7 +5,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>Inscription</title>
 </head>
-<body>
+<body style="line-height: 1.8">
     <p>Salut <i>${name}</i>,</p>
     <p>Bienvenu dans la MINI CITÉ CONCORDE. </p>
     <p>Votre nom d'utilisateur est <b><i>${login}</i></b> et votre mot de passe est <b><i>${password}</i></b></p>

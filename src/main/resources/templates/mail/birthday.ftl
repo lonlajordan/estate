@@ -5,7 +5,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>Anniversaire</title>
 </head>
-<body>
+<body style="line-height: 1.8">
     <p>Bonjour <i>${name}</i>,</p>
     <p>La MINI CITE CONCORDE vous souhaite un joyeux anniversaire. </p>
     <p>Cordialement,</p>

@@ -5,7 +5,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <title>Réinitialisation de votre mot de passe</title>
     </head>
-    <body>
+    <body style="line-height: 1.8">
         <p>Bonjour <i>${name}</i></p>
         <p>Nous vous envoyons ce mail parce que vous avez demandé une réinitialisation de votre mot de passe. </p>
         <p>Suivez le lien ci-après pour définir un nouveau mot de passe : <b><a href="${link}">Réinitialiser</a></b></p>

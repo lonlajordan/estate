@@ -5,7 +5,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <title>Paiement initié</title>
     </head>
-    <body>
+    <body style="line-height: 1.8">
         <p>Bonjour à tous,</p>
         <p>Un paiement a été initié par <i>${name}</i>. </p>
         <p>Les détails du paiement sont les suivants :</p>
