@@ -2,7 +2,6 @@ package com.estate.domain.service.face;
 
 import com.estate.domain.entity.Housing;
 import com.estate.domain.entity.Notification;
-import com.estate.domain.enumaration.Availability;
 import com.estate.domain.form.HousingForm;
 import com.estate.domain.form.HousingSearch;
 
@@ -32,5 +31,5 @@ public interface HousingService {
 
     Notification toggleById(long id);
 
-    Notification liberate(long id);
+    Notification liberate(long id, HttpServletRequest request);
 }

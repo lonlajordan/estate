@@ -17,15 +17,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.Model;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import java.io.ByteArrayOutputStream;
 import java.security.Principal;
-import java.time.LocalDate;
-import java.util.Objects;
 import java.util.Optional;
 
 @Slf4j
@@ -91,6 +88,7 @@ public class LeaseServiceImpl implements LeaseService {
         try {
             lease.setActive(false);
             notification.setMessage("Le contract de bail de l'étudiant <b>" + lease.getPayment().getStudent().getUser().getName() + "</b> a été résilié avec succès.");
+            leaseRepository.save(lease);
             logRepository.save(Log.info(notification.getMessage()));
         } catch (Throwable e){
             notification = Notification.error("Erreur lors de la résiliation du contrat de bail.");

@@ -26,7 +26,7 @@ public class Lease extends Auditable {
     private Housing housing;
     @OneToOne
     private Lease nextLease;
-    private boolean active = false;
+    private boolean active = true;
 
     @Transient
     public String getBackground(){
@@ -58,6 +58,6 @@ public class Lease extends Auditable {
     }
 
     public boolean isMutable(){
-        return isPending() && nextLease == null;
+        return active && isPending() && nextLease == null;
     }
 }

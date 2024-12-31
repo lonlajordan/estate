@@ -99,8 +99,8 @@ public class HousingController {
     }
 
     @RequestMapping(value="liberate/{id}")
-    public String liberate(@PathVariable long id, RedirectAttributes attributes){
-        attributes.addFlashAttribute("notification", housingService.liberate(id));
+    public String liberate(@PathVariable long id, RedirectAttributes attributes, HttpServletRequest request){
+        attributes.addFlashAttribute("notification", housingService.liberate(id, request));
         return "redirect:/housing/list";
     }
 

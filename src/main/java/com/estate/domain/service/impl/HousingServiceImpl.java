@@ -146,7 +146,7 @@ public class HousingServiceImpl implements HousingService {
     }
 
     @Override
-    public Notification liberate(long id) {
+    public Notification liberate(long id, HttpServletRequest request) {
         Notification notification = new Notification();
         Housing housing = housingRepository.findById(id).orElse(null);
         if(housing == null) return Notification.error("Logement introuvable");
@@ -155,7 +155,10 @@ public class HousingServiceImpl implements HousingService {
             if(student != null && student.getCurrentLease() != null) {
                 String name = student.getUser().getName();
                 LocalDate expiration = student.getCurrentLease().getRealEndDate();
-                if(LocalDate.now().isBefore(student.getCurrentLease().getRealEndDate())) return Notification.warn("Ce logement est encore occupé par <b>" + name + "</b> dont le contrat de bail expire le <b>" + (DateTimeFormatter.ofPattern("dd/MM/yyyy").format(expiration)) + "</b>.");
+                if(LocalDate.now().isBefore(student.getCurrentLease().getRealEndDate()) && student.getCurrentLease().isActive()){
+                    String actions = "<a class='lazy-link text-danger' href='" + request.getContextPath() + "/lease/disable/" + student.getCurrentLease().getId() + "'><b>Résilier</b></a> ce contrat avant de continuer.";
+                    return Notification.warn("Ce logement est encore occupé par <b>" + name + "</b> dont le contrat de bail expire le <b>" + (DateTimeFormatter.ofPattern("dd/MM/yyyy").format(expiration)) + "</b>. " + actions);
+                }
                 student.setHousing(null);
                 student.setCurrentLease(null);
                 studentRepository.save(student);
