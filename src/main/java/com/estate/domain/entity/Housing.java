@@ -1,6 +1,5 @@
 package com.estate.domain.entity;
 
-import com.estate.domain.enumaration.Availability;
 import com.estate.domain.enumaration.Category;
 import com.estate.domain.form.HousingForm;
 import lombok.Getter;
@@ -27,7 +26,6 @@ public class Housing extends Auditable {
     @Convert(converter = Category.Converter.class)
     private Category category = Category.ROOM;
     private boolean available = true;
-    private boolean outgoing = false;
     private boolean active = true;
 
     public Housing() {
@@ -41,13 +39,6 @@ public class Housing extends Auditable {
         form.setCategory(category);
         form.setAvailable(available);
         return form;
-    }
-
-    public Availability getAvailability(){
-        if(!Boolean.TRUE.equals(available)){
-            return Boolean.TRUE.equals(outgoing) ? Availability.LIBERATION : Availability.OCCUPIED;
-        }
-        return Availability.FREE;
     }
 
     @PrePersist

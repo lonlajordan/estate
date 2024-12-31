@@ -4,7 +4,6 @@ $(function () {
 
     // On window's load
     $(window).on('load', function () {
-        populateColorPlates();
         setTimeout(function () {
             $(".page_loader").fadeOut("fast");
             //$('link[id="style_sheet"]').attr('href', 'assets/css/skins/default.css');
@@ -198,34 +197,6 @@ $(function () {
     });
 
 
-    // Counter Activation
-    function isCounterElementVisible($elementToBeChecked)
-    {
-        var TopView = $(window).scrollTop();
-        var BotView = TopView + $(window).height();
-        var TopElement = $elementToBeChecked.offset().top;
-        var BotElement = TopElement + $elementToBeChecked.height();
-        return ((BotElement <= BotView) && (TopElement >= TopView));
-    }
-    $(window).on('scroll', function () {
-        $( ".counter" ).each(function() {
-            var isOnView = isCounterElementVisible($(this));
-            if(isOnView && !$(this).hasClass('Starting')){
-                $(this).addClass('Starting');
-                $(this).prop('Counter',0).animate({
-                    Counter: $(this).text()
-                }, {
-                    duration: 3000,
-                    easing: 'swing',
-                    step: function (now) {
-                        $(this).text(Math.ceil(now));
-                    }
-                });
-            }
-        });
-    });
-
-
     // Full  Page Search Activation
     $(function () {
         $('a[href="#full-page-search"]').on('click', function(event) {
@@ -240,10 +211,10 @@ $(function () {
             }
         });
 
-        $('form').on('submit', function(event) {
+        /*$('form').on('submit', function(event) {
             event.preventDefault();
             return false;
-        })
+        })*/
     });
 
 
@@ -266,144 +237,6 @@ $(function () {
         activeOverlay: false,
         zIndex: 2147483647
     });
-
-
-    // Magnify activation
-    $('.property-magnify-gallery').each(function() {
-        $(this).magnificPopup({
-            delegate: 'a',
-            type: 'image',
-            gallery:{enabled:true}
-        });
-    });
-
-    // Range sliders activation
-    $(".range-slider-ui").each(function () {
-        var minRangeValue = $(this).attr('data-min');
-        var maxRangeValue = $(this).attr('data-max');
-        var minName = $(this).attr('data-min-name');
-        var maxName = $(this).attr('data-max-name');
-        var unit = $(this).attr('data-unit');
-
-        $(this).append("" +
-            "<span class='min-value'></span> " +
-            "<span class='max-value'></span>" +
-            "<input class='current-min' type='hidden' name='"+minName+"'>" +
-            "<input class='current-max' type='hidden' name='"+maxName+"'>"
-        );
-        $(this).slider({
-            range: true,
-            min: minRangeValue,
-            max: maxRangeValue,
-            values: [minRangeValue, maxRangeValue],
-            slide: function (event, ui) {
-                event = event;
-                var currentMin = parseInt(ui.values[0], 10);
-                var currentMax = parseInt(ui.values[1], 10);
-                $(this).children(".min-value").text( currentMin + " " + unit);
-                $(this).children(".max-value").text(currentMax + " " + unit);
-                $(this).children(".current-min").val(currentMin);
-                $(this).children(".current-max").val(currentMax);
-            }
-        });
-
-        var currentMin = parseInt($(this).slider("values", 0), 10);
-        var currentMax = parseInt($(this).slider("values", 1), 10);
-        $(this).children(".min-value").text( currentMin + " " + unit);
-        $(this).children(".max-value").text(currentMax + " " + unit);
-        $(this).children(".current-min").val(currentMin);
-        $(this).children(".current-max").val(currentMax);
-    });
-
-
-
-    // Dropdown activation
-    $('.dropdown-menu a.dropdown-toggle').on('click', function(e) {
-        if (!$(this).next().hasClass('show')) {
-            $(this).parents('.dropdown-menu').first().find('.show').removeClass("show");
-        }
-        var $subMenu = $(this).next(".dropdown-menu");
-        $subMenu.toggleClass('show');
-
-
-        $(this).parents('li.nav-item.dropdown.show').on('hidden.bs.dropdown', function(e) {
-            $('.dropdown-submenu .show').removeClass("show");
-        });
-
-        return false;
-    });
-
-
-    // Modal activation
-    $('.property-video').on('click', function () {
-        $('#propertyModal').modal('show');
-    });
-
-
-    // Google map activation
-    function LoadMap(propertes) {
-        var defaultLat = 40.7110411;
-        var defaultLng = -74.0110326;
-        var mapOptions = {
-            center: new google.maps.LatLng(defaultLat, defaultLng),
-            zoom: 15,
-            scrollwheel: false,
-            styles: [
-                {
-                    featureType: "administrative",
-                    elementType: "labels",
-                    stylers: [
-                        {visibility: "off"}
-                    ]
-                },
-                {
-                    featureType: "water",
-                    elementType: "labels",
-                    stylers: [
-                        {visibility: "off"}
-                    ]
-                },
-                {
-                    featureType: 'poi.business',
-                    stylers: [{visibility: 'off'}]
-                },
-                {
-                    featureType: 'transit',
-                    elementType: 'labels.icon',
-                    stylers: [{visibility: 'off'}]
-                },
-            ]
-        };
-        var map = new google.maps.Map(document.getElementById("contactMap"), mapOptions);
-        var infoWindow = new google.maps.InfoWindow();
-        var myLatlng = new google.maps.LatLng(40.7110411, -74.0110326);
-
-        var marker = new google.maps.Marker({
-            position: myLatlng,
-            map: map
-        });
-        (function (marker) {
-            google.maps.event.addListener(marker, "click", function (e) {
-                infoWindow.setContent("" +
-                    "<div class='map-properties contact-map-content'>" +
-                    "<div class='map-content'>" +
-                    "<p class='address'>123 Kathal St. Tampa City </p>" +
-                    "<ul class='map-properties-list'> " +
-                    "<li><i class='fa fa-phone'></i>  +XXXX XXXX XXX</li> " +
-                    "<li><i class='fa fa-envelope'></i>  info@themevessel.com</li> " +
-                    "<li><a href='dashboard.html'><i class='fa fa-globe'></i>  http://http://themevessel.com</li></a> " +
-                    "</ul>" +
-                    "</div>" +
-                    "</div>");
-                infoWindow.open(map, marker);
-            });
-        })(marker);
-    }
-
-    if($('#contactMap').length){
-        LoadMap();
-    }
-
 
     // Multi-item carousel activation
     var itemsMainDiv = ('.multi-carousel');
@@ -550,149 +383,4 @@ $(function () {
             loop: true
         });
     }
-
-
-    //Youtube carousel activation
-    if($('.player').length > 0){
-        $(document).on('ready', function () {
-            $(".player").mb_YTPlayer();
-        });
-    }
-
-
-    /* ---- particles.js config ---- */
-    if($('#particles-banner').length > 0){
-        loadParticlesBackground();
-    }
-
-    function loadParticlesBackground() {
-        particlesJS("particles-banner", {
-            "particles": {
-                "number": {
-                    "value": 100,
-                    "density": {
-                        "enable": true,
-                        "value_area":1000
-                    }
-                },
-                "color": {
-                    "value": ["#aa73ff", "#f8c210", "#83d238", "#33b1f8"]
-                },
-
-                "shape": {
-                    "type": "circle",
-                    "stroke": {
-                        "width": 0,
-                        "color": "#fff"
-                    },
-                    "polygon": {
-                        "nb_sides": 2
-                    },
-                    "image": {
-                        "src": "img/github.svg",
-                        "width": 100,
-                        "height": 100
-                    }
-                },
-                "opacity": {
-                    "value": 0.6,
-                    "random": false,
-                    "anim": {
-                        "enable": false,
-                        "speed": 1,
-                        "opacity_min": 0.1,
-                        "sync": false
-                    }
-                },
-                "size": {
-                    "value": 2,
-                    "random": true,
-                    "anim": {
-                        "enable": false,
-                        "speed": 40,
-                        "size_min": 0.1,
-                        "sync": false
-                    }
-                },
-                "line_linked": {
-                    "enable": true,
-                    "distance": 120,
-                    "color": "#ffffff",
-                    "opacity": 0.4,
-                    "width": 1
-                },
-            },
-            "interactivity": {
-                "detect_on": "canvas",
-                "events": {
-                    "onhover": {
-                        "enable": true,
-                        "mode": "grab"
-                    },
-                    "onclick": {
-                        "enable": false
-                    },
-                    "resize": true
-                },
-                "modes": {
-                    "grab": {
-                        "distance": 140,
-                        "line_linked": {
-                            "opacity": 1
-                        }
-                    },
-                    "bubble": {
-                        "distance": 400,
-                        "size": 40,
-                        "duration": 2,
-                        "opacity": 8,
-                        "speed": 3
-                    },
-                    "repulse": {
-                        "distance": 200,
-                        "duration": 0.4
-                    },
-                    "push": {
-                        "particles_nb": 4
-                    },
-                    "remove": {
-                        "particles_nb": 2
-                    }
-                }
-            },
-            "retina_detect": true
-        });
-    }
-
-
-    // Switching Color schema
-    function populateColorPlates() {
-        var plateStings = '<div class="option-panel option-panel-collased">\n' +
-            '    <h2>Change Color</h2>\n' +
-            '    <div class="color-plate default-plate" data-color="default"></div>\n' +
-            '    <div class="color-plate blue-plate" data-color="blue"></div>\n' +
-            '    <div class="color-plate yellow-plate" data-color="yellow"></div>\n' +
-            '    <div class="color-plate red-plate" data-color="red"></div>\n' +
-            '    <div class="color-plate green-light-plate" data-color="green-light"></div>\n' +
-            '    <div class="color-plate orange-plate" data-color="orange"></div>\n' +
-            '    <div class="color-plate yellow-light-plate" data-color="yellow-light"></div>\n' +
-            '    <div class="color-plate green-light-2-plate" data-color="green-light-2"></div>\n' +
-            '    <div class="color-plate olive-plate" data-color="olive"></div>\n' +
-            '    <div class="color-plate purple-plate" data-color="purple"></div>\n' +
-            '    <div class="color-plate blue-light-plate" data-color="blue-light"></div>\n' +
-            '    <div class="color-plate brown-plate" data-color="brown"></div>\n' +
-            '    <div class="setting-button">\n' +
-            '        <i class="fa fa-gear"></i>\n' +
-            '    </div>\n' +
-            '</div>';
-        //$('body').append(plateStings);
-    }
-    $(document).on('click', '.color-plate', function () {
-        var name = $(this).attr('data-color');
-        $('link[id="style_sheet"]').attr('href', 'assets/css/skins/' + name + '.css');
-    });
-
-    $(document).on('click', '.setting-button', function () {
-        $('.option-panel').toggleClass('option-panel-collased');
-    });
 });

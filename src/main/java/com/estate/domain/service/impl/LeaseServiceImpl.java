@@ -111,7 +111,6 @@ public class LeaseServiceImpl implements LeaseService {
                 if(!housing.isActive() || !housing.isAvailable()) return Notification.error("Logement sollicité n'est pas disponible");
                 lease.getHousing().setResident(null);
                 lease.getHousing().setAvailable(true);
-                lease.getHousing().setOutgoing(false);
                 housingRepository.save(lease.getHousing());
                 transfer = true;
             }
@@ -121,7 +120,6 @@ public class LeaseServiceImpl implements LeaseService {
             Student student = lease.getPayment().getStudent();
             housing.setResident(student);
             housing.setAvailable(false);
-            housing.setOutgoing(false);
             housingRepository.save(housing);
             student.setHousing(housing);
             studentRepository.save(student);

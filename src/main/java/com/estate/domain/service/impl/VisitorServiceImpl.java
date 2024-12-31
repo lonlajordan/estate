@@ -27,28 +27,27 @@ public class VisitorServiceImpl implements VisitorService {
     @Override
     public Notification contact(ContactForm form){
         HashMap<String, Object> context = new HashMap<>();
-        context.put("name",form.getName());
-        context.put("message",form.getMessage());
-        context.put("number",form.getPhone());
-        context.put("email",form.getEmail());
+        context.put("name",form.getName().trim());
+        context.put("message",form.getMessage().trim());
+        context.put("number",form.getPhone().trim());
+        context.put("email",form.getEmail().trim());
         String receiver = userRepository.findByProfil(Profil.STAFF).stream().map(User::getEmail).collect(Collectors.joining(","));
-        emailHelper.sendMail(form.getEmail(), "", "Votre demande sur la cité", "contact_user.ftl", Locale.FRENCH, context, Collections.emptyList());
+        emailHelper.sendMail(form.getEmail().trim(), "", "PRISE DE CONTACT - MINI CITE CONCORDE", "contact_user.ftl", Locale.FRENCH, context, Collections.emptyList());
         emailHelper.sendMail(receiver,"", form.getSubject(),"contact_staff.ftl",Locale.FRENCH, context, Collections.emptyList());
-        return Notification.info();
+        return Notification.info("Votre message a été envoyé");
     }
 
     @Override
     public Notification subscribe(VisitorForm form){
-        Visitor visitor = visitorRepository.findByEmail(form.getEmail()).orElse(new Visitor());
-        visitor.setEmail(form.getEmail());
-        visitor.setName(form.getName());
-        visitor.setPhone(form.getPhone());
+        Visitor visitor = visitorRepository.findByEmail(form.getEmail().trim()).orElse(new Visitor());
+        visitor.setEmail(form.getEmail().trim());
+        visitor.setName(form.getName().trim());
+        visitor.setPhone(form.getPhone().trim());
         visitorRepository.save(visitor);
-        Notification notification = Notification.info("Le visiteur <b>" + form.getName() +"</b> a été enregistré.");
         HashMap<String, Object> context = new HashMap<>();
-        context.put("name",form.getName());
-        emailHelper.sendMail(form.getEmail(),"","Visite de la mini cité","visitor.ftl", Locale.FRENCH, context, Collections.emptyList());
-        return notification;
+        context.put("name", visitor.getName());
+        emailHelper.sendMail(visitor.getEmail(),"","SOUSCRIPTION - MINI CITE CONCORDE","visitor.ftl", Locale.FRENCH, context, Collections.emptyList());
+        return Notification.info("Votre souscription a été enregistrée.");
     }
 
 }

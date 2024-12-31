@@ -9,6 +9,7 @@
     <link type="text/css" rel="stylesheet" th:href="@{/assets/css/magnific-popup.css}">
     <link type="text/css" rel="stylesheet" th:href="@{/assets/css/slick.css}">
     <link type="text/css" rel="stylesheet" th:href="@{/assets/css/animate.min.css}">
+    <link type="text/css" rel="stylesheet" th:href="@{/assets/css/js-snackbar.min.css}">
     <link type="text/css" rel="stylesheet" th:href="@{/assets/fonts/font-awesome/css/font-awesome.min.css}">
     <link type="text/css" rel="stylesheet" th:href="@{/assets/fonts/flaticon/font/flaticon.css}">
 
@@ -17,7 +18,6 @@
     <!-- Custom Stylesheet -->
     <link type="text/css" rel="stylesheet" th:href="@{/assets/css/style.css}">
     <link rel="stylesheet" type="text/css" id="style_sheet" th:href="@{/assets/css/skins/default.css}">
-
 </head>
 <body id="top">
 <div class="page_loader"></div>
@@ -76,7 +76,7 @@
                                     <a href="#pricing" class="btn btn-color btn-md r-btn">En savoir plus</a>
                                 </div>
                                 <div class="contact-from cf-2 cf-3">
-                                    <form id="subscribeFormMobile" th:object="${visitor}" th:action="@{/subscribe}" method="post">
+                                    <form th:object="${visitor}" th:action="@{/subscribe}" method="post">
                                         <div class="row">
                                             <div class="col-lg-3 col-md-6 pad-10">
                                                 <div class="form-group name">
@@ -95,7 +95,7 @@
                                             </div>
                                             <div class="col-lg-3 col-md-6 pad-10">
                                                 <div class="send-btn text-center">
-                                                    <button type="submit" onclick="document.getElementById('subscribeFormMobile').submit()" class="btn btn-color btn-md btn-block">Souscrire</button>
+                                                    <button type="submit" class="btn btn-color btn-md btn-block">Souscrire</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -105,18 +105,18 @@
                             <div class="col-lg-6 col-md-12 cf-4">
                                 <div class="contact-from">
                                     <h3>Recevoir des notifications pour les logements disponibles.</h3>
-                                    <form id="subscribeForm" th:object="${visitor}" th:action="@{/subscribe}" method="post">
-                                        <div class="form-group name" th:classappend="${#fields.hasErrors('name') ? 'has-error' : ''}">
-                                            <input th:field="*{name}" class="form-control" placeholder="Nom" autocomplete="off">
+                                    <form th:object="${visitor}" th:action="@{/subscribe}" method="post">
+                                        <div class="form-group" th:classappend="${#fields.hasErrors('name') ? 'has-error' : ''}">
+                                            <input th:field="*{name}" class="form-control" placeholder="Nom" autocomplete="off" required>
                                         </div>
-                                        <div class="form-group email" th:classappend="${#fields.hasErrors('email') ? 'has-error' : ''}">
+                                        <div class="form-group" th:classappend="${#fields.hasErrors('email') ? 'has-error' : ''}">
                                             <input type="email" th:field="*{email}" class="form-control" placeholder="Adresse e-mail" autocomplete="off" required>
                                         </div>
-                                        <div class="form-group phone" th:classappend="${#fields.hasErrors('phone') ? 'has-error' : ''}">
+                                        <div class="form-group" th:classappend="${#fields.hasErrors('phone') ? 'has-error' : ''}">
                                             <input th:field="*{phone}" class="form-control" placeholder="Numéro de téléphone" autocomplete="off" required>
                                         </div>
                                         <div class="send-btn text-center">
-                                            <button type="submit" onclick="document.getElementById('subscribeForm').submit()" class="btn btn-color btn-md btn-block">Souscrire</button>
+                                            <button type="submit" class="btn btn-color btn-md btn-block">Souscrire</button>
                                         </div>
                                     </form>
                                 </div>
@@ -179,16 +179,16 @@
     <div class="container">
         <div class="main-title wow_ fadeInDown delay-04s">
             <h1>Nos logements</h1>
-            <p>Découvrez nos logements en cours de libération ou prêts à être occupés. Nous mettons à jour régulièrement nos disponibilités</p>
+            <p>Découvrez nos logements. Nous mettons à jour régulièrement nos disponibilités</p>
         </div>
         <div class="slick-slider-area">
             <div class="row slick-carousel" data-slick='{"slidesToShow": 3, "responsive":[{"breakpoint": 1024,"settings":{"slidesToShow": 2}}, {"breakpoint": 768,"settings":{"slidesToShow": 1}}]}'>
                 <div th:each="housing : ${housings}" class="slick-slide-item">
                     <div class="property-box">
                         <div class="photo">
-                            <a href="#">
+                            <a href="#" onclick="return false">
                                 <img th:src="@{'/explorer/' + ${housing.standing?.picture}}" onerror="this.src='assets/img/property-1.jpg'" alt="property" class="img-fluid">
-                                <div class="tag" th:text="${housing.availability?.name}"></div>
+                                <div class="tag" th:text="${#bools.isTrue(housing.available) ? 'Disponible' : 'Occupé'}"></div>
                                 <div class="love"><i class="flaticon-heart"></i></div>
                                 <div class="plan-price" th:utext="${#numbers.formatInteger(housing.standing?.rent, 1, 'WHITESPACE') + '<sup>FCFA</sup><span> / mois</span>'}"></div>
                             </a>
@@ -256,36 +256,36 @@
         </div>
         <div class="row">
             <div class="col-lg-7 wow_ fadeInLeft delay-04s">
-                <form id="contactForm" th:object="${contact}" th:action="@{/contact}" method="post">
+                <form method="post" th:object="${contact}" th:action="@{/contact}" enctype="multipart/form-data">
                     <div class="row">
                         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                            <div class="form-group name">
-                                <input type="text" th:field="*{name}" class="form-control" placeholder="Nom">
+                            <div class="form-group">
+                                <input type="text" th:field="*{name}" class="form-control" placeholder="Nom" autocomplete="off" required>
                             </div>
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                            <div class="form-group email">
-                                <input type="email" th:field="*{email}" class="form-control" placeholder="Adresse e-mail">
+                            <div class="form-group">
+                                <input type="email" th:field="*{email}" class="form-control" placeholder="Adresse e-mail" autocomplete="off" required>
                             </div>
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                            <div class="form-group subject">
-                                <input type="text" th:field="*{subject}" class="form-control" placeholder="Objet">
+                            <div class="form-group">
+                                <input type="text" th:field="*{subject}" class="form-control" placeholder="Objet" autocomplete="off" required>
                             </div>
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                            <div class="form-group number">
-                                <input type="text" th:field="*{phone}" class="form-control" placeholder="Numéro de téléphone">
+                            <div class="form-group">
+                                <input type="text" th:field="*{phone}" class="form-control" placeholder="Numéro de téléphone" autocomplete="off" required>
                             </div>
                         </div>
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <div class="form-group message">
-                                <textarea class="form-control" th:field="*{message}" placeholder="Écrire un message"></textarea>
+                            <div class="form-group">
+                                <textarea class="form-control" th:field="*{message}" placeholder="Écrire un message" autocomplete="off" required></textarea>
                             </div>
                         </div>
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <div class="send-btn text-center">
-                                <button type="submit" onclick="document.getElementById('contactForm').submit()" class="btn btn-color btn-md btn-message">Envoyer</button>
+                                <button type="submit" class="btn btn-color btn-md btn-message">Envoyer</button>
                             </div>
                         </div>
                     </div>
@@ -350,17 +350,32 @@
 
 <!-- External JS libraries -->
 <script th:src="@{/assets/js/jquery.min.js}"></script>
+<!--
 <script th:src="@{/assets/js/popper.min.js}"></script>
+-->
 <script th:src="@{/assets/js/bootstrap.min.js}"></script>
+<script th:src="@{/assets/js/js-snackbar.min.js}"></script>
+
 <script th:src="@{/assets/js/slick.min.js}"></script>
-<script th:src="@{/assets/js/jquery.magnific-popup.min.js}"></script>
 <script th:src="@{/assets/js/jquery.filterizr.js}"></script>
 <script th:src="@{/assets/js/wow.min.js}"></script>
+
 <script th:src="@{/assets/js/jquery.scrollUp.js}"></script>
-<script th:src="@{/assets/js/particles.min.js}"></script>
+
 <script th:src="@{/assets/js/typed.min.js}"></script>
 <script th:src="@{/assets/js/ie-emulation-modes-warning.js}"></script>
 <!-- Custom JS Script -->
 <script th:src="@{/assets/js/app.js}"></script>
+<!--/*@thymesVar id="notification" type="com.estate.domain.entity.Notification"*/-->
+<script th:if="${notification}" th:inline="javascript">
+    new SnackBar({
+        message: /*[[${notification?.message}]]*/ '',
+        status: /*[[${notification?.hasError() ? 'error' : 'success'}]]*/ '',
+        dismissible: false,
+        position: 'bc',
+        fixed: true,
+        timeout: 6000,
+    });
+</script>
 </body>
 </html>

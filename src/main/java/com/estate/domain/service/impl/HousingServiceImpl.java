@@ -165,7 +165,6 @@ public class HousingServiceImpl implements HousingService {
             }
             housing.setResident(null);
             housing.setAvailable(true);
-            housing.setOutgoing(false);
             housingRepository.save(housing);
             notification.setMessage("Le logement <b>" + housing.getName() + "</b> a été libéré avec succès.");
             logRepository.save(Log.info(notification.getMessage()));

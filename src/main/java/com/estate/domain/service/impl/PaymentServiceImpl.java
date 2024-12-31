@@ -157,7 +157,7 @@ public class PaymentServiceImpl implements PaymentService {
             }
             if(student.getCurrentLease() == null){
                 if(!housing.isActive()) return Notification.error("Le logement <b>" + housing.getName() + "</b> sollicité est désactivé");
-                if(!housing.isAvailable() && !housing.isOutgoing()){
+                if(!housing.isAvailable()){
                     return Notification.warn("Le logement <b>" + housing.getName() + "</b> est occupé par <b>" + housing.getResident().getUser().getName() + "</b>.");
                 } else {
                     lease.setHousing(housing);
@@ -168,7 +168,6 @@ public class PaymentServiceImpl implements PaymentService {
                     student.setCurrentLease(lease);
                     housing.setResident(student);
                     housing.setAvailable(false);
-                    housing.setOutgoing(false);
                     notification = Notification.info("Le paiement a été confirmé. Le contrat de bail a été enregistré avec succès.");
                     notifyForPayment(payment.getStudent().getUser().getEmail(),payment,"validate.ftl",true,"NOUVEAU CONTRAT DE BAIL");
                 }

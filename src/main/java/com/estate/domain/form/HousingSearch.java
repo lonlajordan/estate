@@ -1,7 +1,6 @@
 package com.estate.domain.form;
 
 import com.estate.domain.entity.Housing;
-import com.estate.domain.enumaration.Availability;
 import lombok.Data;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -12,7 +11,7 @@ import java.util.List;
 @Data
 public class HousingSearch {
     private Long standingId;
-    private Availability status;
+    private Boolean available;
 
     public Specification<Housing> toSpecification() {
         return (root, query, cb) -> {
@@ -20,13 +19,8 @@ public class HousingSearch {
             if (standingId != null) {
                 predicates.add(cb.equal(root.get("standing").get("id"), standingId));
             }
-            if (status != null) {
-                if(Availability.FREE.equals(status)) {
-                    predicates.add(cb.equal(root.get("available"), true));
-                } else {
-                    predicates.add(cb.equal(root.get("available"), false));
-                    if(Availability.LIBERATION.equals(status)) predicates.add(cb.equal(root.get("outgoing"), true));
-                }
+            if (available != null) {
+                predicates.add(cb.equal(root.get("available"), available));
             }
             return cb.and(predicates.toArray(new Predicate[0]));
         };
