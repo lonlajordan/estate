@@ -1,7 +1,6 @@
 package com.estate.controller;
 
 import com.estate.domain.entity.*;
-import com.estate.domain.enumaration.Availability;
 import com.estate.domain.enumaration.Profil;
 import com.estate.domain.form.LeaseSearch;
 import com.estate.domain.form.MutationForm;
@@ -86,7 +85,7 @@ public class LeaseController {
         Notification notification = leaseService.activate(id, housingId, model);
         Lease lease = (Lease) model.getAttribute("lease");
         if(notification.hasError() && lease != null){
-            List<Housing> housings = housingService.findAllByStandingIdAndStatusAndActiveTrue(lease.getPayment().getStanding().getId(), Availability.FREE);
+            List<Housing> housings = housingService.findAllByStandingIdAndAvailableAndActiveTrue(lease.getPayment().getStanding().getId(), true);
             model.addAttribute("housings", housings);
             model.addAttribute("notification", notification);
             return "admin/lease/activate";
@@ -104,9 +103,10 @@ public class LeaseController {
         }
         MutationForm mutation = new MutationForm();
         mutation.setLeaseId(lease.getId());
+        mutation.setStartDate(lease.getStartDate());
         model.addAttribute("lease", lease);
         model.addAttribute("mutation", mutation);
-        model.addAttribute("housings", housingService.findAllByStatusAndActiveTrue(Availability.FREE));
+        model.addAttribute("housings", housingService.findAllByAvailableAndActiveTrue(true));
         return "admin/lease/save";
     }
 
@@ -114,7 +114,7 @@ public class LeaseController {
     @PostMapping("save")
     public String save(@Valid @ModelAttribute("mutation") MutationForm mutation, BindingResult result, Model model, RedirectAttributes attributes, Principal principal){
         if(result.hasErrors()){
-            model.addAttribute("housings", housingService.findAllByStatusAndActiveTrue(Availability.FREE));
+            model.addAttribute("housings", housingService.findAllByAvailableAndActiveTrue(true));
             return "admin/lease/save";
         }
         Notification notification =  leaseService.mutate(mutation, principal);

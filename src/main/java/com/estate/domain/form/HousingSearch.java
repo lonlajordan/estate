@@ -21,7 +21,12 @@ public class HousingSearch {
                 predicates.add(cb.equal(root.get("standing").get("id"), standingId));
             }
             if (status != null) {
-                predicates.add(cb.equal(root.get("status"), status));
+                if(Availability.FREE.equals(status)) {
+                    predicates.add(cb.equal(root.get("available"), true));
+                } else {
+                    predicates.add(cb.equal(root.get("available"), false));
+                    if(Availability.LIBERATION.equals(status)) predicates.add(cb.equal(root.get("outgoing"), true));
+                }
             }
             return cb.and(predicates.toArray(new Predicate[0]));
         };

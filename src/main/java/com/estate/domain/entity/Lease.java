@@ -6,7 +6,6 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
 @Getter
@@ -25,14 +24,9 @@ public class Lease extends Auditable {
     private Payment payment;
     @ManyToOne
     private Housing housing;
-    @ManyToOne
-    private Housing mutationHousing;
-    private Integer mutationAmount;
-    private LocalDateTime mutationDate;
-    @ManyToOne
-    private User mutedBy;
     @OneToOne
     private Lease nextLease;
+    private boolean active = false;
 
     @Transient
     public String getBackground(){
@@ -64,6 +58,6 @@ public class Lease extends Auditable {
     }
 
     public boolean isMutable(){
-        return isPending() && mutationDate == null && nextLease == null;
+        return isPending() && nextLease == null;
     }
 }

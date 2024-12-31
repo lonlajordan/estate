@@ -1,7 +1,6 @@
 package com.estate.domain.service.impl;
 
 import com.estate.domain.entity.*;
-import com.estate.domain.enumaration.Availability;
 import com.estate.domain.form.LeaseSearch;
 import com.estate.domain.form.MutationForm;
 import com.estate.domain.service.face.LeaseService;
@@ -26,7 +25,6 @@ import org.xhtmlrenderer.pdf.ITextRenderer;
 import java.io.ByteArrayOutputStream;
 import java.security.Principal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -39,7 +37,6 @@ public class LeaseServiceImpl implements LeaseService {
     private final StudentRepository studentRepository;
     private final LeaseRepository leaseRepository;
     private final LogRepository logRepository;
-    private final UserRepository userRepository;
 
     @Override
     public Page<Lease> findAll(int page) {
@@ -101,7 +98,7 @@ public class LeaseServiceImpl implements LeaseService {
             } else {
                 housing = lease.getPayment().getDesiderata();
             }
-            if(housing == null || !housing.isActive() || !Availability.FREE.equals(housing.getStatus())){
+            if(housing == null || !housing.isActive() || !housing.isAvailable()){
                 model.addAttribute("lease", lease);
                 return Notification.error("Le logement sollicité n'est pas disponible");
             }
@@ -119,9 +116,8 @@ public class LeaseServiceImpl implements LeaseService {
                 resident.setHousing(null);
                 studentRepository.save(resident);
             }
-            housing.setStatus(Availability.OCCUPIED);
+            housing.setAvailable(false);
             housing.setResident(student);
-            housing.setReservedBy(null);
             studentRepository.save(student);
             housingRepository.save(housing);
             notification.setMessage("Le contract de bail de l'étudiant <b>" + lease.getPayment().getStudent().getUser().getName() + "</b> a été activé avec succès.");
@@ -142,25 +138,30 @@ public class LeaseServiceImpl implements LeaseService {
         try {
             Housing housing = housingRepository.findById(mutation.getHousingId()).orElse(null);
             if(housing == null) return Notification.error("Logement sollicité introuvable");
-            if(!housing.isActive() || !Availability.FREE.equals(housing.getStatus())) return Notification.error("Logement sollicité n'est pas disponible");
-            if(Objects.equals(lease.getHousing().getId(), housing.getId())) return Notification.error("Logement sollicité correspond au logement actuel");
-            if(Objects.equals(lease.getHousing().getStanding().getId(), housing.getStanding().getId()) && mutation.getAmount() != 0) return Notification.error("Le logement sollicité est du même standing que le logement actuel, donc le montant doit être zéro");
-            lease.setMutationHousing(housing);
-            lease.setMutationAmount(mutation.getAmount());
-            lease.setMutationDate(LocalDateTime.now());
-            lease.setMutedBy(userRepository.findByEmail(Optional.ofNullable(principal).map(Principal::getName).orElse("")).orElse(null));
+            boolean transfer = false;
+            if(lease.getHousing() != null && !housing.getId().equals(lease.getHousing().getId())){
+                if(!housing.isActive() || !housing.isAvailable()) return Notification.error("Logement sollicité n'est pas disponible");
+                lease.getHousing().setResident(null);
+                lease.getHousing().setAvailable(true);
+                lease.getHousing().setOutgoing(false);
+                housingRepository.save(lease.getHousing());
+                transfer = true;
+            }
+            lease.setHousing(housing);
+            lease.setStartDate(mutation.getStartDate());
+            lease.setEndDate(lease.getStartDate().plusMonths(lease.getPayment().getMonths()));
             Student student = lease.getPayment().getStudent();
             housing.setResident(student);
-            housing.setReservedBy(null);
-            housing.setStatus(Availability.OCCUPIED);
+            housing.setAvailable(false);
+            housing.setOutgoing(false);
             housingRepository.save(housing);
             student.setHousing(housing);
             studentRepository.save(student);
-            notification.setMessage("L'étudiant <b>" + student.getUser().getName() + "</b> a été transféré dans le logement <b>" + housing.getName() + "</b> avec succès.");
-            housing = lease.getHousing();
-            housing.setResident(null);
-            housing.setStatus(Availability.FREE);
-            housingRepository.save(housing);
+            if(transfer) {
+                notification.setMessage("L'étudiant <b>" + student.getUser().getName() + "</b> a été transféré dans le logement <b>" + housing.getName() + "</b> avec succès.");
+            } else {
+                notification.setMessage("Le contrat de bail de l'étudiant <b>" + student.getUser().getName() + "</b> a été modifié avec succès.");
+            }
             leaseRepository.save(lease);
             logRepository.save(Log.info(notification.getMessage()));
         } catch (Throwable e){

@@ -24,12 +24,10 @@ public class Housing extends Auditable {
     private Standing standing;
     @OneToOne
     private Student resident;
-    @OneToOne
-    private Student reservedBy;
     @Convert(converter = Category.Converter.class)
     private Category category = Category.ROOM;
-    @Convert(converter = Availability.Converter.class)
-    private Availability status = Availability.FREE;
+    private boolean available = true;
+    private boolean outgoing = false;
     private boolean active = true;
 
     public Housing() {
@@ -41,8 +39,15 @@ public class Housing extends Auditable {
         form.setName(name);
         form.setStandingId(Optional.ofNullable(standing).map(Standing::getId).orElse(null));
         form.setCategory(category);
-        form.setStatus(status);
+        form.setAvailable(available);
         return form;
+    }
+
+    public Availability getAvailability(){
+        if(!Boolean.TRUE.equals(available)){
+            return Boolean.TRUE.equals(outgoing) ? Availability.LIBERATION : Availability.OCCUPIED;
+        }
+        return Availability.FREE;
     }
 
     @PrePersist

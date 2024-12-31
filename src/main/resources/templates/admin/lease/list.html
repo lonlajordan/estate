@@ -74,6 +74,7 @@
                             <th class="fit-cell-content">Logement</th>
                             <th class="fit-cell-content">Standing</th>
                             <th class="fit-cell-content">Période de validité</th>
+                            <th class="fit-cell-content">Actif</th>
                             <th class="action fit-cell-content">Date de création</th>
                             <th class="action fit-cell-content">Date de modification</th>
                             <th class="action fit-cell-content">Actions</th>
@@ -83,13 +84,12 @@
                         <tr th:each="lease,iter: ${leases}" th:data-id="${lease.id}">
                         <td th:text="${lease.id}"></td>
                         <td th:text="${lease.payment?.student?.user?.name}" th:if="${T(com.estate.domain.enumaration.Profil).STAFF.equals(session?.user?.profil)}"></td>
-                        <td>
-                            <span th:text="${lease.housing?.name}"></span><span th:if="${lease.mutationHousing != null}" th:text="${' -> ' + lease.mutationHousing?.name}"></span>
-                        </td>
+                        <td th:text="${lease.housing?.name}"></td>
                         <td th:text="${lease.payment?.standing?.name}"></td>
                         <td>
                             <span th:text="${#temporals.format(lease.startDate, 'dd/MM/yyyy')}"></span> - <span th:text="${#temporals.format(lease.endDate, 'dd/MM/yyyy')}"></span>
                         </td>
+                        <td th:text="${#bools.isTrue(lease.active) ? 'OUI' : 'NON'}"></td>
                         <td th:text="${#temporals.format(lease.creationDate, 'dd-MM-yyyy HH:mm')}"></td>
                         <td th:text="${#temporals.format(lease.lastModifiedDate, 'dd-MM-yyyy HH:mm')}"></td>
                         <td class="text-center fit-cell-content">

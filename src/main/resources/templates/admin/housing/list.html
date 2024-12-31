@@ -86,7 +86,7 @@
                             <td th:text="${housing.id}"></td>
                             <td th:text="${housing.name}"></td>
                             <td th:text="${housing.standing?.name}"></td>
-                            <td th:text="${housing.status?.name}"></td>
+                            <td th:text="${housing.availability?.name}"></td>
                             <td th:text="${housing.resident?.user?.name}"></td>
                             <td th:classappend="${housing.resident?.currentLease?.background}">
                                 <span th:text="${#temporals.format(housing.resident?.currentLease?.startDate, 'dd/MM/yyyy')}"></span> - <span style="font-weight: bold" th:text="${#temporals.format(housing.resident?.currentLease?.realEndDate, 'dd/MM/yyyy')}"></span>
@@ -105,7 +105,7 @@
                                     <a class="list-group-item text-decoration-none text-left" th:href="@{'/housing/view/' + ${housing.id}}">
                                         <i class="fa fa-eye fa-fw"></i> Détails
                                     </a>
-                                    <a th:if="${!T(com.estate.domain.enumaration.Availability).FREE.equals(housing.status)}" class="list-group-item text-decoration-none text-left" th:href="@{'/housing/liberate/' + ${housing.id}}">
+                                    <a th:unless="${housing.available}" class="list-group-item text-decoration-none text-left" th:href="@{'/housing/liberate/' + ${housing.id}}">
                                         <i class="fa fa-truck fa-fw"></i> Libérer
                                     </a>
                                     <a class="list-group-item text-decoration-none text-left" th:href="@{'/housing/save?id=' + ${housing.id}}">

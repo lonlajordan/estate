@@ -28,26 +28,23 @@
                                     <label class="control-label" for="student">Étudiant</label>
                                     <input id="student" class="form-control" th:value="${lease.payment?.student?.user?.name}" autocomplete="off" readonly>
                                 </div>
-                                <div class="form-group col-lg-6">
-                                    <label class="control-label" for="housing">Logement initial</label>
-                                    <input id="housing" class="form-control" th:value="${lease.housing?.name}" autocomplete="off" readonly>
-                                </div>
-                            </div>
-                            <div class="row">
                                 <div class="form-group col-lg-6" th:classappend="${#fields.hasErrors('housingId') ? 'has-error' : ''}">
-                                    <label for="housingId" class="control-label">Logement sollicité <span class="required-field">*</span></label>
+                                    <label for="housingId" class="control-label">Logement <span class="required-field">*</span></label>
                                     <select id="housingId" th:field="*{housingId}" class="form-control searchable-select-box" required>
+                                        <option th:if="${lease.housing?.id != null}" th:value="${lease.housing?.id}" th:text="${lease.housing?.name}"></option>
                                         <option th:each="housing: ${housings}" th:value="${housing.id}" th:text="${housing.name}"></option>
                                     </select>
                                     <p th:if="${#fields.hasErrors('housingId')}" th:errors="*{housingId}" class="help-block"></p>
                                 </div>
-                                <div class="col-lg-6">
-                                    <div class="form-group input-group" th:classappend="${#fields.hasErrors('amount') ? 'has-error' : ''}">
-                                        <label class="control-label" for="amount"> Montant à ajouter (positif) ou à rembourser (négatif) <span class="required-field">*</span></label>
-                                        <input id="amount" type="number" min="0" th:field="*{amount}" class="form-control" autocomplete="off" required>
-                                        <span class="input-group-addon">FCFA</span>
-                                        <p th:if="${#fields.hasErrors('amount')}" th:errors="*{amount}" class="help-block"></p>
-                                    </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-lg-6">
+                                    <label class="control-label" for="startDate">Date de début <span class="required-field">*</span></label>
+                                    <input id="startDate" th:field="*{startDate}" type="date" class="form-control" autocomplete="off" required>
+                                </div>
+                                <div class="form-group col-lg-6">
+                                    <label class="control-label" for="months">Durée (en mois)</label>
+                                    <input id="months" type="number" th:value="${lease.payment?.months}" class="form-control" autocomplete="off" readonly>
                                 </div>
                             </div>
                         </div>

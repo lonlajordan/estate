@@ -2,7 +2,6 @@ package com.estate.domain.service.impl;
 
 import com.estate.domain.entity.Notification;
 import com.estate.domain.entity.*;
-import com.estate.domain.enumaration.Availability;
 import com.estate.domain.enumaration.Level;
 import com.estate.domain.enumaration.Profil;
 import com.estate.domain.enumaration.Status;
@@ -147,7 +146,7 @@ public class PaymentServiceImpl implements PaymentService {
             payment.setStatus(Status.CONFIRMED);
             User validator = (User) session.getAttribute("user");
             payment.setValidator(validator);
-            if(validator == null || !validator.getModes().contains(payment.getMode())) return Notification.error("Vous n'êtes pas chargé de la vérification des paiement par <b>" + payment.getMode().name() + "</b>.");
+            if(validator == null || !validator.getModes().contains(payment.getMode())) return Notification.error("Vous n'êtes pas chargé de la vérification des paiements par <b>" + payment.getMode().name() + "</b>.");
             Student student = payment.getStudent();
             Housing housing = payment.getDesiderata();
             Lease lease = new Lease();
@@ -158,9 +157,17 @@ public class PaymentServiceImpl implements PaymentService {
             }
             if(student.getCurrentLease() == null){
                 if(!housing.isActive()) return Notification.error("Le logement <b>" + housing.getName() + "</b> sollicité est désactivé");
-                if(Availability.OCCUPIED.equals(housing.getStatus())){
+                if(!housing.isAvailable()){
+                    if(housing.isOutgoing()){
+                        lease.setHousing(housing);
+                        lease = leaseRepository.save(lease);
+                        student.setHousing(housing);
+                        student.setCurrentLease(lease);
+                        notification = Notification.info("Le paiement a été confirmé. Le contrat de bail a été enregistré et en attente d'activation.");
+                        notifyForPayment(payment.getStudent().getUser().getEmail(),payment,"validate.ftl",true,"RENOUVELLEMENT DE BAIL");
+                    }
                     return Notification.warn("Le logement <b>" + housing.getName() + "</b> est occupé par <b>" + housing.getResident().getUser().getName() + "</b>.");
-                } else if(Availability.FREE.equals(housing.getStatus())){
+                } else {
                     lease.setHousing(housing);
                     lease.setStartDate(LocalDate.now());
                     lease.setEndDate(lease.getStartDate().plusMonths(payment.getMonths()));
@@ -168,17 +175,8 @@ public class PaymentServiceImpl implements PaymentService {
                     lease = leaseRepository.save(lease);
                     student.setCurrentLease(lease);
                     housing.setResident(student);
-                    housing.setStatus(Availability.OCCUPIED);
+                    housing.setAvailable(false);
                     notification = Notification.info("Le paiement a été confirmé. Le contrat de bail a été enregistré et activé avec succès.");
-                    notifyForPayment(payment.getStudent().getUser().getEmail(),payment,"validate.ftl",true,"RENOUVELLEMENT DE BAIL");
-                } else if(Availability.LIBERATION.equals(housing.getStatus())){
-                    lease.setHousing(housing);
-                    if(housing.getReservedBy() != null) return Notification.warn("Le logement <b>" + housing.getName() + "</b> a été réservé par <b>" + housing.getResident().getUser().getName() + "</b>.");
-                    housing.setReservedBy(student);
-                    lease = leaseRepository.save(lease);
-                    student.setHousing(housing);
-                    student.setCurrentLease(lease);
-                    notification = Notification.info("Le paiement a été confirmé. Le contrat de bail a été enregistré et en attente d'activation.");
                     notifyForPayment(payment.getStudent().getUser().getEmail(),payment,"validate.ftl",true,"RENOUVELLEMENT DE BAIL");
                 }
                 studentRepository.save(student);
@@ -238,7 +236,7 @@ public class PaymentServiceImpl implements PaymentService {
         payment.setComment(StringUtils.trim(form.getComment()));
         User validator = (User) session.getAttribute("user");
         payment.setValidator(validator);
-        if(validator == null || !validator.getModes().contains(payment.getMode())) return Notification.error("Vous n'êtes pas chargé de la vérification des paiement par <b>" + payment.getMode().name() + "</b>.");
+        if(validator == null || !validator.getModes().contains(payment.getMode())) return Notification.error("Vous n'êtes pas chargé de la vérification des paiements par <b>" + payment.getMode().name() + "</b>.");
         paymentRepository.save(payment);
         notifyForPayment(payment.getStudent().getUser().getEmail(), payment,"cancel.ftl",true,"ECHEC DE PAIEMENT");
         return notification;

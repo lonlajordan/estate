@@ -1,6 +1,5 @@
 package com.estate.domain.form;
 
-import com.estate.domain.enumaration.Availability;
 import com.estate.domain.enumaration.Category;
 import lombok.Data;
 
@@ -17,5 +16,5 @@ public class HousingForm {
     @NotNull
     private Category category;
     @NotNull
-    private Availability status;
+    private Boolean available;
 }

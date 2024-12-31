@@ -11,10 +11,9 @@ import java.util.List;
 
 public interface HousingRepository extends JpaRepository<Housing, Long>, JpaSpecificationExecutor<Housing> {
     List<Housing> findAllByOrderByNameAsc();
-    List<Housing> findAllByStandingIdOrderByNameAsc(long standingId);
-    List<Housing> findAllByStatusAndActiveTrueOrderByNameAsc(Availability status);
+    List<Housing> findAllByAvailableAndActiveTrueOrderByNameAsc(boolean available);
     List<Housing> findAllByStandingIdAndActiveTrueOrderByNameAsc(long standingId);
-    List<Housing> findAllByStandingIdAndStatusAndActiveTrueOrderByNameAsc(long standingId, Availability status);
+    List<Housing> findAllByStandingIdAndAvailableAndActiveTrueOrderByNameAsc(long standingId, boolean available);
 
     @Transactional
     @Modifying(clearAutomatically = true)

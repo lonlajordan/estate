@@ -4,7 +4,6 @@ import com.estate.domain.entity.Housing;
 import com.estate.domain.entity.Log;
 import com.estate.domain.entity.Notification;
 import com.estate.domain.entity.Student;
-import com.estate.domain.enumaration.Availability;
 import com.estate.domain.enumaration.Level;
 import com.estate.domain.form.HousingForm;
 import com.estate.domain.form.HousingSearch;
@@ -40,13 +39,13 @@ public class HousingServiceImpl implements HousingService {
     }
 
     @Override
-    public List<Housing> findAllByStandingIdAndStatusAndActiveTrue(long standingId, Availability status) {
-        return housingRepository.findAllByStandingIdAndStatusAndActiveTrueOrderByNameAsc(standingId, status);
+    public List<Housing> findAllByStandingIdAndAvailableAndActiveTrue(long standingId, boolean available) {
+        return housingRepository.findAllByStandingIdAndAvailableAndActiveTrueOrderByNameAsc(standingId, available);
     }
 
     @Override
-    public List<Housing> findAllByStatusAndActiveTrue(Availability status) {
-        return housingRepository.findAllByStatusAndActiveTrueOrderByNameAsc(status);
+    public List<Housing> findAllByAvailableAndActiveTrue(boolean available) {
+        return housingRepository.findAllByAvailableAndActiveTrueOrderByNameAsc(available);
     }
 
     @Override
@@ -78,8 +77,8 @@ public class HousingServiceImpl implements HousingService {
         housing.setName(form.getName());
         housing.setStanding(standingRepository.getReferenceById(form.getStandingId()));
         housing.setCategory(form.getCategory());
-        housing.setStatus(form.getStatus());
-        if(!Availability.OCCUPIED.equals(housing.getStatus()) && housing.getResident() != null) return Notification.error("Ce logement est occupé par <b>" + housing.getResident().getUser().getName() + "</b>");
+        housing.setAvailable(form.getAvailable());
+        if(housing.isAvailable() && housing.getResident() != null) return Notification.warn("Ce logement est occupé par <b>" + housing.getResident().getUser().getName() + "</b>");
         try {
             housingRepository.saveAndFlush(housing);
             notification.setMessage("Un logement a été " + (creation ? "ajouté." : "modifié."));
@@ -162,7 +161,8 @@ public class HousingServiceImpl implements HousingService {
                 studentRepository.save(student);
             }
             housing.setResident(null);
-            housing.setStatus(Availability.FREE);
+            housing.setAvailable(true);
+            housing.setOutgoing(false);
             housingRepository.save(housing);
             notification.setMessage("Le logement <b>" + housing.getName() + "</b> a été libéré avec succès.");
             logRepository.save(Log.info(notification.getMessage()));

@@ -14,11 +14,11 @@ public interface HousingService {
 
     List<Housing> findAll();
 
-    List<Housing> findAllByStandingIdAndStatusAndActiveTrue(long standingId, Availability status);
+    List<Housing> findAllByStandingIdAndAvailableAndActiveTrue(long standingId, boolean available);
 
     List<Housing> findAllByStandingIdAndActiveTrue(long standingId);
 
-    List<Housing> findAllByStatusAndActiveTrue(Availability status);
+    List<Housing> findAllByAvailableAndActiveTrue(boolean available);
 
     List<Housing> findAll(HousingSearch form);
 

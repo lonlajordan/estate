@@ -58,24 +58,10 @@
                             <b>Date de fin</b>
                             <span class="pull-right"><em th:text="*{#temporals.format(endDate, 'dd-MM-yyyy')}"></em></span>
                         </a>
-                        <th:block th:if="${lease.mutationDate != null}">
-                            <a href="#" class="list-group-item">
-                                <b>Logement après transfert</b>
-                                <span class="pull-right"><em th:text="*{mutationHousing?.name}"></em></span>
-                            </a>
-                            <a href="#" class="list-group-item">
-                                <b>Montant du transfert (FCFA)</b>
-                                <span class="pull-right"><em th:text="${#numbers.formatInteger(lease.mutationAmount, 1, 'WHITESPACE')}"></em></span>
-                            </a>
-                            <a href="#" class="list-group-item">
-                                <b>Transfert effectué par</b>
-                                <span class="pull-right"><em th:text="*{#temporals.format(mutedBy?.name, 'dd-MM-yyyy  HH:mm')}"></em></span>
-                            </a>
-                            <a href="#" class="list-group-item">
-                                <b>Date de transfert</b>
-                                <span class="pull-right"><em th:text="*{#temporals.format(mutationDate, 'dd-MM-yyyy  HH:mm')}"></em></span>
-                            </a>
-                        </th:block>
+                        <a href="#" class="list-group-item">
+                            <b>Actif</b>
+                            <span class="pull-right"><em th:text="${#bools.isTrue(lease.active) ? 'OUI' : 'NON'}"></em></span>
+                        </a>
                         <a href="#" class="list-group-item">
                             <b>Créé par</b>
                             <span class="pull-right"><em th:text="*{createdBy}"></em></span>

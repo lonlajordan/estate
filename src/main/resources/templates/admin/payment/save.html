@@ -48,7 +48,7 @@
                                 <div class="form-group col-lg-6" th:classappend="${#fields.hasErrors('desiderataId') ? 'has-error' : ''}">
                                     <label for="desiderataId" class="control-label">Logement <span class="required-field">*</span></label>
                                     <select id="desiderataId" th:field="*{desiderataId}" class="form-control searchable-select-box" th:disabled="${student?.housing != null}" required>
-                                        <option th:each="housing: ${housings}" th:value="${housing.id}" th:text="${housing.name + ' (' + housing.status.name + ')'}"></option>
+                                        <option th:each="housing: ${housings}" th:value="${housing.id}" th:text="${housing.name + ' (' + housing.availability?.name + ')'}"></option>
                                     </select>
                                     <p th:if="${#fields.hasErrors('desiderataId')}" th:errors="*{desiderataId}" class="help-block"></p>
                                 </div>
