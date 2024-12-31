@@ -40,13 +40,16 @@ public class VisitorServiceImpl implements VisitorService {
     @Override
     public Notification subscribe(VisitorForm form){
         Visitor visitor = visitorRepository.findByEmail(form.getEmail().trim()).orElse(new Visitor());
+        boolean sendNotification = visitor.getId() == null;
         visitor.setEmail(form.getEmail().trim());
         visitor.setName(form.getName().trim());
         visitor.setPhone(form.getPhone().trim());
         visitorRepository.save(visitor);
-        HashMap<String, Object> context = new HashMap<>();
-        context.put("name", visitor.getName());
-        emailHelper.sendMail(visitor.getEmail(),"","SOUSCRIPTION - MINI CITE CONCORDE","visitor.ftl", Locale.FRENCH, context, Collections.emptyList());
+        if(sendNotification) {
+            HashMap<String, Object> context = new HashMap<>();
+            context.put("name", visitor.getName());
+            emailHelper.sendMail(visitor.getEmail(),"","SOUSCRIPTION - MINI CITE CONCORDE","visitor.ftl", Locale.FRENCH, context, Collections.emptyList());
+        }
         return Notification.info("Votre souscription a été enregistrée.");
     }
 
