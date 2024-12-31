@@ -28,29 +28,23 @@ public class VisitorServiceImpl implements VisitorService {
     public Notification contact(ContactForm form){
         HashMap<String, Object> context = new HashMap<>();
         context.put("name",form.getName());
-        HashMap<String, Object> context1 = new HashMap<>();
-        context1.put("name",form.getName());
-        context1.put("message",form.getEmail());
-        context1.put("number",form.getPhone());
-        context1.put("email",form.getEmail());
+        context.put("message",form.getMessage());
+        context.put("number",form.getPhone());
+        context.put("email",form.getEmail());
         String receiver = userRepository.findByProfil(Profil.STAFF).stream().map(User::getEmail).collect(Collectors.joining(","));
         emailHelper.sendMail(form.getEmail(), "", "Votre demande sur la cité", "contact_user.ftl", Locale.FRENCH, context, Collections.emptyList());
-        emailHelper.sendMail(receiver,"",form.getSubject(),"contact_staff.ftl",Locale.FRENCH, context1, Collections.emptyList());
+        emailHelper.sendMail(receiver,"", form.getSubject(),"contact_staff.ftl",Locale.FRENCH, context, Collections.emptyList());
         return Notification.info();
     }
 
     @Override
-    public Notification save(VisitorForm form){
+    public Notification subscribe(VisitorForm form){
         Visitor visitor = visitorRepository.findByEmail(form.getEmail()).orElse(new Visitor());
         visitor.setEmail(form.getEmail());
         visitor.setName(form.getName());
         visitor.setPhone(form.getPhone());
-        return Notification.info("Le visiteur <b>" + form.getName() +"</b> a été enregistré.");
-    }
-
-    @Override
-    public Notification subscribe(VisitorForm form){
-        Notification notification = save(form);
+        visitorRepository.save(visitor);
+        Notification notification = Notification.info("Le visiteur <b>" + form.getName() +"</b> a été enregistré.");
         HashMap<String, Object> context = new HashMap<>();
         context.put("name",form.getName());
         emailHelper.sendMail(form.getEmail(),"","Visite de la mini cité","visitor.ftl", Locale.FRENCH, context, Collections.emptyList());

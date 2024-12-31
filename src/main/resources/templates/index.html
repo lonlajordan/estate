@@ -76,7 +76,7 @@
                                     <a href="#pricing" class="btn btn-color btn-md r-btn">En savoir plus</a>
                                 </div>
                                 <div class="contact-from cf-2 cf-3">
-                                    <form th:object="${visitor}" th:action="@{/subscribe}" method="post">
+                                    <form id="subscribeFormMobile" th:object="${visitor}" th:action="@{/subscribe}" method="post">
                                         <div class="row">
                                             <div class="col-lg-3 col-md-6 pad-10">
                                                 <div class="form-group name">
@@ -95,7 +95,7 @@
                                             </div>
                                             <div class="col-lg-3 col-md-6 pad-10">
                                                 <div class="send-btn text-center">
-                                                    <button type="submit" class="btn btn-color btn-md btn-block">Souscrire</button>
+                                                    <button type="submit" onclick="document.getElementById('subscribeFormMobile').submit()" class="btn btn-color btn-md btn-block">Souscrire</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -105,7 +105,7 @@
                             <div class="col-lg-6 col-md-12 cf-4">
                                 <div class="contact-from">
                                     <h3>Recevoir des notifications pour les logements disponibles.</h3>
-                                    <form th:object="${visitor}" th:action="@{/subscribe}" method="post">
+                                    <form id="subscribeForm" th:object="${visitor}" th:action="@{/subscribe}" method="post">
                                         <div class="form-group name" th:classappend="${#fields.hasErrors('name') ? 'has-error' : ''}">
                                             <input th:field="*{name}" class="form-control" placeholder="Nom" autocomplete="off">
                                         </div>
@@ -116,7 +116,7 @@
                                             <input th:field="*{phone}" class="form-control" placeholder="Numéro de téléphone" autocomplete="off" required>
                                         </div>
                                         <div class="send-btn text-center">
-                                            <button type="submit" class="btn btn-color btn-md btn-block">Souscrire</button>
+                                            <button type="submit" onclick="document.getElementById('subscribeForm').submit()" class="btn btn-color btn-md btn-block">Souscrire</button>
                                         </div>
                                     </form>
                                 </div>
@@ -256,7 +256,7 @@
         </div>
         <div class="row">
             <div class="col-lg-7 wow_ fadeInLeft delay-04s">
-                <form th:object="${contact}" th:action="@{/contact}" method="post">
+                <form id="contactForm" th:object="${contact}" th:action="@{/contact}" method="post">
                     <div class="row">
                         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                             <div class="form-group name">
@@ -285,7 +285,7 @@
                         </div>
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <div class="send-btn text-center">
-                                <button type="submit" class="btn btn-color btn-md btn-message">Envoyer</button>
+                                <button type="submit" onclick="document.getElementById('contactForm').submit()" class="btn btn-color btn-md btn-message">Envoyer</button>
                             </div>
                         </div>
                     </div>

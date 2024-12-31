@@ -73,7 +73,7 @@ public class SecurityConfiguration {
                     .invalidateHttpSession(true)
             .and()
                 .authorizeRequests()
-                    .antMatchers("/237in", "/error", "/error/**", "/password/reset/**", "/", "/contact").permitAll()
+                    .antMatchers("/237in", "/error", "/error/**", "/password/reset/**", "/", "/contact", "/subscribe").permitAll()
                     .anyRequest().authenticated();
         return http.build();
     }
