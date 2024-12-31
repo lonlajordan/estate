@@ -83,47 +83,17 @@ public class LeaseServiceImpl implements LeaseService {
     }
 
     @Override
-    public Notification activate(long id, Long housingId, Model model) {
+    public Notification disable(long id) {
         Notification notification = new Notification();
         Lease lease = leaseRepository.findById(id).orElse(null);
         if(lease == null) return Notification.error("Contrat de bail introuvable");
-        if(lease.getStartDate() != null) return Notification.warn("Ce contrat de bail a déjà été activé");
+        if(lease.getStartDate() == null) return Notification.warn("Ce contrat de bail n'est pas encore actif");
         try {
-            LocalDate now = LocalDate.now();
-            lease.setStartDate(now);
-            lease.setEndDate(now.plusMonths(lease.getPayment().getMonths()));
-            Housing housing;
-            if(housingId != null) {
-                housing = housingRepository.findById(housingId).orElse(null);
-            } else {
-                housing = lease.getPayment().getDesiderata();
-            }
-            if(housing == null || !housing.isActive() || !housing.isAvailable()){
-                model.addAttribute("lease", lease);
-                return Notification.error("Le logement sollicité n'est pas disponible");
-            }
-            if(!Objects.equals(housing.getStanding().getId(), lease.getPayment().getStanding().getId())){
-                model.addAttribute("lease", lease);
-                return Notification.error("Choisir un logement correspondant au <b>" + lease.getPayment().getStanding().getName() + "<b> standing.");
-            }
-            lease.setHousing(housing);
-            lease = leaseRepository.save(lease);
-            Student student = lease.getPayment().getStudent();
-            student.setCurrentLease(lease);
-            student.setHousing(housing);
-            if(housing.getResident() != null) {
-                Student resident = housing.getResident();
-                resident.setHousing(null);
-                studentRepository.save(resident);
-            }
-            housing.setAvailable(false);
-            housing.setResident(student);
-            studentRepository.save(student);
-            housingRepository.save(housing);
-            notification.setMessage("Le contract de bail de l'étudiant <b>" + lease.getPayment().getStudent().getUser().getName() + "</b> a été activé avec succès.");
+            lease.setActive(false);
+            notification.setMessage("Le contract de bail de l'étudiant <b>" + lease.getPayment().getStudent().getUser().getName() + "</b> a été résilié avec succès.");
             logRepository.save(Log.info(notification.getMessage()));
         } catch (Throwable e){
-            notification = Notification.error("Erreur lors de l'activation du contrat de bail.");
+            notification = Notification.error("Erreur lors de la résiliation du contrat de bail.");
             logRepository.save(Log.error(notification.getMessage(), ExceptionUtils.getStackTrace(e)));
         }
         return notification;

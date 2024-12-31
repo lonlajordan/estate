@@ -188,7 +188,7 @@
                         <div class="photo">
                             <a href="#">
                                 <img th:src="@{'/explorer/' + ${housing.standing?.picture}}" onerror="this.src='assets/img/property-1.jpg'" alt="property" class="img-fluid">
-                                <div class="tag" th:text="${housing.status?.name}"></div>
+                                <div class="tag" th:text="${housing.availability?.name}"></div>
                                 <div class="love"><i class="flaticon-heart"></i></div>
                                 <div class="plan-price" th:utext="${#numbers.formatInteger(housing.standing?.rent, 1, 'WHITESPACE') + '<sup>FCFA</sup><span> / mois</span>'}"></div>
                             </a>
@@ -318,7 +318,7 @@
                         <i class="flaticon-pin-1"></i>
                         <div class="media-body">
                             <h5>Localisation</h5>
-                            <p><a href="#" th:text="${localisation}"></a></p>
+                            <p><a href="#">Cradat, Yaoundé, Centre - Cameroun</a></p>
                         </div>
                     </div>
                 </div>

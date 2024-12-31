@@ -157,27 +157,20 @@ public class PaymentServiceImpl implements PaymentService {
             }
             if(student.getCurrentLease() == null){
                 if(!housing.isActive()) return Notification.error("Le logement <b>" + housing.getName() + "</b> sollicité est désactivé");
-                if(!housing.isAvailable()){
-                    if(housing.isOutgoing()){
-                        lease.setHousing(housing);
-                        lease = leaseRepository.save(lease);
-                        student.setHousing(housing);
-                        student.setCurrentLease(lease);
-                        notification = Notification.info("Le paiement a été confirmé. Le contrat de bail a été enregistré et en attente d'activation.");
-                        notifyForPayment(payment.getStudent().getUser().getEmail(),payment,"validate.ftl",true,"RENOUVELLEMENT DE BAIL");
-                    }
+                if(!housing.isAvailable() && !housing.isOutgoing()){
                     return Notification.warn("Le logement <b>" + housing.getName() + "</b> est occupé par <b>" + housing.getResident().getUser().getName() + "</b>.");
                 } else {
                     lease.setHousing(housing);
                     lease.setStartDate(LocalDate.now());
                     lease.setEndDate(lease.getStartDate().plusMonths(payment.getMonths()));
-                    student.setHousing(housing);
                     lease = leaseRepository.save(lease);
+                    student.setHousing(housing);
                     student.setCurrentLease(lease);
                     housing.setResident(student);
                     housing.setAvailable(false);
-                    notification = Notification.info("Le paiement a été confirmé. Le contrat de bail a été enregistré et activé avec succès.");
-                    notifyForPayment(payment.getStudent().getUser().getEmail(),payment,"validate.ftl",true,"RENOUVELLEMENT DE BAIL");
+                    housing.setOutgoing(false);
+                    notification = Notification.info("Le paiement a été confirmé. Le contrat de bail a été enregistré avec succès.");
+                    notifyForPayment(payment.getStudent().getUser().getEmail(),payment,"validate.ftl",true,"NOUVEAU CONTRAT DE BAIL");
                 }
                 studentRepository.save(student);
                 housingRepository.save(housing);

@@ -20,7 +20,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.security.Principal;
-import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -80,16 +79,9 @@ public class LeaseController {
         return "redirect:/lease/list";
     }
 
-    @RequestMapping(value="activate/{id}")
-    public String activate(@PathVariable long id, @RequestParam(required = false) Long housingId, RedirectAttributes attributes, Model model){
-        Notification notification = leaseService.activate(id, housingId, model);
-        Lease lease = (Lease) model.getAttribute("lease");
-        if(notification.hasError() && lease != null){
-            List<Housing> housings = housingService.findAllByStandingIdAndAvailableAndActiveTrue(lease.getPayment().getStanding().getId(), true);
-            model.addAttribute("housings", housings);
-            model.addAttribute("notification", notification);
-            return "admin/lease/activate";
-        }
+    @GetMapping(value="disable/{id}")
+    public String disable(@PathVariable long id, RedirectAttributes attributes){
+        Notification notification = leaseService.disable(id);
         attributes.addFlashAttribute("notification", notification);
         return "redirect:/lease/list";
     }

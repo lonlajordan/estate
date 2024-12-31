@@ -6,7 +6,6 @@ import com.estate.domain.form.LeaseSearch;
 import com.estate.domain.form.MutationForm;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 
 import java.security.Principal;
 import java.util.Optional;
@@ -24,7 +23,7 @@ public interface LeaseService {
 
     long count();
 
-    Notification activate(long id, Long housingId, Model model);
+    Notification disable(long id);
 
     Notification mutate(MutationForm mutation, Principal principal);
 }

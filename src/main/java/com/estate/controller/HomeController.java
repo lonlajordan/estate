@@ -9,6 +9,7 @@ import com.estate.domain.form.VisitorForm;
 import com.estate.domain.helper.SmsHelper;
 import com.estate.domain.service.face.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,6 +28,9 @@ public class HomeController {
     private final StandingService standingService;
     private final VisitorService visitorService;
 
+    @Value("${spring.mail.username}")
+    private String email;
+
     @GetMapping("/")
     public String home(Model model){
         model.addAttribute("countryCodes", SmsHelper.countryCodes);
@@ -37,8 +41,7 @@ public class HomeController {
         model.addAttribute("standings", standingService.findAllByActiveTrueOrderByRentAsc());
         model.addAttribute("telephone", settingService.findByCode(SettingCode.TELEPHONE_PUBLIC).map(Setting::getValue).orElse(""));
         model.addAttribute("whatsapp", settingService.findByCode(SettingCode.WHATSAPP).map(Setting::getValue).orElse(""));
-        model.addAttribute("email", settingService.findByCode(SettingCode.EMAIL_PUBLIC).map(Setting::getValue).orElse(""));
-        model.addAttribute("localisation", settingService.findByCode(SettingCode.ADDRESS_PUBLIC).map(Setting::getValue).orElse(""));
+        model.addAttribute("email", email);
         return "index";
     }
 

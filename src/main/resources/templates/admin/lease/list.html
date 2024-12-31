@@ -97,8 +97,8 @@
                                 <i class="fa fa-ellipsis-h"></i>
                             </a>
                             <div th:id="${'popover-content-' + lease.id}" class="list-group" style="display: none">
-                                <a th:if="${lease.startDate == null && T(com.estate.domain.enumaration.Profil).STAFF.equals(session?.user?.profil)}" class="list-group-item text-decoration-none text-left" th:href="@{'/lease/activate/' + ${lease.id}}">
-                                    <i class="fa fa-fw fa-toggle-on"></i> Activer
+                                <a th:if="${lease.startDate != null && T(com.estate.domain.enumaration.Profil).STAFF.equals(session?.user?.profil)}" class="list-group-item text-decoration-none text-left" th:href="@{'/lease/disable/' + ${lease.id}}" onclick="return confirm('Voulez-vous vraiment résilier ce contrat ?')">
+                                    <i class="fa fa-fw fa-toggle-off"></i> Résilier
                                 </a>
                                 <a class="list-group-item text-decoration-none text-left" th:href="@{'/lease/view/' + ${lease.id}}">
                                     <i class="fa fa-eye fa-fw"></i> Détails

@@ -1,16 +1,14 @@
 package com.estate.configuration;
 
 import com.estate.domain.entity.Lease;
-import com.estate.domain.entity.Setting;
 import com.estate.domain.entity.Student;
 import com.estate.domain.enumaration.Gender;
-import com.estate.domain.enumaration.SettingCode;
 import com.estate.domain.helper.EmailHelper;
 import com.estate.domain.service.face.NotificationService;
-import com.estate.domain.service.face.SettingService;
 import com.estate.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -33,9 +31,11 @@ public class Scheduler {
     private final NotificationService notificationService;
     private final LogRepository logRepository;
     private final StudentRepository studentRepository;
-    private final SettingService settingService;
     private final LeaseRepository leaseRepository;
     private final VisitorRepository visitorRepository;
+
+    @Value("${sms.sender}")
+    private String sender;
 
     @Scheduled(cron = "@daily", zone = "GMT+1")
     public void updateStudentCurrentLease(){
@@ -55,7 +55,6 @@ public class Scheduler {
 
     @Scheduled(cron = "0 0 8 * * ?", zone = "GMT+1")
     public void rememberBirthday(){
-        String sender = settingService.findByCode(SettingCode.SMS_SENDER).map(Setting::getValue).orElse("CONCORDE");
         String to, cc, name, date, messageStudent, messageFirstParent, messageSecondParent, countryCode = "+237";
 
         List<Student> students = studentRepository.findAllByDateOfBirthAndCurrentLeaseNotNull(LocalDate.now());
