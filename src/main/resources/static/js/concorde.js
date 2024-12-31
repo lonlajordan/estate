@@ -23,6 +23,7 @@ function toggleStanding(id, studentId, standingId, url){
     if(standingId !== null){
         query += (query.length === 0 ? '' : '&') + 'standingId=' + standingId;
     }
+    console.log(ctx + '/' + url + '?' + query);
     fetch(ctx + '/' + url + '?' + query, false);
 }
 
