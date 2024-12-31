@@ -47,12 +47,12 @@ public class StandingServiceImpl implements StandingService {
     }
 
     @Override
-    public Optional<Standing> findById(long id) {
+    public Optional<Standing> findById(String id) {
         return standingRepository.findById(id);
     }
 
     @Override
-    public Notification deleteById(long id, boolean force, HttpServletRequest request){
+    public Notification deleteById(String id, boolean force, HttpServletRequest request){
         Notification notification;
         Standing standing = standingRepository.findById(id).orElse(null);
         if(standing == null) return Notification.error("Standing introuvable");
@@ -140,7 +140,7 @@ public class StandingServiceImpl implements StandingService {
     }
 
     @Override
-    public Notification toggleById(long id) {
+    public Notification toggleById(String id) {
         Notification notification = new Notification();
         Standing standing = standingRepository.findById(id).orElse(null);
         if(standing == null) return Notification.error("Standing introuvable");

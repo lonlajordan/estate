@@ -9,7 +9,6 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpSession;
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,9 +17,9 @@ public interface LogService {
 
     Page<Log> findAll(LogSearch form);
 
-    Optional<Log> findById(long id);
+    Optional<Log> findById(String id);
 
-    RedirectView deleteAllByIds(List<Long> ids, RedirectAttributes attributes);
+    RedirectView deleteAllByIds(List<String> ids, RedirectAttributes attributes);
 
     void handleError(Integer status, HttpSession session, Model model, Principal principal, Exception exception);
 }

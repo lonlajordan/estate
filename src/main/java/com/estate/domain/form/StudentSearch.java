@@ -16,7 +16,7 @@ public class StudentSearch {
     private String firstName;
     private String lastName;
     private Gender gender;
-    private Long housingId;
+    private String housingId;
 
     public Specification<Student> toSpecification() {
         return (root, query, cb) -> {

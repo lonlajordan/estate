@@ -13,23 +13,23 @@ public interface HousingService {
 
     List<Housing> findAll();
 
-    List<Housing> findAllByStandingIdAndAvailableAndActiveTrue(long standingId, boolean available);
+    List<Housing> findAllByStandingIdAndAvailableAndActiveTrue(String standingId, boolean available);
 
-    List<Housing> findAllByStandingIdAndActiveTrue(long standingId);
+    List<Housing> findAllByStandingIdAndActiveTrue(String standingId);
 
     List<Housing> findAllByAvailableAndActiveTrue(boolean available);
 
     List<Housing> findAll(HousingSearch form);
 
-    Optional<Housing> findById(long id);
+    Optional<Housing> findById(String id);
 
-    Notification deleteById(long id, boolean force, HttpServletRequest request);
+    Notification deleteById(String id, boolean force, HttpServletRequest request);
 
     long count();
 
     Notification save(HousingForm form);
 
-    Notification toggleById(long id);
+    Notification toggleById(String id);
 
-    Notification liberate(long id, HttpServletRequest request);
+    Notification liberate(String id, HttpServletRequest request);
 }

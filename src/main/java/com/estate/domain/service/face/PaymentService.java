@@ -18,9 +18,9 @@ public interface PaymentService {
 
     Page<Payment> findAll(PaymentSearch form);
 
-    Page<Payment> findAllByUserId(long userId, int page);
+    Page<Payment> findAllByUserId(String userId, int page);
 
-    Optional<Payment> findById(long id);
+    Optional<Payment> findById(String id);
 
     long countByStatus(Status status);
 
@@ -28,9 +28,9 @@ public interface PaymentService {
 
     List<Payment> findAllByStatusAndYear(Status status, Integer year);
 
-    Notification validate(long id, HttpSession session);
+    Notification validate(String id, HttpSession session);
 
-    Notification submit(long id);
+    Notification submit(String id);
 
     Notification cancel(PaymentReject form, HttpSession session);
 }

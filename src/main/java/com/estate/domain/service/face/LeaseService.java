@@ -15,15 +15,15 @@ public interface LeaseService {
 
     Page<Lease> findAll(LeaseSearch form);
 
-    Page<Lease> findAllByUserId(long userId, int page);
+    Page<Lease> findAllByUserId(String userId, int page);
 
-    Optional<Lease> findById(long id);
+    Optional<Lease> findById(String id);
 
-    ResponseEntity<?> download(long id);
+    ResponseEntity<?> download(String id);
 
     long count();
 
-    Notification disable(long id);
+    Notification disable(String id);
 
     Notification mutate(MutationForm mutation, Principal principal);
 }

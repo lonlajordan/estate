@@ -12,7 +12,7 @@ public interface StudentService {
     long count();
     Page<Student> findAll(int page);
     Page<Student> findAll(StudentSearch form);
-    Optional<Student> findById(Long id);
+    Optional<Student> findById(String id);
     Notification save(StudentForm form);
-    Notification toggleById(long id);
+    Notification toggleById(String id);
 }

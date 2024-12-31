@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import java.time.LocalDate;
 import java.util.List;
 
-public interface StudentRepository extends JpaRepository<Student, Long>, JpaSpecificationExecutor<Student> {
+public interface StudentRepository extends JpaRepository<Student, String>, JpaSpecificationExecutor<Student> {
 
     Page<Student> findAllByOrderByCreationDateDesc(Pageable pageable);
     List<Student> findAllByDateOfBirthAndCurrentLeaseNotNull(LocalDate date);

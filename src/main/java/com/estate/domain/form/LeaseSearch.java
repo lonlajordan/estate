@@ -13,7 +13,7 @@ import java.util.List;
 @Data
 public class LeaseSearch {
     private Integer page = 1;
-    private Long housingId;
+    private String housingId;
     private State state;
 
     public Specification<Lease> toSpecification() {

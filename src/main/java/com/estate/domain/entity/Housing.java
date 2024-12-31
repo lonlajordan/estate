@@ -4,6 +4,7 @@ import com.estate.domain.enumaration.Category;
 import com.estate.domain.form.HousingForm;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.util.Optional;
@@ -15,8 +16,9 @@ import java.util.Optional;
 @Table(uniqueConstraints = @UniqueConstraint(name = "UK_NAME", columnNames = {"name"}))
 public class Housing extends Auditable {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(generator = "uuid2", strategy = GenerationType.IDENTITY)
+    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    private String id;
     @Column(nullable = false)
     private String name;
     @ManyToOne(optional = false)

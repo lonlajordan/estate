@@ -39,12 +39,12 @@ public class LogServiceImpl implements LogService {
     }
 
     @Override
-    public Optional<Log> findById(long id){
+    public Optional<Log> findById(String id){
         return logRepository.findById(id);
     }
 
     @Override
-    public RedirectView deleteAllByIds(List<Long> ids, RedirectAttributes attributes){
+    public RedirectView deleteAllByIds(List<String> ids, RedirectAttributes attributes){
         Notification notification = Notification.info();
         try {
             int n = ids.size();

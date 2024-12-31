@@ -30,7 +30,7 @@ public class SettingController {
     }
 
     @GetMapping(value = "save")
-    private String findById(@RequestParam long id, Model model, RedirectAttributes attributes){
+    private String findById(@RequestParam String id, Model model, RedirectAttributes attributes){
         Setting setting = settingService.findById(id).orElse(null);
         if(setting == null){
             attributes.addFlashAttribute("notification", Notification.error("Paramètre introuvable"));

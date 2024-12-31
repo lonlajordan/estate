@@ -13,29 +13,29 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public interface PaymentRepository extends JpaRepository<Payment, Long>, JpaSpecificationExecutor<Payment> {
+public interface PaymentRepository extends JpaRepository<Payment, String>, JpaSpecificationExecutor<Payment> {
     @Query("SELECT COALESCE(SUM(p.rent * p.months + p.caution + p.repair),0) FROM Payment p WHERE p.status = ?1")
     long sumAllAmount(Status status);
     Page<Payment> findAllByOrderByCreationDateDesc(Pageable pageable);
     @Modifying(clearAutomatically = true)
-    void deleteAllByIdAndStatus(long id, Status status);
+    void deleteAllByIdAndStatus(String id, Status status);
     long countAllByStatus(Status status);
 
-    Page<Payment> findAllByStudentUserIdOrderByCreationDateDesc(Long userId, Pageable pageable);
+    Page<Payment> findAllByStudentUserIdOrderByCreationDateDesc(String userId, Pageable pageable);
     List<Payment> findAllByStatusAndCreationDateBetweenOrderByCreationDateDesc(Status status, LocalDateTime startDate, LocalDateTime endDate);
 
     @Transactional
     @Modifying(clearAutomatically = true)
-    void deleteAllByStandingId(long standingId);
+    void deleteAllByStandingId(String standingId);
 
     @Transactional
     @Modifying(clearAutomatically = true)
     @Query("UPDATE Payment p SET p.validator = null WHERE p.validator.id = ?1")
-    void setValidatorToNullByUserId(long userId);
+    void setValidatorToNullByUserId(String userId);
 
     @Transactional
     @Modifying(clearAutomatically = true)
     @Query("UPDATE Payment p SET p.desiderata = null WHERE p.desiderata.id = ?1")
-    void setDesiderataToNullByHousingId(long housingId);
+    void setDesiderataToNullByHousingId(String housingId);
 
 }

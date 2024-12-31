@@ -5,6 +5,7 @@ import com.estate.domain.entity.Standing;
 import com.estate.domain.form.StandingForm;
 import com.estate.domain.service.face.StandingService;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -27,9 +28,9 @@ public class StandingController {
     }
 
     @GetMapping(value = "save")
-    private String findById(@RequestParam(required = false) Long id, Model model, RedirectAttributes attributes){
+    private String findById(@RequestParam(required = false) String id, Model model, RedirectAttributes attributes){
         Standing standing = new Standing();
-        if(id != null)  standing = standingService.findById(id).orElse(null);
+        if(StringUtils.isNotBlank(id))  standing = standingService.findById(id).orElse(null);
         if(standing == null){
             attributes.addFlashAttribute("notification", Notification.error("Standing introuvable"));
             return "redirect:/standing/list";
@@ -40,7 +41,7 @@ public class StandingController {
 
 
     @GetMapping(value="view/{id}")
-    public String findById(@PathVariable long id, Model model, RedirectAttributes attributes){
+    public String viewById(@PathVariable String id, Model model, RedirectAttributes attributes){
         Standing standing = standingService.findById(id).orElse(null);
         if(standing == null){
             attributes.addFlashAttribute("notification", Notification.error("Standing introuvable"));
@@ -51,7 +52,7 @@ public class StandingController {
     }
 
     @RequestMapping(value="toggle/{id}")
-    public String toggle(@PathVariable long id, RedirectAttributes attributes){
+    public String toggle(@PathVariable String id, RedirectAttributes attributes){
         attributes.addFlashAttribute("notification", standingService.toggleById(id));
         return "redirect:/standing/list";
     }
@@ -70,7 +71,7 @@ public class StandingController {
     }
 
     @RequestMapping(value="delete")
-    public String deleteById(@RequestParam long id, @RequestParam(required = false, defaultValue = "false") boolean force, RedirectAttributes attributes, HttpServletRequest request){
+    public String deleteById(@RequestParam String id, @RequestParam(required = false, defaultValue = "false") boolean force, RedirectAttributes attributes, HttpServletRequest request){
         Notification notification =  standingService.deleteById(id, force, request);
         attributes.addFlashAttribute("notification", notification);
         return "redirect:/standing/list";

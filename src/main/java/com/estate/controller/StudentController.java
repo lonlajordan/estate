@@ -8,6 +8,7 @@ import com.estate.domain.helper.SmsHelper;
 import com.estate.domain.service.face.HousingService;
 import com.estate.domain.service.face.StudentService;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -56,9 +57,9 @@ public class StudentController {
     }
 
     @GetMapping("save")
-    public String save(Model model, @RequestParam(required = false) Long id, RedirectAttributes attributes){
+    public String save(Model model, @RequestParam(required = false) String id, RedirectAttributes attributes){
         Student student = new Student();
-        if(id != null)  student = studentService.findById(id).orElse(null);
+        if(StringUtils.isNotBlank(id))  student = studentService.findById(id).orElse(null);
         if(student == null){
             attributes.addFlashAttribute("notification", Notification.error("Étudiant introuvable"));
             return "redirect:/student/list";
@@ -93,7 +94,7 @@ public class StudentController {
     }
 
     @GetMapping("view/{id}")
-    public String view(@PathVariable long id, Model model, RedirectAttributes attributes){
+    public String view(@PathVariable String id, Model model, RedirectAttributes attributes){
         Student student = studentService.findById(id).orElse(null);
         if(student == null){
             attributes.addFlashAttribute("notification", Notification.error("Étudiant introuvable"));
@@ -104,7 +105,7 @@ public class StudentController {
     }
 
     @RequestMapping(value="toggle/{id}")
-    public String toggle(@PathVariable long id, RedirectAttributes attributes){
+    public String toggle(@PathVariable String id, RedirectAttributes attributes){
         attributes.addFlashAttribute("notification", studentService.toggleById(id));
         return "redirect:/student/list";
     }

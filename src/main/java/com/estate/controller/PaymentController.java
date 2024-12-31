@@ -13,6 +13,7 @@ import com.estate.domain.service.face.StandingService;
 import com.estate.domain.service.face.StudentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -80,15 +81,15 @@ public class PaymentController {
     }
 
     @GetMapping("save")
-    public String findById(@RequestParam(required = false) Long id, @RequestParam(required = false) Long standingId, @RequestParam(required = false) Long studentId, Model model, RedirectAttributes attributes){
+    public String findById(@RequestParam(required = false) String id, @RequestParam(required = false) String standingId, @RequestParam(required = false) String studentId, Model model, RedirectAttributes attributes){
         Payment payment = null;
         Standing standing = null;
         Student student = null;
         List<Housing> housings = new ArrayList<>();
         List<Standing> standings = standingService.findAll();
-        if(id != null){
+        if(StringUtils.isNotBlank(id)){
             payment = paymentService.findById(id).orElse(null);
-        } else if(studentId != null){
+        } else if(StringUtils.isNotBlank(studentId)){
             student = studentService.findById(studentId).orElse(null);
             if(student == null){
                 attributes.addFlashAttribute("notification", Notification.error("Étudiant introuvable"));
@@ -164,7 +165,7 @@ public class PaymentController {
     }
 
     @GetMapping(value="view/{id}")
-    public String findById(@PathVariable long id, Model model, RedirectAttributes attributes){
+    public String findById(@PathVariable String id, Model model, RedirectAttributes attributes){
         Payment payment = paymentService.findById(id).orElse(null);
         if(payment == null){
             attributes.addFlashAttribute("notification", Notification.error("Paiement introuvable"));
@@ -179,13 +180,13 @@ public class PaymentController {
     }
 
     @GetMapping(value="submit/{id}")
-    public String submitById(@PathVariable long id, RedirectAttributes attributes){
+    public String submitById(@PathVariable String id, RedirectAttributes attributes){
         attributes.addFlashAttribute("notification", paymentService.submit(id));
         return "redirect:/payment/list";
     }
 
     @GetMapping(value="validate/{id}")
-    public String validateById(@PathVariable long id, RedirectAttributes attributes, HttpSession session){
+    public String validateById(@PathVariable String id, RedirectAttributes attributes, HttpSession session){
         attributes.addFlashAttribute("notification", paymentService.validate(id, session));
         return "redirect:/payment/list";
     }

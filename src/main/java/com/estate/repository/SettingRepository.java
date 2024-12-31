@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 import java.util.Optional;
 
-public interface SettingRepository extends JpaRepository<Setting, Long> {
+public interface SettingRepository extends JpaRepository<Setting, String> {
     boolean existsByCode(SettingCode code);
     List<Setting> findAllByOrderById();
     Optional<Setting> findByCode(SettingCode code);

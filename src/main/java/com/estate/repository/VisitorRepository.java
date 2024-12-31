@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface VisitorRepository extends JpaRepository <Visitor, Long>, JpaSpecificationExecutor<Visitor> {
+public interface VisitorRepository extends JpaRepository <Visitor, String>, JpaSpecificationExecutor<Visitor> {
     Optional<Visitor> findByEmail(String email);
     @Transactional
     @Modifying(clearAutomatically = true)

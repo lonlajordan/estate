@@ -16,7 +16,7 @@ import java.time.LocalDate;
 
 @Data
 public class StudentForm {
-    private Long id;
+    private String id;
     @NotBlank
     private String firstName;
     private String lastName;

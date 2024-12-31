@@ -8,13 +8,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-public interface HousingRepository extends JpaRepository<Housing, Long>, JpaSpecificationExecutor<Housing> {
+public interface HousingRepository extends JpaRepository<Housing, String>, JpaSpecificationExecutor<Housing> {
     List<Housing> findAllByOrderByNameAsc();
     List<Housing> findAllByAvailableAndActiveTrueOrderByNameAsc(boolean available);
-    List<Housing> findAllByStandingIdAndActiveTrueOrderByNameAsc(long standingId);
-    List<Housing> findAllByStandingIdAndAvailableAndActiveTrueOrderByNameAsc(long standingId, boolean available);
+    List<Housing> findAllByStandingIdAndActiveTrueOrderByNameAsc(String standingId);
+    List<Housing> findAllByStandingIdAndAvailableAndActiveTrueOrderByNameAsc(String standingId, boolean available);
 
     @Transactional
     @Modifying(clearAutomatically = true)
-    void deleteAllByStandingId(long standingId);
+    void deleteAllByStandingId(String standingId);
 }

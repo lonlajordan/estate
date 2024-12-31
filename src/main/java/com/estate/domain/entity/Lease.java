@@ -3,6 +3,7 @@ package com.estate.domain.entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -14,9 +15,9 @@ import java.time.temporal.ChronoUnit;
 @Entity
 public class Lease extends Auditable {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false)
-    private Long id;
+    @GeneratedValue(generator = "uuid2", strategy = GenerationType.IDENTITY)
+    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    private String id;
     private LocalDate startDate;
     private LocalDate endDate;
     private LocalDate lastRememberDate;

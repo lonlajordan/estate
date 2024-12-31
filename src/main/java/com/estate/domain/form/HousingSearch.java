@@ -10,7 +10,7 @@ import java.util.List;
 
 @Data
 public class HousingSearch {
-    private Long standingId;
+    private String standingId;
     private Boolean available;
 
     public Specification<Housing> toSpecification() {

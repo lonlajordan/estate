@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Notification deleteById(long id, boolean force, HttpServletRequest request){
+    public Notification deleteById(String id, boolean force, HttpServletRequest request){
         Notification notification;
         User user = userRepository.findById(id).orElse(null);
         if(user == null) return Notification.error("Utilisateur introuvable");
@@ -77,7 +77,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Notification toggleById(long id) {
+    public Notification toggleById(String id) {
         Notification notification = new Notification();
         User user = userRepository.findById(id).orElse(null);
         if(user == null) return Notification.error("Utilisateur introuvable");
@@ -166,7 +166,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> findById(long id) {
+    public Optional<User> findById(String id) {
         return userRepository.findById(id);
     }
 

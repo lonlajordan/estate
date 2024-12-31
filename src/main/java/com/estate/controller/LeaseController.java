@@ -57,7 +57,7 @@ public class LeaseController {
     }
     
     @GetMapping("view/{id}")
-    public String findById(@PathVariable long id, Model model, RedirectAttributes attributes){
+    public String findById(@PathVariable String id, Model model, RedirectAttributes attributes){
         Lease lease = leaseService.findById(id).orElse(null);
         if(lease == null){
             attributes.addFlashAttribute("notification", Notification.error("Contrat de bail introuvable"));
@@ -69,7 +69,7 @@ public class LeaseController {
 
     @ResponseBody
     @GetMapping("download/{id}")
-    public ResponseEntity<?> download(@PathVariable long id){
+    public ResponseEntity<?> download(@PathVariable String id){
         return leaseService.download(id);
     }
 
@@ -80,14 +80,14 @@ public class LeaseController {
     }
 
     @GetMapping(value="disable/{id}")
-    public String disable(@PathVariable long id, RedirectAttributes attributes){
+    public String disable(@PathVariable String id, RedirectAttributes attributes){
         Notification notification = leaseService.disable(id);
         attributes.addFlashAttribute("notification", notification);
         return "redirect:/lease/list";
     }
 
     @GetMapping("save")
-    public String mutation(@RequestParam long id, Model model, RedirectAttributes attributes){
+    public String mutation(@RequestParam String id, Model model, RedirectAttributes attributes){
         Lease lease = leaseService.findById(id).orElse(null);
         if(lease == null){
             attributes.addFlashAttribute("notification", Notification.error("Contrat de bail introuvable"));

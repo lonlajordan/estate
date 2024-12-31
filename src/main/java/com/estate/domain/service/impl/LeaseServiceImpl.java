@@ -46,17 +46,17 @@ public class LeaseServiceImpl implements LeaseService {
     }
 
     @Override
-    public Page<Lease> findAllByUserId(long userId, int page) {
+    public Page<Lease> findAllByUserId(String userId, int page) {
         return leaseRepository.findAllByPaymentStudentUserIdOrderByCreationDateDesc(userId, PageRequest.of(page - 1, 100));
     }
 
     @Override
-    public Optional<Lease> findById(long id) {
+    public Optional<Lease> findById(String id) {
         return leaseRepository.findById(id);
     }
 
     @Override
-    public ResponseEntity<?> download(long id) {
+    public ResponseEntity<?> download(String id) {
         Lease lease = findById(id).orElse(null);
         Context context = new Context();
         context.setVariable("lease", lease);
@@ -80,7 +80,7 @@ public class LeaseServiceImpl implements LeaseService {
     }
 
     @Override
-    public Notification disable(long id) {
+    public Notification disable(String id) {
         Notification notification = new Notification();
         Lease lease = leaseRepository.findById(id).orElse(null);
         if(lease == null) return Notification.error("Contrat de bail introuvable");

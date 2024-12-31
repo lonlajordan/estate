@@ -10,8 +10,8 @@ import javax.validation.constraints.NotNull;
 
 @Data
 public class ProfilForm {
-    @NotNull
-    private Long id;
+    @NotBlank
+    private String id;
     @NotBlank
     private String firstName;
     private String lastName;

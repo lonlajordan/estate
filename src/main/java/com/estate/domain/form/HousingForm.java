@@ -8,11 +8,11 @@ import javax.validation.constraints.NotNull;
 
 @Data
 public class HousingForm {
-    private Long id;
+    private String id;
     @NotBlank
     private String name;
-    @NotNull
-    private Long standingId;
+    @NotBlank
+    private String standingId;
     @NotNull
     private Category category;
     @NotNull

@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface StandingService {
-    Optional<Standing> findById(long id);
+    Optional<Standing> findById(String id);
 
     List<Standing> findAll();
 
@@ -18,9 +18,9 @@ public interface StandingService {
 
     List<Standing> findAllByActiveTrueOrderByRentAsc();
 
-    Notification deleteById(long id, boolean force, HttpServletRequest request);
+    Notification deleteById(String id, boolean force, HttpServletRequest request);
 
     Notification save(StandingForm form);
 
-    Notification toggleById(long id);
+    Notification toggleById(String id);
 }

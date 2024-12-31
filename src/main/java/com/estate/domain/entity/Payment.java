@@ -6,6 +6,7 @@ import com.estate.domain.form.PaymentForm;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.util.Optional;
@@ -16,8 +17,9 @@ import java.util.Optional;
 @Entity
 public class Payment extends Auditable {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(generator = "uuid2", strategy = GenerationType.IDENTITY)
+    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    private String id;
     private int rent;
     private int months = 12;
     private int caution;

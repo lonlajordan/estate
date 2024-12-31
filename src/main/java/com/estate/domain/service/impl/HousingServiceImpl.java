@@ -39,7 +39,7 @@ public class HousingServiceImpl implements HousingService {
     }
 
     @Override
-    public List<Housing> findAllByStandingIdAndAvailableAndActiveTrue(long standingId, boolean available) {
+    public List<Housing> findAllByStandingIdAndAvailableAndActiveTrue(String standingId, boolean available) {
         return housingRepository.findAllByStandingIdAndAvailableAndActiveTrueOrderByNameAsc(standingId, available);
     }
 
@@ -49,7 +49,7 @@ public class HousingServiceImpl implements HousingService {
     }
 
     @Override
-    public List<Housing> findAllByStandingIdAndActiveTrue(long standingId) {
+    public List<Housing> findAllByStandingIdAndActiveTrue(String standingId) {
         return housingRepository.findAllByStandingIdAndActiveTrueOrderByNameAsc(standingId);
     }
 
@@ -59,7 +59,7 @@ public class HousingServiceImpl implements HousingService {
     }
 
     @Override
-    public Optional<Housing> findById(long id) {
+    public Optional<Housing> findById(String id) {
         return housingRepository.findById(id);
     }
 
@@ -100,7 +100,7 @@ public class HousingServiceImpl implements HousingService {
     }
 
     @Override
-    public Notification deleteById(long id, boolean force, HttpServletRequest request) {
+    public Notification deleteById(String id, boolean force, HttpServletRequest request) {
         Notification notification;
         Housing housing = housingRepository.findById(id).orElse(null);
         if(housing == null) return Notification.error("Logement introuvable");
@@ -128,7 +128,7 @@ public class HousingServiceImpl implements HousingService {
     }
 
     @Override
-    public Notification toggleById(long id) {
+    public Notification toggleById(String id) {
         Notification notification = new Notification();
         Housing housing = housingRepository.findById(id).orElse(null);
         if(housing == null) return Notification.error("Logement introuvable");
@@ -146,7 +146,7 @@ public class HousingServiceImpl implements HousingService {
     }
 
     @Override
-    public Notification liberate(long id, HttpServletRequest request) {
+    public Notification liberate(String id, HttpServletRequest request) {
         Notification notification = new Notification();
         Housing housing = housingRepository.findById(id).orElse(null);
         if(housing == null) return Notification.error("Logement introuvable");

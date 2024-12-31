@@ -57,12 +57,12 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public Page<Payment> findAllByUserId(long userId, int page) {
+    public Page<Payment> findAllByUserId(String userId, int page) {
         return paymentRepository.findAllByStudentUserIdOrderByCreationDateDesc(userId, PageRequest.of(page  - 1, 500));
     }
 
     @Override
-    public Optional<Payment> findById(long id) {
+    public Optional<Payment> findById(String id) {
         return paymentRepository.findById(id);
     }
 
@@ -137,7 +137,7 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public Notification validate(long id, HttpSession session) {
+    public Notification validate(String id, HttpSession session) {
         Notification notification = Notification.info();
         try {
             Payment payment = paymentRepository.findById(id).orElse(null);
@@ -203,7 +203,7 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public Notification submit(long id) {
+    public Notification submit(String id) {
         Notification notification = Notification.info();
         Payment payment = paymentRepository.findById(id).orElse(null);
         if(payment == null) return Notification.error("Paiement introuvable");

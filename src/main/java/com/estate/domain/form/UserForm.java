@@ -11,7 +11,7 @@ import java.util.List;
 
 @Data
 public class UserForm {
-    private Long id;
+    private String id;
     @NotBlank
     private String firstName;
     private String lastName;

@@ -9,6 +9,7 @@ import com.estate.domain.form.UserForm;
 import com.estate.domain.helper.SmsHelper;
 import com.estate.domain.service.face.UserService;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -33,7 +34,7 @@ public class UserController {
     }
 
     @GetMapping(value="view/{id}")
-    public String findById(@PathVariable long id, Model model, RedirectAttributes attributes){
+    public String viewById(@PathVariable String id, Model model, RedirectAttributes attributes){
         User user = userService.findById(id).orElse(null);
         if(user == null){
             attributes.addFlashAttribute("notification", Notification.error("Utilisateur introuvable."));
@@ -44,9 +45,9 @@ public class UserController {
     }
 
     @GetMapping(value = "save")
-    private String findById(@RequestParam(required = false) Long id, Model model, RedirectAttributes attributes){
+    private String findById(@RequestParam(required = false) String id, Model model, RedirectAttributes attributes){
         User user = new User();
-        if(id != null)  user = userService.findById(id).orElse(null);
+        if(StringUtils.isNotBlank(id))  user = userService.findById(id).orElse(null);
         if(user == null){
             attributes.addFlashAttribute("notification", Notification.error("Utilisateur introuvable"));
             return "redirect:/user/list";
@@ -111,13 +112,13 @@ public class UserController {
     }
 
     @RequestMapping(value="toggle/{id}")
-    public String toggle(@PathVariable int id, RedirectAttributes attributes){
+    public String toggle(@PathVariable String id, RedirectAttributes attributes){
         attributes.addFlashAttribute("notification", userService.toggleById(id));
         return "redirect:/user/list";
     }
 
     @RequestMapping(value="delete")
-    public String deleteById(@RequestParam long id, @RequestParam(required = false, defaultValue = "false") boolean force, RedirectAttributes attributes, HttpServletRequest request){
+    public String deleteById(@RequestParam String id, @RequestParam(required = false, defaultValue = "false") boolean force, RedirectAttributes attributes, HttpServletRequest request){
         Notification notification =  userService.deleteById(id, force, request);
         attributes.addFlashAttribute("notification", notification);
         return "redirect:/user/list";

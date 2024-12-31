@@ -6,18 +6,19 @@ import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
 
 @Data
 public class PaymentForm {
-    private Long id;
-    @NotNull
-    private Long studentId;
-    @NotNull
-    private Long standingId;
-    @NotNull
-    private Long desiderataId;
+    private String id;
+    @NotBlank
+    private String studentId;
+    @NotBlank
+    private String standingId;
+    @NotBlank
+    private String desiderataId;
     @Min(12)
     private Integer months;
     @Min(1)

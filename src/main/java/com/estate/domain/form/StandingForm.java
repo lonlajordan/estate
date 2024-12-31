@@ -10,7 +10,7 @@ import javax.validation.constraints.PositiveOrZero;
 
 @Data
 public class StandingForm {
-    private Long id;
+    private String id;
     @NotBlank
     private String name;
     @NotBlank

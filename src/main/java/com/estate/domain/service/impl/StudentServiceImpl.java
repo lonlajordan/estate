@@ -62,7 +62,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public Optional<Student> findById(Long id) {
+    public Optional<Student> findById(String id) {
         return studentRepository.findById(id);
     }
 
@@ -214,7 +214,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public Notification toggleById(long id) {
+    public Notification toggleById(String id) {
         Notification notification = new Notification();
         Student student = studentRepository.findById(id).orElse(null);
         if(student == null) return Notification.error("Étudiant introuvable");

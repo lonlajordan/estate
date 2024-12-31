@@ -44,7 +44,7 @@ public class LogController {
     }
 
     @GetMapping(value="view/{id}")
-    public String findById(@PathVariable long id, Model model, RedirectAttributes attributes){
+    public String findById(@PathVariable String id, Model model, RedirectAttributes attributes){
         Log log = logService.findById(id).orElse(null);
         if(log == null){
             attributes.addFlashAttribute("notification", Notification.error("Évènement introuvable"));
@@ -61,12 +61,12 @@ public class LogController {
     }
 
     @RequestMapping(value="remove")
-    public RedirectView deleteById(@RequestParam Long id, RedirectAttributes attributes){
+    public RedirectView deleteById(@RequestParam String id, RedirectAttributes attributes){
         return logService.deleteAllByIds(Collections.singletonList(id), attributes);
     }
 
     @RequestMapping(value="delete")
-    public RedirectView deleteAll(@RequestParam ArrayList<Long> ids, RedirectAttributes attributes){
+    public RedirectView deleteAll(@RequestParam ArrayList<String> ids, RedirectAttributes attributes){
         return logService.deleteAllByIds(ids, attributes);
     }
 }

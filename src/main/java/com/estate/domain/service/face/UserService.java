@@ -19,15 +19,15 @@ public interface UserService {
 
     List<User> findAllByProfil(Profil profil);
 
-    Optional<User> findById(long id);
+    Optional<User> findById(String id);
 
     Notification save(UserForm form, HttpSession session);
 
     Notification updateProfile(ProfilForm form, HttpSession session);
 
-    Notification toggleById(long id);
+    Notification toggleById(String id);
 
     Notification changePassword(PasswordForm form, Principal principal);
 
-    Notification deleteById(long id, boolean force, HttpServletRequest request);
+    Notification deleteById(String id, boolean force, HttpServletRequest request);
 }

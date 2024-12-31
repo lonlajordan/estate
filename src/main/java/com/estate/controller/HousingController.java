@@ -7,6 +7,7 @@ import com.estate.domain.form.HousingSearch;
 import com.estate.domain.service.face.HousingService;
 import com.estate.domain.service.face.StandingService;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -46,9 +47,9 @@ public class HousingController {
     }
 
     @GetMapping("save")
-    public String findById(@RequestParam(required = false) Long id, Model model, RedirectAttributes attributes){
+    public String findById(@RequestParam(required = false) String id, Model model, RedirectAttributes attributes){
         Housing housing = new Housing();
-        if(id != null)  housing = housingService.findById(id).orElse(null);
+        if(StringUtils.isNotBlank(id))  housing = housingService.findById(id).orElse(null);
         if(housing == null){
             attributes.addFlashAttribute("notification", Notification.error("Logement introuvable"));
             return "redirect:/logement/list";
@@ -76,7 +77,7 @@ public class HousingController {
     }
 
     @GetMapping("view/{id}")
-    public String findById(@PathVariable long id, Model model, RedirectAttributes attributes){
+    public String viewById(@PathVariable String id, Model model, RedirectAttributes attributes){
         Housing housing = housingService.findById(id).orElse(null);
         if(housing == null){
             attributes.addFlashAttribute("notification", Notification.error("Logement introuvable"));
@@ -93,19 +94,19 @@ public class HousingController {
     }
 
     @RequestMapping(value="toggle/{id}")
-    public String toggle(@PathVariable long id, RedirectAttributes attributes){
+    public String toggle(@PathVariable String id, RedirectAttributes attributes){
         attributes.addFlashAttribute("notification", housingService.toggleById(id));
         return "redirect:/housing/list";
     }
 
     @RequestMapping(value="liberate/{id}")
-    public String liberate(@PathVariable long id, RedirectAttributes attributes, HttpServletRequest request){
+    public String liberate(@PathVariable String id, RedirectAttributes attributes, HttpServletRequest request){
         attributes.addFlashAttribute("notification", housingService.liberate(id, request));
         return "redirect:/housing/list";
     }
 
     @RequestMapping(value="delete")
-    public String deleteById(@RequestParam long id, @RequestParam(required = false, defaultValue = "false") boolean force, RedirectAttributes attributes, HttpServletRequest request){
+    public String deleteById(@RequestParam String id, @RequestParam(required = false, defaultValue = "false") boolean force, RedirectAttributes attributes, HttpServletRequest request){
         Notification notification =  housingService.deleteById(id, force, request);
         attributes.addFlashAttribute("notification", notification);
         return "redirect:/housing/list";
