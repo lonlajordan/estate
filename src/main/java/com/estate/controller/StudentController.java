@@ -45,6 +45,7 @@ public class StudentController {
         model.addAttribute("students", students.toList());
         model.addAttribute("totalPages", students.getTotalPages());
         model.addAttribute("currentPage", students.getNumber() + 1);
+        model.addAttribute("startIndex", students.getPageable().getOffset());
         model.addAttribute("searchForm", form);
         model.addAttribute("search", search);
         return "admin/student/list";
@@ -71,7 +72,7 @@ public class StudentController {
 
     @PostMapping("save")
     public String save(@Valid @ModelAttribute("student") StudentForm student, BindingResult result, @RequestParam(required = false, defaultValue = "false") boolean multiple, Model model, RedirectAttributes attributes){
-        if(student.getId() == null) {
+        if(StringUtils.isBlank(student.getId())) {
             String notNullMessage = "javax.validation.constraints.NotNull.message";
             String defaultMessage = "ne doit pas être nul";
             if(student.getCniRectoFile() == null || student.getCniRectoFile().isEmpty()) result.rejectValue("cniRectoFile", notNullMessage, defaultMessage);

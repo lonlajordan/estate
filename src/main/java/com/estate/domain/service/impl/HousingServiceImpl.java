@@ -70,7 +70,7 @@ public class HousingServiceImpl implements HousingService {
 
     @Override
     public Notification save(HousingForm form) {
-        boolean creation = form.getId() == null;
+        boolean creation = StringUtils.isBlank(form.getId());
         Notification notification = Notification.info();
         Housing housing = creation ? new Housing() : housingRepository.findById(form.getId()).orElse(null);
         if(housing == null) return Notification.error("Logement introuvable");

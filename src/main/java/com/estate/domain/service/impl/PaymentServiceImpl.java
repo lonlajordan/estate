@@ -23,6 +23,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
@@ -72,8 +73,8 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public Notification save(PaymentForm form) {
-        boolean creation = form.getId() == null;
+    public Notification save(PaymentForm form, HttpServletRequest request) {
+        boolean creation = StringUtils.isBlank(form.getId());
         Notification notification = Notification.info();
         Payment payment = creation ? new Payment() : paymentRepository.findById(form.getId()).orElse(null);
         if(payment == null) return Notification.error("Paiement introuvable");
@@ -115,8 +116,9 @@ public class PaymentServiceImpl implements PaymentService {
             }
         }
         try {
-            paymentRepository.saveAndFlush(payment);
-            notification.setMessage("Un paiement a été " + (creation ? "ajouté." : "modifié."));
+            payment = paymentRepository.saveAndFlush(payment);
+            String action = "<a class='lazy-link' href='" + request.getContextPath() + "/payment/submit/" + payment.getId() + "'><b>Soumettre</b></a> ";
+            notification.setMessage("Un paiement a été " + (creation ? "ajouté" : "modifié") + ". Vérifiez que les informations renseignées sont correctes puis " + action + " pour validation.");
             log.info(notification.getMessage());
             logRepository.save(Log.info(notification.getMessage()));
         } catch (Throwable e){
@@ -169,7 +171,7 @@ public class PaymentServiceImpl implements PaymentService {
                     housing.setResident(student);
                     housing.setAvailable(false);
                     notification = Notification.info("Le paiement a été confirmé. Le contrat de bail a été enregistré avec succès.");
-                    notifyForPayment(payment.getStudent().getUser().getEmail(),payment,"validate.ftl",true,"NOUVEAU CONTRAT DE BAIL");
+                    notifyForPayment(payment.getStudent().getUser().getEmail(), payment,"validate.ftl",true,"PAIEMENT CONFIRMÉ - NOUVEAU CONTRAT DE BAIL", Collections.singletonList("documents/policy.pdf"));
                 }
                 studentRepository.save(student);
                 housingRepository.save(housing);
@@ -193,7 +195,7 @@ public class PaymentServiceImpl implements PaymentService {
                 currentLease.setNextLease(lease);
                 leaseRepository.save(currentLease);
                 notification = Notification.info("Le paiement a été confirmé. Le contrat de bail a été renouvelé avec succès.");
-                notifyForPayment(payment.getStudent().getUser().getEmail(), payment,"validate.ftl",true,"RENOUVELLEMENT DE BAIL");
+                notifyForPayment(payment.getStudent().getUser().getEmail(), payment,"validate.ftl",true,"PAIEMENT CONFIRMÉ - RENOUVELLEMENT DE BAIL", Collections.emptyList());
             }
             paymentRepository.save(payment);
         } catch (Exception e){
@@ -204,15 +206,14 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public Notification submit(String id) {
-        Notification notification = Notification.info();
+        Notification notification = Notification.info("Le paiement a été soumis pour validation");
         Payment payment = paymentRepository.findById(id).orElse(null);
         if(payment == null) return Notification.error("Paiement introuvable");
         if(Status.INITIATED.equals(payment.getStatus())){
             payment.setStatus(Status.SUBMITTED);
             paymentRepository.save(payment);
             String receiver = userRepository.findByProfil(Profil.STAFF).stream().map(User::getEmail).collect(Collectors.joining(","));
-            notifyForPayment(receiver,payment,"payment.ftl",false,"NOTIFICATION DE PAIEMENT");
-            log.info(receiver);
+            notifyForPayment(receiver, payment,"payment.ftl",false,"NOTIFICATION DE PAIEMENT", Collections.singletonList(payment.getProof()));
         } else {
             notification = Notification.warn("Le paiement ne peut être soumis dans son statut actuel");
         }
@@ -230,13 +231,37 @@ public class PaymentServiceImpl implements PaymentService {
         payment.setValidator(validator);
         if(validator == null || !validator.getModes().contains(payment.getMode())) return Notification.error("Vous n'êtes pas chargé de la vérification des paiements par <b>" + payment.getMode().name() + "</b>.");
         paymentRepository.save(payment);
-        notifyForPayment(payment.getStudent().getUser().getEmail(), payment,"cancel.ftl",true,"ECHEC DE PAIEMENT");
+        notifyForPayment(payment.getStudent().getUser().getEmail(), payment,"cancel.ftl",true,"PAIEMENT REJETÉ", Collections.emptyList());
         return notification;
     }
 
-    public void notifyForPayment(String to, Payment payment, String template, boolean copy, String subject){
+    @Override
+    public Notification deleteById(String id, HttpServletRequest request) {
+        Notification notification;
+        Payment payment = paymentRepository.findById(id).orElse(null);
+        if(payment == null) return Notification.error("Paiement introuvable");
+        if(Status.SUBMITTED.equals(payment.getStatus())) return Notification.warn("Le paiement a déjà été soumis pour vérification.");
+        if(Status.CONFIRMED.equals(payment.getStatus())) return Notification.warn("Le paiement a déjà été validé.");
+        try {
+            paymentRepository.deleteById(id);
+            if(StringUtils.isNotBlank(payment.getProof())){
+                File proofFile = new File(payment.getProof());
+                try {
+                    if(proofFile.exists()) FileUtils.deleteQuietly(proofFile);
+                } catch (Exception ignored) {}
+            }
+            notification = Notification.info("Le paiement a été supprimé");
+            logRepository.save(Log.info(notification.getMessage()));
+        }catch (Throwable e){
+            notification = Notification.error("Erreur lors de la suppression du paiement.");
+            logRepository.save(Log.error(notification.getMessage(), ExceptionUtils.getStackTrace(e)));
+        }
+        return notification;
+    }
+
+    public void notifyForPayment(String to, Payment payment, String template, boolean copy, String subject, List<String> attachments) {
         HashMap<String, Object> context = new HashMap<>();
-        context.put("name", payment.getStudent().getUser().getOneName());
+        context.put("name", payment.getStudent().getUser().getName());
         context.put("amount", payment.getAmount());
         context.put("rent", payment.getRent());
         context.put("repair", payment.getRepair());
@@ -248,6 +273,6 @@ public class PaymentServiceImpl implements PaymentService {
         if(copy){
             cc = payment.getStudent().getFirstParentEmail() + ";" + payment.getStudent().getSecondParentEmail();
         }
-        emailHelper.sendMail(to, cc, subject, template, Locale.FRENCH, context, Collections.emptyList());
+        emailHelper.sendMail(to, cc, subject, template, Locale.FRENCH, context, attachments);
     }
 }

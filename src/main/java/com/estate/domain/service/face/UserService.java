@@ -15,7 +15,7 @@ import java.util.Optional;
 
 public interface UserService {
 
-    long count();
+    long countByProfil(Profil profil);
 
     List<User> findAllByProfil(Profil profil);
 

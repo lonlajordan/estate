@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
-<head th:insert="base.html :: head(${user.id == null ? 'Nouvel utilisateur' : 'Modification de l''utilisateur'})"></head>
+<head th:insert="base.html :: head(${#strings.isEmpty(user.id) ? 'Nouvel utilisateur' : 'Modification de l''utilisateur'})"></head>
 
 <body>
 <div id="wrapper">
@@ -10,7 +10,7 @@
             <ol class="breadcrumb">
                 <li><i class="fa fa-home"></i> <a class="lazy-link" th:href="@{/dashboard}">Accueil</a></li>
                 <li><a class="lazy-link" th:href="@{/user/list}">Utilisateurs</a></li>
-                <li th:text="${user.id == null ? 'Nouvel utilisateur' : 'Modification de l''utilisateur'}"></li>
+                <li th:text="${#strings.isEmpty(user.id) ? 'Nouvel utilisateur' : 'Modification de l''utilisateur'}"></li>
             </ol>
         </div>
         <div class="row">
@@ -74,7 +74,7 @@
                                 <div class="form-group col-lg-6" th:classappend="${#fields.hasErrors('roles') ? 'has-error' : ''}">
                                     <label for="user-roles" class="control-label">Rôles <span class="required-field">*</span></label>
                                     <select id="user-roles" class="form-control searchable-select-box" th:field="*{roles}" multiple required>
-                                        <option th:each="role: ${T(com.estate.domain.enumaration.Role).values()}" th:value="${role}" th:text="${role.name}" th:selected="${user?.roles?.contains(role)}"></option>
+                                        <option th:each="role: ${T(com.estate.domain.enumaration.Role).values()}" th:if="${role.staff}" th:value="${role}" th:text="${role.name}" th:selected="${user?.roles?.contains(role)}"></option>
                                     </select>
                                     <p th:if="${#fields.hasErrors('roles')}" th:errors="*{roles}" class="help-block"></p>
                                 </div>

@@ -16,6 +16,7 @@ import com.estate.repository.UserRepository;
 import com.estate.domain.helper.TextUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -42,8 +43,8 @@ public class UserServiceImpl implements UserService {
     private final EmailHelper emailHelper;
 
     @Override
-    public long count(){
-        return userRepository.count();
+    public long countByProfil(Profil profil) {
+        return userRepository.countByProfil(profil);
     }
 
     @Override
@@ -95,7 +96,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Notification save(UserForm form, HttpSession session) {
-        boolean creation = form.getId() == null;
+        boolean creation = StringUtils.isBlank(form.getId());
         Notification notification = Notification.info();
         User user = creation ? new User() : userRepository.findById(form.getId()).orElse(null);
         if(user == null) return Notification.error("Utilisateur introuvable");

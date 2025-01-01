@@ -11,6 +11,7 @@ import com.estate.domain.service.face.VisitorService;
 import com.estate.repository.UserRepository;
 import com.estate.repository.VisitorRepository;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import com.estate.domain.entity.Notification;
 
@@ -40,7 +41,7 @@ public class VisitorServiceImpl implements VisitorService {
     @Override
     public Notification subscribe(VisitorForm form){
         Visitor visitor = visitorRepository.findByEmail(form.getEmail().trim()).orElse(new Visitor());
-        boolean sendNotification = visitor.getId() == null;
+        boolean sendNotification = StringUtils.isBlank(visitor.getId());
         visitor.setEmail(form.getEmail().trim());
         visitor.setName(form.getName().trim());
         visitor.setPhone(form.getPhone().trim());

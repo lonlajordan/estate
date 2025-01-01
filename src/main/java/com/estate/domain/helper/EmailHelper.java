@@ -43,8 +43,12 @@ public class EmailHelper {
             helper.setSubject(subject);
             helper.setText(body, true);
             for(int i = 0; i < attachments.size(); i++){
-                FileSystemResource file = new FileSystemResource(new File(attachments.get(i)));
-                helper.addAttachment(StringUtils.defaultString(file.getFilename() , "Fichier " + (i + 1)), file);
+                try {
+                    FileSystemResource file = new FileSystemResource(new File(attachments.get(i)));
+                    helper.addAttachment(StringUtils.defaultString(file.getFilename() , "Fichier " + (i + 1)), file);
+                } catch (Exception e) {
+                    log.error("Unable to add attachment", e);
+                }
             }
             mailSender.send(message);
         } catch (MessagingException | IOException | TemplateException e) {

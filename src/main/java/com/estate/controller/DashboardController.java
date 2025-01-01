@@ -1,5 +1,6 @@
 package com.estate.controller;
 
+import com.estate.domain.enumaration.Profil;
 import com.estate.domain.enumaration.Status;
 import com.estate.domain.service.face.*;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +34,7 @@ public class DashboardController {
 
     @GetMapping("dashboard")
     private String home(Model model){
-        model.addAttribute("users", userService.count());
+        model.addAttribute("users", userService.countByProfil(Profil.STAFF));
         model.addAttribute("students", studentService.count());
         model.addAttribute("housings", housingService.count());
         model.addAttribute("payments", paymentService.countByStatus(Status.SUBMITTED));

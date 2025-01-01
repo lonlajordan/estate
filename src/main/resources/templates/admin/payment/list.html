@@ -72,10 +72,10 @@
                 <div th:replace="base.html :: alert(${notification})"></div>
                 <button id="add-item" role="link" class="lazy-link d-none" th:href="@{'/payment/save?studentId=' + ${session?.user?.student?.id}}" th:if="${T(com.estate.domain.enumaration.Profil).STUDENT.equals(session?.user?.profil)}"></button>
                 <button id="report-items" role="link" class="lazy-link d-none" th:href="@{/payment/accounting}" th:if="${T(com.estate.domain.enumaration.Profil).STAFF.equals(session?.user?.profil)}"></button>
-                <table id="data-list" data-pdf-title="HISTORIQUE DES PAIEMENTS" data-pdf-name="Historique des paiements" data-columns-left="2" data-columns-right="2" class="table table-bordered table-hover paging searching landscape dataTable" th:classappend="${T(com.estate.domain.enumaration.Profil).STAFF.equals(session?.user?.profil) ? 'can-report' : 'can-add'}">
+                <table id="data-list" data-pdf-title="HISTORIQUE DES PAIEMENTS" data-pdf-name="Historique des paiements" data-columns-left="2" data-columns-right="2" class="table table-bordered paging searching landscape dataTable" th:classappend="${T(com.estate.domain.enumaration.Profil).STAFF.equals(session?.user?.profil) ? 'can-report' : 'can-add'}">
                     <thead>
                         <tr>
-                            <th>ID</th>
+                            <th>N°</th>
                             <th th:if="${T(com.estate.domain.enumaration.Profil).STAFF.equals(session?.user?.profil)}">Étudiant</th>
                             <th>Montant</th>
                             <th>Date et heure</th>
@@ -87,7 +87,7 @@
                     </thead>
                     <tbody>
                         <tr th:each="payment,iter: ${payments}" th:data-id="${payment.id}">
-                            <td th:text="${payment.id}"></td>
+                            <td th:text="${startIndex + iter.count}"></td>
                             <td th:text="${payment.student?.user?.name}" th:if="${T(com.estate.domain.enumaration.Profil).STAFF.equals(session?.user?.profil)}"></td>
                             <td th:text="${#numbers.formatInteger(payment.amount, 1, 'WHITESPACE')}"></td>
                             <td th:text="${#temporals.format(payment.creationDate, 'dd-MM-yyyy  HH:mm')}"></td>
@@ -108,7 +108,7 @@
                                     <a th:if="${T(com.estate.domain.enumaration.Status).INITIATED.equals(payment.status)}" class="list-group-item text-decoration-none text-left" th:href="@{'/payment/save?id=' + ${payment.id}}">
                                         <i class="fa fa-pencil-square-o fa-fw"></i> Modifier
                                     </a>
-                                    <a class="list-group-item text-decoration-none text-danger text-left" th:data-payment-id="${payment.id}" onclick="deleteItem(this.getAttribute('data-payment-id'), 'payment/delete')" href="#">
+                                    <a th:if="${payment.status?.removable}" class="list-group-item text-decoration-none text-danger text-left" th:data-payment-id="${payment.id}" onclick="deleteItem(this.getAttribute('data-payment-id'), 'payment/delete')" href="#">
                                         <i class="fa fa-trash-o fa-fw"></i> Supprimer
                                     </a>
                                 </div>

@@ -61,7 +61,8 @@ public class PaymentController {
         }
         model.addAttribute("payments", payments.toList());
         model.addAttribute("totalPages", payments.getTotalPages());
-        model.addAttribute("currentPage", payments.getPageable().getPageNumber());
+        model.addAttribute("currentPage", payments.getNumber() + 1);
+        model.addAttribute("startIndex", payments.getPageable().getOffset());
         model.addAttribute("searchForm", form);
         model.addAttribute("search", search);
         return "admin/payment/list";
@@ -143,14 +144,14 @@ public class PaymentController {
     }
 
     @PostMapping("save")
-    public String save(@Valid @ModelAttribute("payment") PaymentForm payment, BindingResult result, Model model, RedirectAttributes attributes){
-        if(payment.getId() == null) {
+    public String save(@Valid @ModelAttribute("payment") PaymentForm payment, BindingResult result, Model model, RedirectAttributes attributes, HttpServletRequest request){
+        if(StringUtils.isBlank(payment.getId())) {
             String notNullMessage = "javax.validation.constraints.NotNull.message";
             String defaultMessage = "ne doit pas être nul";
             if(payment.getProofFile() == null || payment.getProofFile().isEmpty()) result.rejectValue("proofFile", notNullMessage, defaultMessage);
         }
         Notification notification = null;
-        if(!result.hasErrors()) notification =  paymentService.save(payment);
+        if(!result.hasErrors()) notification =  paymentService.save(payment, request);
         if(result.hasErrors() || (notification != null && notification.hasError())){
             List<Standing> standings = standingService.findAll();
             model.addAttribute("notification", notification);
@@ -209,6 +210,13 @@ public class PaymentController {
     @PostMapping("search")
     public String search(HousingSearch form, RedirectAttributes attributes){
         attributes.addFlashAttribute("searchForm", form);
+        return "redirect:/payment/list";
+    }
+
+    @RequestMapping(value="delete")
+    public String deleteById(@RequestParam String id, RedirectAttributes attributes, HttpServletRequest request){
+        Notification notification =  paymentService.deleteById(id, request);
+        attributes.addFlashAttribute("notification", notification);
         return "redirect:/payment/list";
     }
 }

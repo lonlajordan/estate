@@ -70,7 +70,7 @@
                 <table id="data-list" data-pdf-title="LISTE DES LOGEMENTS" data-pdf-name="Liste des logements" data-columns-left="2" data-columns-right="2" class="table table-bordered paging searching dataTable can-add">
                     <thead>
                         <tr>
-                            <th class="action fit-cell-content">ID</th>
+                            <th class="action fit-cell-content">N°</th>
                             <th class="fit-cell-content">Nom</th>
                             <th class="fit-cell-content">Standing</th>
                             <th class="fit-cell-content">Statut</th>
@@ -84,7 +84,7 @@
                     </thead>
                     <tbody>
                         <tr th:each="housing,iter: ${housings}" th:data-id="${housing.id}">
-                            <td th:text="${housing.id}"></td>
+                            <td th:text="${iter.count}"></td>
                             <td th:text="${housing.name}"></td>
                             <td th:text="${housing.standing?.name}"></td>
                             <td th:text="${#bools.isTrue(housing.available) ? 'Disponible' : 'Occupé'}"></td>

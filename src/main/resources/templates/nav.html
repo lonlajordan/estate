@@ -24,7 +24,7 @@
             <li>
                 <a class="lazy-link" th:href="@{/payment/list}"><i class="fa fa-money fa-fw"></i> &nbsp; Paiements</a>
             </li>
-            <li>
+            <li th:if="${T(com.estate.domain.enumaration.Profil).STAFF.equals(session?.user?.profil)}">
                 <a href="#"><i class="fa fa-cogs fa-fw"></i> &nbsp; Réglages<span class="fa arrow" style="margin-top: 4px"></span></a>
                 <ul class="nav nav-second-level collapse">
                     <li>

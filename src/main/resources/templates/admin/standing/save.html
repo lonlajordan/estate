@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
-<head th:insert="base.html :: head(${standing.id == null ? 'Nouveau standing' : 'Modification du standing'})"></head>
+<head th:insert="base.html :: head(${#strings.isEmpty(standing.id) ? 'Nouveau standing' : 'Modification du standing'})"></head>
 
 <body>
 <div id="wrapper">
@@ -10,7 +10,7 @@
             <ol class="breadcrumb">
                 <li><i class="fa fa-home"></i> <a class="lazy-link" th:href="@{/dashboard}">Accueil</a></li>
                 <li><a class="lazy-link" th:href="@{/standing/list}">Standings</a></li>
-                <li th:text="${standing.id == null ? 'Nouveau standing' : 'Modification du standing'}"></li>
+                <li th:text="${#strings.isEmpty(standing.id) ? 'Nouveau standing' : 'Modification du standing'}"></li>
             </ol>
         </div>
         <div class="row">
@@ -32,8 +32,8 @@
                             </div>
                             <div class="row">
                                 <div class="form-group col-lg-12" th:classappend="${#fields.hasErrors('picture') ? 'has-error' : ''}">
-                                    <label for="picture" class="control-label">Aperçu photo <span class="required-field" th:if="${standing.id == null}">*</span></label>
-                                    <input id="picture" th:field="*{picture}" type="file" autocomplete="off" class="form-control" th:required="${standing.id == null}">
+                                    <label for="picture" class="control-label">Aperçu photo <span class="required-field" th:if="${#strings.isEmpty(standing.id)}">*</span></label>
+                                    <input id="picture" th:field="*{picture}" type="file" autocomplete="off" class="form-control" th:required="${#strings.isEmpty(standing.id)}">
                                     <p th:if="${#fields.hasErrors('picture')}" th:errors="*{picture}" class="help-block"></p>
                                 </div>
                             </div>

@@ -69,7 +69,7 @@ public class StudentServiceImpl implements StudentService {
     @Override
     @Transactional
     public Notification save(StudentForm form) {
-        boolean creation = form.getId() == null;
+        boolean creation = StringUtils.isBlank(form.getId());
         Notification notification = Notification.info();
         Student student = creation ? new Student() : studentRepository.findById(form.getId()).orElse(null);
         if(student == null) return Notification.error("Étudiant introuvable");

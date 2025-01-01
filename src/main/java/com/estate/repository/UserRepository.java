@@ -14,4 +14,6 @@ public interface UserRepository extends JpaRepository<User, String> {
     List<User> findAllByProfilOrderByLastLoginDesc(Profil profil);
 
     List<User> findByProfil(Profil profil);
+
+    long countByProfil(Profil profil);
 }

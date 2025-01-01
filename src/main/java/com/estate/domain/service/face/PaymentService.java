@@ -8,6 +8,7 @@ import com.estate.domain.form.PaymentReject;
 import com.estate.domain.form.PaymentSearch;
 import org.springframework.data.domain.Page;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Optional;
@@ -24,7 +25,7 @@ public interface PaymentService {
 
     long countByStatus(Status status);
 
-    Notification save(PaymentForm form);
+    Notification save(PaymentForm form, HttpServletRequest request);
 
     List<Payment> findAllByStatusAndYear(Status status, Integer year);
 
@@ -33,4 +34,6 @@ public interface PaymentService {
     Notification submit(String id);
 
     Notification cancel(PaymentReject form, HttpSession session);
+
+    Notification deleteById(String id, HttpServletRequest request);
 }

@@ -51,6 +51,7 @@ public class LeaseController {
         model.addAttribute("leases", leases.toList());
         model.addAttribute("totalPages", leases.getTotalPages());
         model.addAttribute("currentPage", leases.getNumber() + 1);
+        model.addAttribute("startIndex", leases.getPageable().getOffset());
         model.addAttribute("searchForm", form);
         model.addAttribute("search", search);
         return "admin/lease/list";

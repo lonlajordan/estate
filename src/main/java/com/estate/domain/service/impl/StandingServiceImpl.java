@@ -88,7 +88,7 @@ public class StandingServiceImpl implements StandingService {
 
     @Override
     public Notification save(StandingForm form) {
-        boolean creation = form.getId() == null;
+        boolean creation = StringUtils.isBlank(form.getId());
         Notification notification = Notification.info();
         Standing standing = creation ? new Standing() : standingRepository.findById(form.getId()).orElse(null);
         if(standing == null) return Notification.error("Standing introuvable");

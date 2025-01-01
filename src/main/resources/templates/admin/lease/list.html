@@ -66,10 +66,10 @@
                     </div>
                 </div>
                 <div th:replace="base.html :: alert(${notification})"></div>
-                <table id="data-list" data-pdf-title="LISTE DES CONTRATS DE BAIL" data-pdf-name="Liste des contrats de bail" data-columns-left="2" data-columns-right="2" class="table table-striped table-bordered table-hover paging searching dataTable">
+                <table id="data-list" data-pdf-title="LISTE DES CONTRATS DE BAIL" data-pdf-name="Liste des contrats de bail" data-columns-left="2" data-columns-right="2" class="table table-bordered paging searching dataTable">
                     <thead>
                         <tr>
-                            <th class="action fit-cell-content">ID</th>
+                            <th class="action fit-cell-content">N°</th>
                             <th th:if="${T(com.estate.domain.enumaration.Profil).STAFF.equals(session?.user?.profil)}">Résident</th>
                             <th class="fit-cell-content">Logement</th>
                             <th class="fit-cell-content">Standing</th>
@@ -82,11 +82,11 @@
                     </thead>
                     <tbody>
                         <tr th:each="lease,iter: ${leases}" th:data-id="${lease.id}">
-                        <td th:text="${lease.id}"></td>
+                        <td th:text="${startIndex + iter.count}"></td>
                         <td th:text="${lease.payment?.student?.user?.name}" th:if="${T(com.estate.domain.enumaration.Profil).STAFF.equals(session?.user?.profil)}"></td>
                         <td th:text="${lease.housing?.name}"></td>
                         <td th:text="${lease.payment?.standing?.name}"></td>
-                        <td>
+                        <td th:classappend="${lease.background}">
                             <span th:text="${#temporals.format(lease.startDate, 'dd/MM/yyyy')}"></span> - <span th:text="${#temporals.format(lease.endDate, 'dd/MM/yyyy')}"></span>
                         </td>
                         <td th:text="${#bools.isTrue(lease.active) ? 'OUI' : 'NON'}"></td>
@@ -98,7 +98,7 @@
                             </a>
                             <div th:id="${'popover-content-' + lease.id}" class="list-group" style="display: none">
                                 <a th:if="${lease.startDate != null && lease.active && T(com.estate.domain.enumaration.Profil).STAFF.equals(session?.user?.profil)}" class="list-group-item text-decoration-none text-left" th:href="@{'/lease/disable/' + ${lease.id}}" onclick="return confirm('Voulez-vous vraiment résilier ce contrat ?')">
-                                    <i class="fa fa-fw fa-toggle-off"></i> Résilier
+                                    <i class="fa fa-fw fa-close"></i> Résilier
                                 </a>
                                 <a class="list-group-item text-decoration-none text-left" th:href="@{'/lease/view/' + ${lease.id}}">
                                     <i class="fa fa-eye fa-fw"></i> Détails
@@ -114,6 +114,7 @@
                     </tr>
                     </tbody>
                 </table>
+                <div th:if="${totalPages > 1}" class="mt-6" id="pagination" th:title="${totalPages}" th:classappend="${search ? 'data-search' : ''}" th:aria-placeholder="${currentPage}" aria-label="lease/list"></div>
             </div>
         </div>
     </div>

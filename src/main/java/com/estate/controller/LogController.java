@@ -37,7 +37,7 @@ public class LogController {
         }
         model.addAttribute("logs", logs.toList());
         model.addAttribute("totalPages", logs.getTotalPages());
-        model.addAttribute("currentPage", logs.getPageable().getPageNumber());
+        model.addAttribute("currentPage", logs.getNumber() + 1);
         model.addAttribute("searchForm", form);
         model.addAttribute("search", search);
         return "admin/log/list";

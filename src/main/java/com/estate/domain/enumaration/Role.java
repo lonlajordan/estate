@@ -4,14 +4,16 @@ import lombok.Getter;
 
 @Getter
 public enum Role {
-    ROLE_ADMIN("Administrateur"),
-    ROLE_MANAGER("Gestionnaire"),
-    ROLE_JANITOR("Concierge"),
-    ROLE_STUDENT("Étudiant");
+    ROLE_ADMIN("Administrateur", true),
+    ROLE_MANAGER("Gestionnaire", true),
+    ROLE_JANITOR("Concierge", true),
+    ROLE_STUDENT("Étudiant", false);
 
     private final String name;
+    private final boolean staff;
 
-    Role(String name) {
+    Role(String name, boolean staff) {
         this.name = name;
+        this.staff = staff;
     }
 }

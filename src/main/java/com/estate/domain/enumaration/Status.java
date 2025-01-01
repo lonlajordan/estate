@@ -5,17 +5,19 @@ import lombok.Getter;
 
 @Getter
 public enum Status {
-    INITIATED("Initié", "bg-warning"),
-    SUBMITTED("Soumis", "bg-info"),
-    CONFIRMED("Confirmé", "bg-success"),
-    CANCELLED("Annulé", "bg-danger");
+    INITIATED("Initié", "bg-warning", true),
+    SUBMITTED("Soumis", "bg-info", false),
+    CONFIRMED("Confirmé", "bg-success", false),
+    CANCELLED("Annulé", "bg-danger", true);
 
     private final String name;
     private final String background;
+    private final boolean removable;
 
-    Status(String name, String background) {
+    Status(String name, String background, boolean removable) {
         this.name = name;
         this.background = background;
+        this.removable = removable;
     }
 
     public static class Converter extends EnumConverter<Status> {

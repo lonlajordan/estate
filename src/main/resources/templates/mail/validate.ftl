@@ -3,10 +3,10 @@
     <head>
         <meta charset="UTF-8">
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <title>Confirmation de paiement</title>
+        <title>Paiement confirmé</title>
     </head>
     <body style="line-height: 1.8">
-        <p>Bonjour <i>${name}</i>,</p>
+        <p>Bonjour <b><i>${name}</i></b>,</p>
         <p>Nous vous remercions pour la confiance que vous nous accordez.</p>
         <p>Les détails du paiement sont les suivants :</p>
         <ul>
@@ -17,6 +17,7 @@
             <li>Nombre de mois : <i>${month}</i></li>
             <li>Mode de paiement : <i>${mode}</i></li>
         </ul>
+        <p><b><u>NB :</u></b> Votre contrat de bail est téléchargeable à tout moment depuis votre espace client en ligne. Il suffit de vous connecter, dans la rubrique <b>Contrats de bail</b>, recherchez ledit contrat puis cliquez sur <i>télécharger</i>.</p>
         <p>Merci,</p>
         <p>L'équipe support</p>
     </body>
