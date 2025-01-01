@@ -13,6 +13,7 @@ public interface StudentService {
     Page<Student> findAll(int page);
     Page<Student> findAll(StudentSearch form);
     Optional<Student> findById(String id);
+    Optional<Student> findByUserId(String userId);
     Notification save(StudentForm form);
     Notification toggleById(String id);
 }

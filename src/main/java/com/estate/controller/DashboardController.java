@@ -1,5 +1,7 @@
 package com.estate.controller;
 
+import com.estate.domain.entity.Student;
+import com.estate.domain.entity.User;
 import com.estate.domain.enumaration.Profil;
 import com.estate.domain.enumaration.Status;
 import com.estate.domain.service.face.*;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -33,11 +36,20 @@ public class DashboardController {
     private final UserService userService;
 
     @GetMapping("dashboard")
-    private String home(Model model){
-        model.addAttribute("users", userService.countByProfil(Profil.STAFF));
-        model.addAttribute("students", studentService.count());
-        model.addAttribute("housings", housingService.count());
-        model.addAttribute("payments", paymentService.countByStatus(Status.SUBMITTED));
+    private String home(Model model, HttpSession session){
+        User user = (User) session.getAttribute("user");
+        if(user == null) return "redirect:/error/404";
+        if(Profil.STAFF.equals(user.getProfil())){
+            model.addAttribute("users", userService.countByProfil(Profil.STAFF));
+            model.addAttribute("students", studentService.count());
+            model.addAttribute("housings", housingService.count());
+            model.addAttribute("payments", paymentService.countByStatus(Status.SUBMITTED));
+        } else {
+            Student student = studentService.findByUserId(user.getId()).orElse(null);
+            if(student == null) return "redirect:/error/404";
+            model.addAttribute("student", student);
+        }
+
         return "dashboard";
     }
 

@@ -7,7 +7,7 @@
 </head>
 <body style="line-height: 1.8">
     <p>Bonjour <i>${name}</i>,</p>
-    <p>La MINI CITE CONCORDE vous souhaite un joyeux anniversaire. </p>
+    <p>La <b>MINI CITÉ CONCORDE</b> vous souhaite un joyeux anniversaire.</p>
     <p>Cordialement,</p>
     <p>L'équipe support</p>
 </body>

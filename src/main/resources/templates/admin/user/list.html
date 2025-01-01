@@ -69,7 +69,7 @@
                                     <a class="list-group-item text-decoration-none text-left" sec:authorize="hasRole('ADMIN')" th:href="@{'/user/save?id=' + ${user.id}}">
                                         <i class="fa fa-pencil-square-o fa-fw"></i> Modifier
                                     </a>
-                                    <a class="list-group-item text-decoration-none text-left text-danger" sec:authorize="hasRole('ADMIN')" th:data-user-id="${user.id}" onclick="deleteItem(this.getAttribute('data-user-id'), 'user/delete')" href="#">
+                                    <a class="list-group-item text-decoration-none text-left text-danger" th:if="${user.id != session?.user?.id}" sec:authorize="hasRole('ADMIN')" th:data-user-id="${user.id}" onclick="deleteItem(this.getAttribute('data-user-id'), 'user/delete')" href="#">
                                         <i class="fa fa-trash-o fa-fw"></i> Supprimer
                                     </a>
                                 </div>

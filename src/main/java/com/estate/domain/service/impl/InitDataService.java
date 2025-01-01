@@ -73,7 +73,12 @@ public class InitDataService implements CommandLineRunner {
             new Setting(SettingCode.BANK_ACCOUNT_NUMBER,""),
             new Setting(SettingCode.PAYPAL_LINK, ""),
             new Setting(SettingCode.TELEPHONE_PUBLIC, ""),
-            new Setting(SettingCode.WHATSAPP, "")
+            new Setting(SettingCode.WHATSAPP, ""),
+            new Setting(SettingCode.LANDLORD_NAME, ""),
+            new Setting(SettingCode.LANDLORD_CARD_ID, ""),
+            new Setting(SettingCode.LANDLORD_ADDRESS, ""),
+            new Setting(SettingCode.LANDLORD_PHONE, ""),
+            new Setting(SettingCode.CITY_CATEGORY, "")
         ));
         settingRepository.saveAll(settings.stream().filter(setting -> !settingRepository.existsByCode(setting.getCode())).collect(Collectors.toList()));
         List<SettingCode> codes = settings.stream().map(Setting::getCode).collect(Collectors.toList());

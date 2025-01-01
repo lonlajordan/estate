@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 public interface StudentRepository extends JpaRepository<Student, String>, JpaSpecificationExecutor<Student> {
 
@@ -16,4 +17,6 @@ public interface StudentRepository extends JpaRepository<Student, String>, JpaSp
     List<Student> findAllByDateOfBirthAndCurrentLeaseNotNull(LocalDate date);
     @Query("SELECT s FROM Student s WHERE s.currentLease.endDate < ?1 AND s.currentLease.nextLease IS NOT NULL")
     List<Student> findAllByHavingPendingLease(LocalDate date);
+
+    Optional<Student> findByUserId(String userId);
 }

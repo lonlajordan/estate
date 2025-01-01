@@ -15,18 +15,22 @@
         </div>
         <div class="row">
             <div class="col mb-6">
-                <div class="panel-group" id="accordion" th:if="${T(com.estate.domain.enumaration.Profil).STAFF.equals(session?.user?.profil)}">
+                <div class="panel-group" id="accordion">
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             <h4 class="panel-title">
-                                <button data-toggle="collapse" data-parent="#accordion" href="#collapseBox" class="collapsed btn btn-primary">
+                                <button th:if="${T(com.estate.domain.enumaration.Profil).STAFF.equals(session?.user?.profil)}" data-toggle="collapse" data-parent="#accordion" href="#collapseBox" class="collapsed btn btn-primary">
                                     <i class="fa fa-search"></i>
                                     &nbsp; Rechercher
+                                </button>
+                                <button th:if="${T(com.estate.domain.enumaration.Profil).STUDENT.equals(session?.user?.profil)}" data-toggle="collapse" data-parent="#accordion" href="#collapseBox" class="collapsed btn btn-primary">
+                                    <i class="fa fa-money"></i>
+                                    &nbsp; Moyens de paiement
                                 </button>
                             </h4>
                         </div>
                         <div id="collapseBox" class="panel-collapse collapse">
-                            <div class="panel-body">
+                            <div class="panel-body" th:if="${T(com.estate.domain.enumaration.Profil).STAFF.equals(session?.user?.profil)}">
                                 <form th:object="${searchForm}" onsubmit="submitForm(event)" th:action="@{/payment/search}" autocomplete="off" method="post">
                                     <input th:field="*{page}" type="hidden" id="current-page">
                                     <div class="row">
@@ -63,9 +67,52 @@
                                     </button>
                                 </form>
                             </div>
+                            <div class="panel-body p-0" th:if="${T(com.estate.domain.enumaration.Profil).STUDENT.equals(session?.user?.profil)}">
+                                <table class="table table-bordered m-0">
+                                    <tr>
+                                        <th rowspan="2" class="fit-cell-content">Orange Money</th>
+                                        <th class="fit-cell-content">Nom du marchant ou bénéficiaire</th>
+                                        <td th:text="${orangeMerchantCode}"></td>
+                                    </tr>
+                                    <tr>
+                                        <th>Code marchant ou numéro de téléphone</th>
+                                        <td th:text="${orangeMerchantName}"></td>
+                                    </tr>
+                                    <tr>
+                                        <th rowspan="2">MTN Mobile Money</th>
+                                        <th>Nom du marchant ou bénéficiaire</th>
+                                        <td th:text="${mtnMerchantCode}"></td>
+                                    </tr>
+                                    <tr>
+                                        <th>Code marchant ou numéro de téléphone</th>
+                                        <td th:text="${mtnMerchantName}"></td>
+                                    </tr>
+                                    <tr>
+                                        <th rowspan="3">Virement bancaire</th>
+                                        <th>Nom de la banque</th>
+                                        <td th:text="${bankName}"></td>
+                                    </tr>
+                                    <tr>
+                                        <th>Titulaire du compte bancaire</th>
+                                        <td th:text="${bankAccountName}"></td>
+                                    </tr>
+                                    <tr>
+                                        <th>Numéro de compte bancaire</th>
+                                        <td th:text="${bankAccountNumber}"></td>
+                                    </tr>
+                                    <tr>
+                                        <th colspan="2">Lien de paiement PayPal</th>
+                                        <td><a th:href="${payPal}" th:text="${payPal}" target="_blank"></a></td>
+                                    </tr>
+                                    <tr>
+                                        <th colspan="2">Paiement en cash</th>
+                                        <td style="text-wrap: auto">Effectuez le versement en espèce auprès du personnel en charge puis utilisez le reçu obtenu comme preuve (faire une photo ou scanner) pour enregistrer votre paiement</td>
+                                    </tr>
+                                </table>
+                            </div>
                         </div>
                         <div class="panel-footer">
-                            <b><u>NB:</u></b> &nbsp; Utilisez des critères précis lorsque c'est possible.
+                            <b><u>NB:</u></b> <span th:text="${T(com.estate.domain.enumaration.Profil).STAFF.equals(session?.user?.profil) ? 'Utilisez des critères précis lorsque c''est possible.' : 'Rassurez vous toujours de l''exactitude des informations liées aux moyens de paiement avant de procéder.'}"></span>
                         </div>
                     </div>
                 </div>

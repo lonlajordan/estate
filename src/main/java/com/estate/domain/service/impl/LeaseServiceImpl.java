@@ -1,6 +1,7 @@
 package com.estate.domain.service.impl;
 
 import com.estate.domain.entity.*;
+import com.estate.domain.enumaration.SettingCode;
 import com.estate.domain.form.LeaseSearch;
 import com.estate.domain.form.MutationForm;
 import com.estate.domain.service.face.LeaseService;
@@ -32,6 +33,7 @@ public class LeaseServiceImpl implements LeaseService {
     private final TemplateEngine templateEngine;
     private final HousingRepository housingRepository;
     private final StudentRepository studentRepository;
+    private final SettingRepository settRepository;
     private final LeaseRepository leaseRepository;
     private final LogRepository logRepository;
 
@@ -60,6 +62,16 @@ public class LeaseServiceImpl implements LeaseService {
         Lease lease = findById(id).orElse(null);
         Context context = new Context();
         context.setVariable("lease", lease);
+        String contractId = "..........";
+        if(lease != null && lease.getStartDate() != null && lease.getHousing() != null) {
+            contractId = lease.getStartDate().getYear() + "/" + lease.getHousing().getName();
+        }
+        context.setVariable("contractId", contractId);
+        context.setVariable("landlordName", settRepository.findByCode(SettingCode.LANDLORD_NAME).map(Setting::getValue).orElse(""));
+        context.setVariable("landlordCardId", settRepository.findByCode(SettingCode.LANDLORD_CARD_ID).map(Setting::getValue).orElse(""));
+        context.setVariable("landlordAddress", settRepository.findByCode(SettingCode.LANDLORD_ADDRESS).map(Setting::getValue).orElse(""));
+        context.setVariable("landlordPhone", settRepository.findByCode(SettingCode.LANDLORD_PHONE).map(Setting::getValue).orElse(""));
+        context.setVariable("cityCategory", settRepository.findByCode(SettingCode.CITY_CATEGORY).map(Setting::getValue).orElse(""));
         String html = templateEngine.process("contract", context);
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         ITextRenderer renderer = new ITextRenderer();

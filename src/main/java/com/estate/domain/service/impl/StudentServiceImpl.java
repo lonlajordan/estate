@@ -67,6 +67,11 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
+    public Optional<Student> findByUserId(String userId) {
+        return studentRepository.findByUserId(userId);
+    }
+
+    @Override
     @Transactional
     public Notification save(StudentForm form) {
         boolean creation = StringUtils.isBlank(form.getId());
@@ -191,7 +196,7 @@ public class StudentServiceImpl implements StudentService {
                 HashMap<String, Object> context = new HashMap<>();
                 context.put("name", name);
                 context.put("password", password);
-                context.put("link", ServletUriComponentsBuilder.fromCurrentRequestUri().replacePath("/237in").build());
+                context.put("link", ServletUriComponentsBuilder.fromCurrentContextPath().path("/237in").build());
                 String cc = student.getFirstParentEmail() +";" + student.getSecondParentEmail();
                 emailHelper.sendMail(student.getUser().getEmail(), cc, "BIENVENUE DANS LA MINI CITÉ CONCORDE", "welcome.ftl", Locale.FRENCH, context, Collections.emptyList());
             }

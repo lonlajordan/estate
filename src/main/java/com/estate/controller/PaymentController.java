@@ -2,15 +2,13 @@ package com.estate.controller;
 
 import com.estate.domain.entity.*;
 import com.estate.domain.enumaration.Profil;
+import com.estate.domain.enumaration.SettingCode;
 import com.estate.domain.enumaration.Status;
 import com.estate.domain.form.HousingSearch;
 import com.estate.domain.form.PaymentForm;
 import com.estate.domain.form.PaymentReject;
 import com.estate.domain.form.PaymentSearch;
-import com.estate.domain.service.face.HousingService;
-import com.estate.domain.service.face.PaymentService;
-import com.estate.domain.service.face.StandingService;
-import com.estate.domain.service.face.StudentService;
+import com.estate.domain.service.face.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -37,6 +35,7 @@ import java.util.stream.IntStream;
 public class PaymentController {
     private final StudentService studentService;
     private final StandingService standingService;
+    private final SettingService settingService;
     private final HousingService housingService;
     private final PaymentService paymentService;
 
@@ -54,6 +53,14 @@ public class PaymentController {
             User user = (User) session.getAttribute("user");
             if(user != null && Profil.STUDENT.equals(user.getProfil())){
                 payments = paymentService.findAllByUserId(user.getId(), page);
+                model.addAttribute("orangeMerchantCode", settingService.findByCode(SettingCode.ORANGE_MONEY_MERCHANT_CODE).map(Setting::getValue).orElse(""));
+                model.addAttribute("orangeMerchantName", settingService.findByCode(SettingCode.ORANGE_MONEY_MERCHANT_NAME).map(Setting::getValue).orElse(""));
+                model.addAttribute("mtnMerchantCode", settingService.findByCode(SettingCode.MTN_MOBILE_MONEY_MERCHANT_CODE).map(Setting::getValue).orElse(""));
+                model.addAttribute("mtnMerchantName", settingService.findByCode(SettingCode.MTN_MOBILE_MONEY_MERCHANT_NAME).map(Setting::getValue).orElse(""));
+                model.addAttribute("bankName", settingService.findByCode(SettingCode.BANK_NAME).map(Setting::getValue).orElse(""));
+                model.addAttribute("bankAccountName", settingService.findByCode(SettingCode.BANK_ACCOUNT_NAME).map(Setting::getValue).orElse(""));
+                model.addAttribute("bankAccountNumber", settingService.findByCode(SettingCode.BANK_ACCOUNT_NUMBER).map(Setting::getValue).orElse(""));
+                model.addAttribute("payPal", settingService.findByCode(SettingCode.PAYPAL_LINK).map(Setting::getValue).orElse(""));
             } else {
                 payments = paymentService.findAll(page);
             }

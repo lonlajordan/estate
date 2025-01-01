@@ -30,25 +30,24 @@
             </tr>
         </table>
         <h1 style="text-align: center">CONTRAT DE LOCATION</h1>
-        <h3 style="text-align: center; margin-bottom: 20px">N°..................</h3>
+        <h3 style="text-align: center; margin-bottom: 20px">N° <span th:text="${contractId}"></span></h3>
         <p>
             Il est conclu entre <br/>
-            M. <span class="field">MBAKOP Irène</span> CNI N° <span class="field">101227216</span><br/>
-            Domicilié (à) <span class="field">BEPANDA RUE DES PAVÉES</span><br/>
-            Adresse/Téléphone <span class="field">(+237) 695463868</span><br/>
+            M. <span class="field" th:text="${landlordName}"></span> CNI N° <span class="field" th:text="${landlordCardId}"></span><br/>
+            Domicilié (à) <span class="field" th:text="${landlordAddress}"></span><br/>
+            Adresse/Téléphone <span class="field" th:text="${landlordPhone}"></span><br/>
             Propriétaire bailleur de la mini-cité dénommée <span class="field">CONCORDE</span><br/>
             Sise à <span class="field">Cradat, Yaoundé</span><br/>
             Ci-dessus désigné(e) le propriétaire bailleur ou son représentant d'une part<br/>
-            Et M. <span class="field" th:text="${lease.payment?.student?.user?.name}"></span> CNI N° <span class="field">101227216</span><br/>
+            Et M. <span class="field mr-2" th:text="${lease.payment?.student?.user?.name}"></span> CNI N° <span class="field" th:text="${lease.payment?.student?.cniNumber}"></span><br/>
             Étudiant(e) à l'Université de Yaoundé 1<br/>
-            Établissement <span class="field" th:text="${lease.payment?.student?.school}"></span> Filière <span class="field" th:text="${lease.payment?.student?.specialities}"></span> Niveau <span class="field" th:text="${lease.payment?.student?.grade?.name}"></span><br/>
-            Matricule <span class="field" th:text="${lease.payment?.student?.matricule}"></span> Adresse ...........................<br/>
+            Établissement <span class="field mr-2" th:text="${lease.payment?.student?.school}"></span> Filière <span class="field mr-2" th:text="${lease.payment?.student?.specialities}"></span> Niveau <span class="field mr-2" th:text="${lease.payment?.student?.grade?.name}"></span> Matricule <span class="field" th:text="${lease.payment?.student?.matricule}"></span> <br/>
             Ci-dessus dénommé(e) l'étudiant d'une part<br/>
             Un contrat de location d'une chambre dans les conditions fixées par les dispositions suivantes :
         </p>
         <p class="article">
             <u><b>Article 1 : L'objet du contrat </b></u> <br/>
-            Le présent contrat porte sur la location d'un logement d'étudiant à la mini-cité dénommée <span class="field">CONCORDE</span> classée à la catégorie....... par l'antenne locale de la brigade spéciale des loyers des logements
+            Le présent contrat porte sur la location d'un logement d'étudiant à la mini-cité dénommée <span class="field">CONCORDE</span> classée à la catégorie <span class="field" th:text="${cityCategory}"></span> par l'antenne locale de la brigade spéciale des loyers des logements
             d'étudiants des Universités d'Etat du Cameroun
         </p>
         <p class="article">
@@ -74,7 +73,7 @@
         </p>
         <p>
             Fait en 3 exemplaires <br/>
-            A Yaounde le <span class="field" th:text="${#temporals.format(lease.startDate, 'dd/MM/yyyy')}"></span>
+            A Yaoundé le <span class="field" th:text="${#temporals.format(lease.startDate, 'dd/MM/yyyy')}"></span>
         </p>
         <p style="text-align: center">
             Lu et approuvé

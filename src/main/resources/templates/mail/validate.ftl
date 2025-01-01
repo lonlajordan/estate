@@ -17,7 +17,7 @@
             <li>Nombre de mois : <i>${month}</i></li>
             <li>Mode de paiement : <i>${mode}</i></li>
         </ul>
-        <p><b><u>NB :</u></b> Votre contrat de bail est téléchargeable à tout moment depuis votre espace client en ligne. Il suffit de vous connecter, dans la rubrique <b>Contrats de bail</b>, recherchez ledit contrat puis cliquez sur <i>télécharger</i>.</p>
+        <p><b><u>NB :</u></b> Votre contrat de bail est téléchargeable à tout moment depuis votre espace client en ligne. Il suffit de vous connecter, dans la rubrique <b>Contrats de bail</b>, identifiez ledit contrat puis cliquez sur <i>[...]</i> (dans la colonne <b>Actions</b>) et enfin <i>Télécharger</i>.</p>
         <p>Merci,</p>
         <p>L'équipe support</p>
     </body>

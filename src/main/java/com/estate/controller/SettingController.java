@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -25,7 +27,9 @@ public class SettingController {
 
     @GetMapping(value="list")
     public String findAll(Model model){
-        model.addAttribute("settings", settingService.findAll());
+        List<Setting> settings = settingService.findAll();
+        settings.sort(Comparator.comparing(Setting::getCode));
+        model.addAttribute("settings", settings);
         return "admin/setting/list";
     }
 
