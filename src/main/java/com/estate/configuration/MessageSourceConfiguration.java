@@ -25,7 +25,7 @@ public class MessageSourceConfiguration {
         HeaderLocaleResolver localeResolver = new HeaderLocaleResolver();
         localeResolver.setName("language");
         localeResolver.setDefaultLocale(Locale.FRENCH);
-        localeResolver.setSupportedLocales(Arrays.asList(new Locale("ar"), new Locale("en"), new Locale("es"), new Locale("fr"), new Locale("pt")));
+        localeResolver.setSupportedLocales(Arrays.asList(new Locale("en"), new Locale("fr")));
         return localeResolver;
     }
 }

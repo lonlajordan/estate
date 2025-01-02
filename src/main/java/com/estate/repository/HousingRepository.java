@@ -13,7 +13,6 @@ public interface HousingRepository extends JpaRepository<Housing, String>, JpaSp
     List<Housing> findAllByOrderByNameAsc();
     List<Housing> findAllByAvailableAndActiveTrueOrderByNameAsc(boolean available);
     List<Housing> findAllByStandingIdAndActiveTrueOrderByNameAsc(String standingId);
-    List<Housing> findAllByStandingIdAndAvailableAndActiveTrueOrderByNameAsc(String standingId, boolean available);
 
     @Transactional
     @Modifying(clearAutomatically = true)
