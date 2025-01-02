@@ -16,7 +16,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.Month;
 import java.util.*;
 
 @Getter
@@ -33,22 +32,22 @@ public class Student extends Auditable {
     @JoinColumn(foreignKey = @ForeignKey(name = "FK_USER_ID"))
     private User user;
     @Column(nullable = false)
-    private String placeOfBirth = "BABADJOU";
+    private String placeOfBirth = "";
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    private LocalDate dateOfBirth = LocalDate.of(1998, Month.AUGUST, 1);
-    private String cniNumber = "10272298"; // Numéro de la CNI
+    private LocalDate dateOfBirth;
+    private String cniNumber = ""; // Numéro de la CNI
     @Column(nullable = false)
     private String cniRecto = ""; // CNI face recto
     private String cniVerso = ""; // CNI face verso
     private String birthCertificate = ""; // Acte de naissance
     private String studentCard = ""; // Carte d'étudiant
     @Column(nullable = false)
-    private String school = "ENSP";
+    private String school = "";
     @Convert(converter = Grade.Converter.class)
     private Grade grade = Grade.L1;
-    private String matricule = "15P007";
+    private String matricule = "";
     @Column(nullable = false)
-    private String specialities = "Informatique";
+    private String specialities = "";
 
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "FK_HOUSING_ID"))
@@ -58,27 +57,27 @@ public class Student extends Auditable {
     @Convert(converter = Relationship.Converter.class)
     private Relationship firstParentRelation = Relationship.FATHER;
     @Column(nullable = false)
-    private String firstParentName = "LONLA EMMANUEL";
+    private String firstParentName = "";
     @Column(nullable = false)
-    private String firstParentAddress = "MESSASSI";
+    private String firstParentAddress = "";
     @Column(nullable = false)
-    private String firstParentPhone = "+237 677432413";
+    private String firstParentPhone = "";
     private String firstParentMobile;
     @Column(nullable = false)
-    private String firstParentEmail = "gatienjordanlonla@yahoo.fr";
+    private String firstParentEmail = "";
 
     @Column(nullable = false)
     @Convert(converter = Relationship.Converter.class)
     private Relationship secondParentRelation = Relationship.MOTHER;
     @Column(nullable = false)
-    private String secondParentName = "LONLA ANGELINE";
+    private String secondParentName = "";
     @Column(nullable = false)
-    private String secondParentAddress = "MESSASSI";
+    private String secondParentAddress = "";
     @Column(nullable = false)
-    private String secondParentPhone = "+237 677078633";
+    private String secondParentPhone = "";
     private String secondParentMobile;
     @Column(nullable = false)
-    private String secondParentEmail = "gatienjordanlonlaep@gmail.com";
+    private String secondParentEmail = "";
 
 
     @Column(nullable = false)
