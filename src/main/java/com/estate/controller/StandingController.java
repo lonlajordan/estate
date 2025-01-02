@@ -6,6 +6,7 @@ import com.estate.domain.form.StandingForm;
 import com.estate.domain.service.face.StandingService;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -21,12 +22,14 @@ import javax.validation.Valid;
 public class StandingController {
     private final StandingService standingService;
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'JANITOR')")
     @GetMapping(value="list")
     public String findAll(Model model){
         model.addAttribute("standings", standingService.findAll());
         return "admin/standing/list";
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping(value = "save")
     private String findById(@RequestParam(required = false) String id, Model model, RedirectAttributes attributes){
         Standing standing = new Standing();
@@ -40,6 +43,7 @@ public class StandingController {
     }
 
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'JANITOR')")
     @GetMapping(value="view/{id}")
     public String viewById(@PathVariable String id, Model model, RedirectAttributes attributes){
         Standing standing = standingService.findById(id).orElse(null);
@@ -51,12 +55,14 @@ public class StandingController {
         return "admin/standing/view";
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'JANITOR')")
     @RequestMapping(value="toggle/{id}")
     public String toggle(@PathVariable String id, RedirectAttributes attributes){
         attributes.addFlashAttribute("notification", standingService.toggleById(id));
         return "redirect:/standing/list";
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping(value="save")
     public String save(@Valid @ModelAttribute("standing") StandingForm standing, BindingResult result, @RequestParam(required = false, defaultValue = "false") boolean multiple, Model model, RedirectAttributes attributes){
         if(result.hasErrors()) return "admin/standing/save";
@@ -70,6 +76,7 @@ public class StandingController {
         return "redirect:/standing/list";
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @RequestMapping(value="delete")
     public String deleteById(@RequestParam String id, @RequestParam(required = false, defaultValue = "false") boolean force, RedirectAttributes attributes, HttpServletRequest request){
         Notification notification =  standingService.deleteById(id, force, request);

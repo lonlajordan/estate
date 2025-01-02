@@ -10,6 +10,7 @@ import com.estate.domain.service.face.StudentService;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -27,7 +28,8 @@ import java.util.Map;
 public class StudentController {
     private final HousingService housingService;
     private final StudentService studentService;
-    
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'JANITOR')")
     @GetMapping("list")
     public String list(Model model, @RequestParam(required = false, defaultValue = "1") int page, HttpServletRequest request) {
         Page<Student> students;
@@ -51,12 +53,14 @@ public class StudentController {
         return "admin/student/list";
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'JANITOR')")
     @PostMapping("search")
     public String search(StudentSearch form, RedirectAttributes attributes){
         attributes.addFlashAttribute("searchForm", form);
         return "redirect:/student/list";
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'JANITOR')")
     @GetMapping("save")
     public String save(Model model, @RequestParam(required = false) String id, RedirectAttributes attributes){
         Student student = new Student();
@@ -70,6 +74,7 @@ public class StudentController {
         return "admin/student/save";
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'JANITOR')")
     @PostMapping("save")
     public String save(@Valid @ModelAttribute("student") StudentForm student, BindingResult result, @RequestParam(required = false, defaultValue = "false") boolean multiple, Model model, RedirectAttributes attributes){
         if(StringUtils.isBlank(student.getId())) {
@@ -94,6 +99,7 @@ public class StudentController {
         return "redirect:/student/list";
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'JANITOR')")
     @GetMapping("view/{id}")
     public String view(@PathVariable String id, Model model, RedirectAttributes attributes){
         Student student = studentService.findById(id).orElse(null);
@@ -105,12 +111,14 @@ public class StudentController {
         return "admin/student/view";
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'JANITOR')")
     @RequestMapping(value="toggle/{id}")
     public String toggle(@PathVariable String id, RedirectAttributes attributes){
         attributes.addFlashAttribute("notification", studentService.toggleById(id));
         return "redirect:/student/list";
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @RequestMapping(value="delete")
     public String deleteById(@RequestParam String id, @RequestParam(required = false, defaultValue = "false") boolean force, RedirectAttributes attributes, HttpServletRequest request){
         Notification notification =  studentService.deleteById(id, force, request);

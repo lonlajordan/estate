@@ -10,6 +10,7 @@ import com.estate.domain.service.face.StandingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -77,12 +78,14 @@ public class LeaseController {
         return leaseService.download(id);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'JANITOR')")
     @PostMapping("search")
     public String search(LeaseSearch form, RedirectAttributes attributes){
         attributes.addFlashAttribute("searchForm", form);
         return "redirect:/lease/list";
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping(value="disable/{id}")
     public String disable(@PathVariable String id, RedirectAttributes attributes){
         Notification notification = leaseService.disable(id);
@@ -90,6 +93,7 @@ public class LeaseController {
         return "redirect:/lease/list";
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("save")
     public String mutation(@RequestParam String id, Model model, RedirectAttributes attributes){
         Lease lease = leaseService.findById(id).orElse(null);
@@ -106,7 +110,7 @@ public class LeaseController {
         return "admin/lease/save";
     }
 
-
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("save")
     public String save(@Valid @ModelAttribute("mutation") MutationForm mutation, BindingResult result, Model model, RedirectAttributes attributes, Principal principal){
         if(result.hasErrors()){

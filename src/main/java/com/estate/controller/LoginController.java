@@ -35,7 +35,14 @@ public class LoginController {
 
     @GetMapping("/237in")
     public String login() {
-        return  isAuthenticated() ? "redirect:dashboard" : "login" ;
+        boolean authenticated;
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || AnonymousAuthenticationToken.class.isAssignableFrom(authentication.getClass())) {
+            authenticated = false;
+        } else {
+            authenticated = authentication.isAuthenticated();
+        }
+        return Boolean.TRUE.equals(authenticated) ? "redirect:dashboard" : "login" ;
     }
 
     @PostMapping("/password/reset")
@@ -118,13 +125,5 @@ public class LoginController {
             model.addAttribute("notification", Notification.error(message));
         }
         return "login";
-    }
-
-    private boolean isAuthenticated() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || AnonymousAuthenticationToken.class.isAssignableFrom(authentication.getClass())) {
-            return false;
-        }
-        return authentication.isAuthenticated();
     }
 }

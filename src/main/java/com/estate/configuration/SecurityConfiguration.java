@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
@@ -36,6 +37,7 @@ import java.util.stream.Collectors;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfiguration {
 
     @Bean
@@ -56,7 +58,7 @@ public class SecurityConfiguration {
                 .maximumSessions(1).expiredUrl("/237in").and()
             .and()
                 .exceptionHandling()
-                .accessDeniedPage("/237in")
+                .accessDeniedPage("/error/403")
             .and()
                 .formLogin()
                     .usernameParameter("email")
@@ -73,8 +75,8 @@ public class SecurityConfiguration {
                     .invalidateHttpSession(true)
             .and()
                 .authorizeRequests()
-                    .antMatchers( "/", "/237in", "/contact", "/subscribe", "/explorer/**", "/password/reset/**", "/password/renew/**").permitAll()
-                    .anyRequest().authenticated();
+                    .antMatchers("/dashboard", "/housing/**", "/lease/**", "/log/**", "/payment/**", "/setting/**", "/standing/**", "/student/**", "/user/**", "/policy").authenticated()
+                    .anyRequest().permitAll();
         return http.build();
     }
 

@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -75,6 +76,7 @@ public class PaymentController {
         return "admin/payment/list";
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping(value="accounting")
     public String accounting(@RequestParam(required = false) Integer year, Model model){
         int currentYear = LocalDate.now().getYear();
@@ -193,12 +195,14 @@ public class PaymentController {
         return "redirect:/payment/list";
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'JANITOR')")
     @GetMapping(value="validate/{id}")
     public String validateById(@PathVariable String id, RedirectAttributes attributes, HttpSession session){
         attributes.addFlashAttribute("notification", paymentService.validate(id, session));
         return "redirect:/payment/list";
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'JANITOR')")
     @PostMapping(value="cancel")
     public String cancelById(@Valid @ModelAttribute("reject") PaymentReject reject, BindingResult result, Model model, RedirectAttributes attributes, HttpSession session){
         if(result.hasErrors()){
@@ -214,12 +218,14 @@ public class PaymentController {
         return "redirect:/payment/list";
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'JANITOR')")
     @PostMapping("search")
     public String search(HousingSearch form, RedirectAttributes attributes){
         attributes.addFlashAttribute("searchForm", form);
         return "redirect:/payment/list";
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @RequestMapping(value="delete")
     public String deleteById(@RequestParam String id, RedirectAttributes attributes, HttpServletRequest request){
         Notification notification =  paymentService.deleteById(id, request);

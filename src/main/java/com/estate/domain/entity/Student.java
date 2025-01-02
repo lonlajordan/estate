@@ -65,7 +65,7 @@ public class Student extends Auditable {
     private String firstParentPhone = "+237 677432413";
     private String firstParentMobile;
     @Column(nullable = false)
-    private String firstParentEmail = "gatienjordanlonlaep@gmail.com";
+    private String firstParentEmail = "gatienjordanlonla@yahoo.fr";
 
     @Column(nullable = false)
     @Convert(converter = Relationship.Converter.class)

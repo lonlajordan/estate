@@ -6,6 +6,7 @@ import com.estate.domain.form.LogSearch;
 import com.estate.domain.service.face.LogService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +23,7 @@ import java.util.*;
 public class LogController {
     private final LogService logService;
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'JANITOR')")
     @GetMapping(value="list")
     public String findAll(@RequestParam(required = false, defaultValue = "1") int page, Model model, HttpServletRequest request){
         LogSearch form = new LogSearch();
@@ -43,6 +45,7 @@ public class LogController {
         return "admin/log/list";
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'JANITOR')")
     @GetMapping(value="view/{id}")
     public String findById(@PathVariable String id, Model model, RedirectAttributes attributes){
         Log log = logService.findById(id).orElse(null);
@@ -54,17 +57,20 @@ public class LogController {
         return "admin/log/view";
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'JANITOR')")
     @PostMapping("search")
     public String search(LogSearch form, RedirectAttributes attributes){
         attributes.addFlashAttribute("searchForm", form);
         return "redirect:/log/list";
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @RequestMapping(value="remove")
     public RedirectView deleteById(@RequestParam String id, RedirectAttributes attributes){
         return logService.deleteAllByIds(Collections.singletonList(id), attributes);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @RequestMapping(value="delete")
     public RedirectView deleteAll(@RequestParam ArrayList<String> ids, RedirectAttributes attributes){
         return logService.deleteAllByIds(ids, attributes);
