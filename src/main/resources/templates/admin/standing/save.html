@@ -32,8 +32,8 @@
                             </div>
                             <div class="row">
                                 <div class="form-group col-lg-12" th:classappend="${#fields.hasErrors('picture') ? 'has-error' : ''}">
-                                    <label for="picture" class="control-label">Aperçu photo <span class="required-field" th:if="${#strings.isEmpty(standing.id)}">*</span></label>
-                                    <input id="picture" th:field="*{picture}" type="file" autocomplete="off" class="form-control" th:required="${#strings.isEmpty(standing.id)}">
+                                    <label for="picture" class="control-label">Aperçu photo</label>
+                                    <input id="picture" th:field="*{picture}" type="file" autocomplete="off" class="form-control">
                                     <p th:if="${#fields.hasErrors('picture')}" th:errors="*{picture}" class="help-block"></p>
                                 </div>
                             </div>

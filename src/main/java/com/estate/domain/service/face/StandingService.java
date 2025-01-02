@@ -5,7 +5,6 @@ import com.estate.domain.entity.Standing;
 import com.estate.domain.form.StandingForm;
 
 import javax.servlet.http.HttpServletRequest;
-import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 

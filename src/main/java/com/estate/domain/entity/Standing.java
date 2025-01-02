@@ -45,6 +45,6 @@ public class Standing extends Auditable {
     @PrePersist
     @PreUpdate
     public void beforeSave(){
-        if(this.name != null) this.name = this.name.replaceAll(" ", "").toUpperCase();
+        if(this.name != null) this.name = this.name.trim().replaceAll("\\s+", " ").toUpperCase();
     }
 }

@@ -5,7 +5,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -19,4 +21,9 @@ public interface StudentRepository extends JpaRepository<Student, String>, JpaSp
     List<Student> findAllByHavingPendingLease(LocalDate date);
 
     Optional<Student> findByUserId(String userId);
+
+    @Transactional
+    @Modifying(clearAutomatically = true)
+    @Query("UPDATE Student s SET s.currentLease = null WHERE s.id = ?1")
+    void setCurrentLeaseToNullByStudentId(String studentId);
 }

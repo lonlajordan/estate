@@ -13,6 +13,7 @@ import java.time.temporal.ChronoUnit;
 @Setter
 @NoArgsConstructor
 @Entity
+@Table(uniqueConstraints = { @UniqueConstraint(name = "UK_PAYMENT_ID", columnNames = { "payment_id"})})
 public class Lease extends Auditable {
     @Id
     @GeneratedValue(generator = "uuid2", strategy = GenerationType.IDENTITY)
@@ -24,8 +25,10 @@ public class Lease extends Auditable {
     @OneToOne(optional = false)
     private Payment payment;
     @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "FK_HOUSING_ID"))
     private Housing housing;
     @OneToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "FK_LEASE_ID"))
     private Lease nextLease;
     private boolean active = true;
 

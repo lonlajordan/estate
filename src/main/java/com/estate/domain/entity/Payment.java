@@ -25,14 +25,18 @@ public class Payment extends Auditable {
     private int caution;
     private int repair;
     @ManyToOne(optional = false)
+    @JoinColumn(foreignKey = @ForeignKey(name = "FK_STANDING_ID"), nullable = false)
     private Standing standing;
     @Convert(converter = Mode.Converter.class)
     private Mode mode = Mode.CASH;
     @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "FK_USER_ID"))
     private User validator;
     @ManyToOne(optional = false)
+    @JoinColumn(foreignKey = @ForeignKey(name = "FK_STUDENT_ID"), nullable = false)
     private Student student;
     @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "FK_HOUSING_ID"))
     private Housing desiderata;
     private String proof;
     private String comment;

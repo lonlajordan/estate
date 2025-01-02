@@ -14,11 +14,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface PaymentRepository extends JpaRepository<Payment, String>, JpaSpecificationExecutor<Payment> {
-    @Query("SELECT COALESCE(SUM(p.rent * p.months + p.caution + p.repair),0) FROM Payment p WHERE p.status = ?1")
-    long sumAllAmount(Status status);
     Page<Payment> findAllByOrderByCreationDateDesc(Pageable pageable);
-    @Modifying(clearAutomatically = true)
-    void deleteAllByIdAndStatus(String id, Status status);
     long countAllByStatus(Status status);
 
     Page<Payment> findAllByStudentUserIdOrderByCreationDateDesc(String userId, Pageable pageable);
@@ -27,6 +23,10 @@ public interface PaymentRepository extends JpaRepository<Payment, String>, JpaSp
     @Transactional
     @Modifying(clearAutomatically = true)
     void deleteAllByStandingId(String standingId);
+
+    @Transactional
+    @Modifying(clearAutomatically = true)
+    void deleteAllByStudentId(String studentId);
 
     @Transactional
     @Modifying(clearAutomatically = true)

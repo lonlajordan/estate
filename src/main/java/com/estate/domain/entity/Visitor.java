@@ -12,12 +12,13 @@ import javax.persistence.*;
 @Setter
 @AllArgsConstructor
 @Entity
-public class Visitor extends Auditable{
+@Table(uniqueConstraints = { @UniqueConstraint(name = "UK_EMAIL", columnNames = { "email"})})
+public class Visitor extends Auditable {
     @Id
     @GeneratedValue(generator = "uuid2", strategy = GenerationType.IDENTITY)
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
     private String id;
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String email;
     @Column(nullable = false)
     private String name;

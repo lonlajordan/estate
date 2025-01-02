@@ -60,7 +60,7 @@
                                     <i class="fa fa-ellipsis-h"></i>
                                 </a>
                                 <div th:id="${'popover-content-' + user.id}" class="list-group" style="display: none">
-                                    <a class="list-group-item text-decoration-none text-left" sec:authorize="hasRole('ADMIN')" th:href="@{'/user/toggle/' + ${user.id}}">
+                                    <a class="list-group-item text-decoration-none text-left" th:if="${user.id != session?.user?.id}" sec:authorize="hasRole('ADMIN')" th:href="@{'/user/toggle/' + ${user.id}}">
                                         <i class="fa fa-fw" th:classappend="${user.active ? 'fa-toggle-off' : 'fa-toggle-on'}"></i> <span th:text="${user.active ? 'Désactiver' : 'Activer'}"></span>
                                     </a>
                                     <a class="list-group-item text-decoration-none text-left" th:href="@{'/user/view/' + ${user.id}}">

@@ -22,8 +22,10 @@ public class Housing extends Auditable {
     @Column(nullable = false)
     private String name;
     @ManyToOne(optional = false)
+    @JoinColumn(foreignKey = @ForeignKey(name = "FK_STANDING_ID"), nullable = false)
     private Standing standing;
     @OneToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "FK_STUDENT_ID"))
     private Student resident;
     @Convert(converter = Category.Converter.class)
     private Category category = Category.ROOM;
@@ -46,6 +48,6 @@ public class Housing extends Auditable {
     @PrePersist
     @PreUpdate
     public void beforeSave(){
-        if(this.name != null) this.name = this.name.replaceAll(" ", "").toUpperCase();
+        if(this.name != null) this.name = this.name.trim().replaceAll("\\s+", " ").toUpperCase();
     }
 }

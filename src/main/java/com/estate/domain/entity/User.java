@@ -39,7 +39,7 @@ public class User extends Auditable {
     @Column(nullable = false)
     private String firstName = "";
     private String lastName = "";
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String email = "";
     @Column(nullable = false)
     private String password = "";
@@ -64,6 +64,7 @@ public class User extends Auditable {
     private List<Payment> payments = new ArrayList<>();
 
     @OneToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "FK_STUDENT_ID"))
     private Student student;
 
     public String getName(){

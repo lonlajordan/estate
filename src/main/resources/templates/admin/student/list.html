@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5" lang="en">
 
 <head th:replace="base.html :: head('Liste des étudiants')"></head>
 
@@ -117,7 +117,7 @@
                                     <a class="list-group-item text-decoration-none text-left" th:href="@{'/student/toggle/' + ${student.id}}">
                                         <i class="fa fa-fw" th:classappend="${student.user?.active ? 'fa-toggle-off' : 'fa-toggle-on'}"></i> <span th:text="${student.user?.active ? 'Désactiver' : 'Activer'}"></span>
                                     </a>
-                                    <a class="list-group-item text-decoration-none text-left text-danger" th:data-student-id="${student.id}" onclick="deleteItem(this.getAttribute('data-student-id'), 'student/delete')" href="#">
+                                    <a sec:authorize="hasRole('ADMIN')" class="list-group-item text-decoration-none text-left text-danger" th:data-student-id="${student.id}" onclick="deleteItem(this.getAttribute('data-student-id'), 'student/delete')" href="#">
                                         <i class="fa fa-fw fa-trash-o"></i> Supprimer
                                     </a>
                                 </div>

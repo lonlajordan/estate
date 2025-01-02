@@ -29,6 +29,7 @@ public class Student extends Auditable {
     private String id;
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(foreignKey = @ForeignKey(name = "FK_USER_ID"))
     private User user;
     @Column(nullable = false)
     private String placeOfBirth = "";
@@ -49,6 +50,7 @@ public class Student extends Auditable {
     private String specialities = "";
 
     @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "FK_HOUSING_ID"))
     private Housing housing;
 
     @Column(nullable = false)
@@ -91,6 +93,7 @@ public class Student extends Auditable {
     }
 
     @OneToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "FK_LEASE_ID"))
     private Lease currentLease;
 
     public StudentForm toForm(){

@@ -4,7 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum Role {
-    ROLE_ADMIN("Administrateur", true),
+    ROLE_ADMIN("Cadre administratif", true),
     ROLE_MANAGER("Gestionnaire", true),
     ROLE_JANITOR("Concierge", true),
     ROLE_STUDENT("Étudiant", false);

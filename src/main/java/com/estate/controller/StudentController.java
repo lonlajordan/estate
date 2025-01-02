@@ -110,4 +110,11 @@ public class StudentController {
         attributes.addFlashAttribute("notification", studentService.toggleById(id));
         return "redirect:/student/list";
     }
+
+    @RequestMapping(value="delete")
+    public String deleteById(@RequestParam String id, @RequestParam(required = false, defaultValue = "false") boolean force, RedirectAttributes attributes, HttpServletRequest request){
+        Notification notification =  studentService.deleteById(id, force, request);
+        attributes.addFlashAttribute("notification", notification);
+        return "redirect:/student/list";
+    }
 }

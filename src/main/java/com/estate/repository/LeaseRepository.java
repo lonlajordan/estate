@@ -22,6 +22,10 @@ public interface LeaseRepository extends JpaRepository<Lease, String>, JpaSpecif
 
     @Transactional
     @Modifying(clearAutomatically = true)
+    void deleteAllByPaymentStudentId(String studentId);
+
+    @Transactional
+    @Modifying(clearAutomatically = true)
     @Query("UPDATE Lease l SET l.housing = null WHERE l.housing.id = ?1")
     void setHousingToNullByHousingId(String housingId);
 

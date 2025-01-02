@@ -5,6 +5,7 @@ import com.estate.domain.entity.Log;
 import com.estate.domain.entity.User;
 import com.estate.domain.enumaration.Level;
 import com.estate.domain.enumaration.Profil;
+import com.estate.domain.enumaration.Role;
 import com.estate.domain.form.PasswordForm;
 import com.estate.domain.form.ProfilForm;
 import com.estate.domain.form.UserForm;
@@ -24,6 +25,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -115,7 +117,15 @@ public class UserServiceImpl implements UserService {
                 user.setPassword(passwordEncoder.encode(password));
                 context.put("name", user.getName());
                 context.put("password", password);
-                emailHelper.sendMail(user.getEmail(),"", "Nouveau compte TRAFFIC", "new_account.ftl", Locale.FRENCH, context, Collections.emptyList());
+                if(user.getRoles().contains(Role.ROLE_ADMIN)){
+                    context.put("role", Role.ROLE_ADMIN.getName());
+                }else if(user.getRoles().contains(Role.ROLE_JANITOR)) {
+                    context.put("role", Role.ROLE_JANITOR.getName());
+                } else {
+                    context.put("role", Role.ROLE_MANAGER.getName());
+                }
+                context.put("link", ServletUriComponentsBuilder.fromCurrentContextPath().path("/237in").build());
+                emailHelper.sendMail(user.getEmail(),"", "NOUVEAU COMPTE", "new_account.ftl", Locale.FRENCH, context, Collections.emptyList());
             }
             user = userRepository.save(user);
             notification.setMessage("L'utilisateur <b>" + user.getName() +"</b> a été " + (creation ? "ajouté." : "modifié."));
@@ -132,8 +142,13 @@ public class UserServiceImpl implements UserService {
             }
         } catch (Throwable e){
             notification.setType(Level.ERROR);
-            notification.setMessage("Erreur lors de la " + (creation ? "création" : "modification") + " de l'utilisateur <b>" + user.getName() + "</b>.");
-            logRepository.save(Log.error(notification.getMessage(), ExceptionUtils.getStackTrace(e)));
+            String message = ExceptionUtils.getRootCauseMessage(e);
+            if(StringUtils.containsIgnoreCase(message, "UK_EMAIL")){
+                notification.setMessage("Adresse e-mail existante");
+            } else {
+                notification.setMessage("Erreur lors de la " + (creation ? "création" : "modification") + " de l'utilisateur <b>" + user.getName() + "</b>.");
+                logRepository.save(Log.error(notification.getMessage(), ExceptionUtils.getStackTrace(e)));
+            }
         }
         return notification;
     }
@@ -160,8 +175,13 @@ public class UserServiceImpl implements UserService {
             session.setAttribute("user", user);
         } catch (Throwable e){
             notification.setType(Level.ERROR);
-            notification.setMessage("Erreur lors de la modification de l'utilisateur <b>" + user.getName() + "</b>.");
-            logRepository.save(Log.error(notification.getMessage(), ExceptionUtils.getStackTrace(e)));
+            String message = ExceptionUtils.getRootCauseMessage(e);
+            if(StringUtils.containsIgnoreCase(message, "UK_EMAIL")){
+                notification.setMessage("Adresse e-mail existante");
+            } else {
+                notification.setMessage("Erreur lors de la modification de l'utilisateur <b>" + user.getName() + "</b>.");
+                logRepository.save(Log.error(notification.getMessage(), ExceptionUtils.getStackTrace(e)));
+            }
         }
         return notification;
     }

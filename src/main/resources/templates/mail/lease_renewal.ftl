@@ -6,10 +6,10 @@
         <title>Fin du contrat de bail</title>
     </head>
     <body style="line-height: 1.8">
-        <p>Salut <i>${name}</i>,</p>
-        <p>Nous vous envoyons ce mail pour vous rappeler que votre contrat de bail à la MINI CITÉ CONCORDE arrive à échéance le <b>${date}</b>.</p>
-        <p>Nous vous prions de ce fait à le renouveler avant ladite date ou de nous informer de votre volonté de quitter la cité le cas échant.</p>
-        <p>Merci,</p>
+        <p>Bonjour M/Mme <b><i>${name}</i></b>,</p>
+        <p>Nous vous envoyons ce mail pour vous rappeler que votre contrat de bail à la <b>MINI CITÉ CONCORDE</b> arrive à échéance le <b>${date}</b>.</p>
+        <p>Nous vous invitons de ce fait à le renouveler avant ladite date ou de nous informer de votre volonté de quitter la cité le cas échéant.</p>
+        <p>Cordialement,</p>
         <p>L'équipe Support</p>
     </body>
 </html>
