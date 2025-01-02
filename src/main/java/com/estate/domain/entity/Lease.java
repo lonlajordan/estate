@@ -43,8 +43,9 @@ public class Lease extends Auditable {
                     return "bg-danger";
                 } else if(n < 60){
                     return "bg-warning";
+                } else if(startDate != null && (today.equals(startDate) || startDate.isBefore(today))){
+                    return "bg-success";
                 }
-                return "bg-success";
             } else {
                 return "bg-danger";
             }
@@ -58,7 +59,7 @@ public class Lease extends Auditable {
 
     public boolean isPending(){
         LocalDate today = LocalDate.now();
-        return startDate != null && !(today.isBefore(startDate) || today.isAfter(endDate));
+        return startDate != null && endDate != null && !(today.isBefore(startDate) || today.isAfter(endDate));
     }
 
     public boolean isMutable(){

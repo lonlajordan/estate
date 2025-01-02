@@ -27,7 +27,7 @@ public class StudentSearch {
             if (StringUtils.isNotBlank(lastName)) {
                 predicates.add(cb.like(cb.lower(root.get("lastName")), cb.lower(cb.literal("%" + lastName + "%"))));
             }
-            if (housingId != null) {
+            if (StringUtils.isNotBlank(housingId)) {
                 predicates.add(cb.equal(root.get("housing").get("id"), housingId));
             }
             if (gender != null) {

@@ -37,14 +37,14 @@ public class User extends Auditable {
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
     private String id;
     @Column(nullable = false)
-    private String firstName = "";
-    private String lastName = "";
+    private String firstName = "LONLA";
+    private String lastName = "Gatien Jordan";
     @Column(nullable = false)
-    private String email = "";
+    private String email = "gatienjordanlonlaep@gmail.com";
     @Column(nullable = false)
     private String password = "";
     @Column(nullable = false)
-    private String phone = "";
+    private String phone = "+237 695463868";
     private String mobile;
     private String token;
     private LocalDateTime tokenExpirationDate = LocalDateTime.now();

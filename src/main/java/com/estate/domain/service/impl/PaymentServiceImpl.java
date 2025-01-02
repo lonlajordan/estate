@@ -118,9 +118,10 @@ public class PaymentServiceImpl implements PaymentService {
         try {
             payment = paymentRepository.saveAndFlush(payment);
             String action = "<a class='lazy-link' href='" + request.getContextPath() + "/payment/submit/" + payment.getId() + "'><b>Soumettre</b></a> ";
-            notification.setMessage("Un paiement a été " + (creation ? "ajouté" : "modifié") + ". Vérifiez que les informations renseignées sont correctes puis " + action + " pour validation.");
+            notification.setMessage("Un paiement a été " + (creation ? "ajouté" : "modifié"));
             log.info(notification.getMessage());
             logRepository.save(Log.info(notification.getMessage()));
+            notification.setMessage(notification.getMessage() + " Vérifiez que les informations renseignées sont correctes puis " + action + " pour validation.");
         } catch (Throwable e){
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             notification.setType(Level.ERROR);

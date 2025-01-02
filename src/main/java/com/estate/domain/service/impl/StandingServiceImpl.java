@@ -14,6 +14,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
@@ -72,15 +73,14 @@ public class StandingServiceImpl implements StandingService {
             notification = Notification.info("Le <b>" + standing.getName() + "</b> standing a été supprimé");
             logRepository.save(Log.info(notification.getMessage()));
         }catch (Throwable e){
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             notification = Notification.error("Erreur lors de la suppression du <b>" + standing.getName() + "</b> standing.");
+            logRepository.save(Log.error(notification.getMessage(), ExceptionUtils.getStackTrace(e)));
             if(!force){
                 String actions = "";
                 if(standing.isActive()) actions = "<a class='lazy-link' href='" + request.getContextPath() + "/standing/toggle/" + id + "'><b>Désactiver</b></a> ou ";
                 actions += "<a class='lazy-link text-danger' href='" + request.getRequestURI() + "?id=" + id + "&force=true" + "'><b>Forcer la suppression</b></a> (cette action supprimera tout logement, paiement ou contrat de bail associé).";
                 notification = Notification.warn("Ce standing est utilisé dans certains enregistrements. " + actions);
-                logRepository.save(Log.warn(notification.getMessage()));
-            } else {
-                logRepository.save(Log.error(notification.getMessage(), ExceptionUtils.getStackTrace(e)));
             }
         }
         return notification;

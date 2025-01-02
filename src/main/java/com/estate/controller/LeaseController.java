@@ -6,6 +6,7 @@ import com.estate.domain.form.LeaseSearch;
 import com.estate.domain.form.MutationForm;
 import com.estate.domain.service.face.HousingService;
 import com.estate.domain.service.face.LeaseService;
+import com.estate.domain.service.face.StandingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +28,7 @@ import java.util.Map;
 @RequestMapping("/lease")
 public class LeaseController {
     private final LeaseService leaseService;
+    private final StandingService standingService;
     private final HousingService housingService;
 
     @GetMapping("list")
@@ -48,6 +50,7 @@ public class LeaseController {
             }
         }
         model.addAttribute("housings", housingService.findAll());
+        model.addAttribute("standings", standingService.findAll());
         model.addAttribute("leases", leases.toList());
         model.addAttribute("totalPages", leases.getTotalPages());
         model.addAttribute("currentPage", leases.getNumber() + 1);

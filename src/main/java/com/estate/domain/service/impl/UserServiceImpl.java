@@ -66,14 +66,12 @@ public class UserServiceImpl implements UserService {
             logRepository.save(Log.info(notification.getMessage()));
         }catch (Throwable e){
             notification = Notification.error("Erreur lors de la suppression de l'utilisateur <b>" + user.getName() + "</b>.");
+            logRepository.save(Log.error(notification.getMessage(), ExceptionUtils.getStackTrace(e)));
             if(!force){
                 String actions = "";
                 if(user.isActive()) actions = "<a class='lazy-link' href='" + request.getContextPath() + "/user/toggle/" + id + "'><b>Désactiver</b></a> ou ";
                 actions += "<a class='lazy-link text-danger' href='" + request.getRequestURI() + "?id=" + id + "&force=true" + "'><b>Forcer la suppression</b></a>.";
                 notification = Notification.warn("Cet utilisateur est impliqué dans certains enregistrements. " + actions);
-                logRepository.save(Log.warn(notification.getMessage()));
-            } else {
-                logRepository.save(Log.error(notification.getMessage(), ExceptionUtils.getStackTrace(e)));
             }
         }
         return notification;

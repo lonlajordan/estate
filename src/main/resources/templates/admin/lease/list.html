@@ -30,23 +30,42 @@
                                 <form th:object="${searchForm}" onsubmit="submitForm(event)" th:action="@{/lease/search}" autocomplete="off" method="post">
                                     <input name="page" type="hidden" id="current-page" th:value="${currentPage}">
                                     <div class="row">
-                                        <div class="col-lg-6">
-                                            <div class="form-group">
-                                                <label class="control-label" for="housing">Logement</label>
-                                                <select id="housing" th:field="*{housingId}" class="form-control searchable-select-box">
-                                                    <option value="">Tous les logements...</option>
-                                                    <option th:each="housing: ${housings}" th:value="${housing.id}" th:text="${housing.name}"></option>
-                                                </select>
-                                            </div>
+                                        <div class="form-group col-lg-6">
+                                            <label for="firstName" class="control-label">Nom de l'étudiant</label>
+                                            <input id="firstName" th:field="*{firstName}" class="form-control">
                                         </div>
-                                        <div class="col-lg-6">
-                                            <div class="form-group">
-                                                <label class="control-label" for="state">Statut</label>
-                                                <select id="state" th:field="*{state}" class="form-control searchable-select-box">
-                                                    <option value="">Tous les statuts...</option>
-                                                    <option th:each="state: ${T(com.estate.domain.enumaration.State).values()}" th:value="${state}" th:text="${state.name}"></option>
-                                                </select>
-                                            </div>
+                                        <div class="form-group col-lg-6">
+                                            <label for="lastName" class="control-label">Prénom de l'étudiant</label>
+                                            <input id="lastName" th:field="*{lastName}" class="form-control">
+                                        </div>
+                                        <div class="form-group col-lg-6">
+                                            <label class="control-label" for="standing">Standing</label>
+                                            <select id="standing" th:field="*{standingId}" class="form-control searchable-select-box">
+                                                <option value="">Tous les standings...</option>
+                                                <option th:each="standing: ${standings}" th:value="${standing.id}" th:text="${standing.name}"></option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group col-lg-6">
+                                            <label class="control-label" for="housing">Logement</label>
+                                            <select id="housing" th:field="*{housingId}" class="form-control searchable-select-box">
+                                                <option value="">Tous les logements...</option>
+                                                <option th:each="housing: ${housings}" th:value="${housing.id}" th:text="${housing.name}"></option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group col-lg-6">
+                                            <label class="control-label" for="state">Statut</label>
+                                            <select id="state" th:field="*{state}" class="form-control searchable-select-box">
+                                                <option value="">Tous les statuts...</option>
+                                                <option th:each="state: ${T(com.estate.domain.enumaration.State).values()}" th:value="${state}" th:text="${state.name}"></option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group col-lg-6">
+                                            <label class="control-label" for="active">Résilié</label>
+                                            <select id="active" th:field="*{active}" class="form-control searchable-select-box">
+                                                <option value="">-</option>
+                                                <option value="false">Oui</option>
+                                                <option value="true">Non</option>
+                                            </select>
                                         </div>
                                     </div>
                                     <button type="submit" class="btn btn-success mr-2">

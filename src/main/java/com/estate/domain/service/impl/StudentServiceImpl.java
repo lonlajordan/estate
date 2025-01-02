@@ -39,9 +39,9 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class StudentServiceImpl implements StudentService {
     private final StudentRepository studentRepository;
+    private final PaymentRepository paymentRepository;
     private final LogRepository logRepository;
     private final LeaseRepository leaseRepository;
-    private final PaymentRepository paymentRepository;
     private final HousingRepository housingRepository;
     private final PasswordEncoder passwordEncoder;
     private final EmailHelper emailHelper;
@@ -276,14 +276,12 @@ public class StudentServiceImpl implements StudentService {
             logRepository.save(Log.info(notification.getMessage()));
         } catch (Throwable e){
             notification = Notification.error("Erreur lors de la suppression de l'étudiant <b>" + student.getUser().getName() + "</b>.");
+            logRepository.save(Log.error(notification.getMessage(), ExceptionUtils.getStackTrace(e)));
             if(!force){
                 String actions = "";
                 if(student.getUser().isActive()) actions = "<a class='lazy-link' href='" + request.getContextPath() + "/student/toggle/" + id + "'><b>Désactiver</b></a> ou ";
-                actions += "<a class='lazy-link text-danger' href='" + request.getRequestURI() + "?id=" + id + "&force=true" + "'><b>Forcer la suppression</b></a> (cette action supprimera tout paiement ou contrat de bail associé).";
+                actions += "<a class='lazy-link text-danger' href='" + request.getRequestURI() + "?id=" + id + "&force=true" + "'><b>Forcer la suppression</b></a> (cette action supprimera tout paiement et contrat de bail associé).";
                 notification = Notification.warn("Cet étudiant est utilisé dans certains enregistrements. " + actions);
-                logRepository.save(Log.warn(notification.getMessage()));
-            } else {
-                logRepository.save(Log.error(notification.getMessage(), ExceptionUtils.getStackTrace(e)));
             }
         }
         return notification;
