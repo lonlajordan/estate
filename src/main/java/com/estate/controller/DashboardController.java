@@ -4,12 +4,14 @@ import com.estate.domain.entity.Student;
 import com.estate.domain.entity.User;
 import com.estate.domain.enumaration.Profil;
 import com.estate.domain.enumaration.Status;
+import com.estate.domain.exception.NotFoundException;
 import com.estate.domain.service.face.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.MimeType;
@@ -35,18 +37,18 @@ public class DashboardController {
     private final PaymentService paymentService;
     private final UserService userService;
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("dashboard")
-    private String home(Model model, HttpSession session){
+    public String home(Model model, HttpSession session){
         User user = (User) session.getAttribute("user");
-        if(user == null) return "redirect:/error/404";
+        if(user == null) throw new NotFoundException();
         if(Profil.STAFF.equals(user.getProfil())){
             model.addAttribute("users", userService.countByProfil(Profil.STAFF));
             model.addAttribute("students", studentService.count());
             model.addAttribute("housings", housingService.count());
             model.addAttribute("payments", paymentService.countByStatus(Status.SUBMITTED));
         } else {
-            Student student = studentService.findByUserId(user.getId()).orElse(null);
-            if(student == null) return "redirect:/error/404";
+            Student student = studentService.findByUserId(user.getId()).orElseThrow(NotFoundException::new);
             model.addAttribute("student", student);
         }
 
@@ -71,6 +73,7 @@ public class DashboardController {
         }
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("policy")
     public String getPolicy(RedirectAttributes attributes) {
         attributes.addAttribute("download", true);

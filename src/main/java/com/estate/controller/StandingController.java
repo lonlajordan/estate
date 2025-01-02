@@ -31,7 +31,7 @@ public class StandingController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping(value = "save")
-    private String findById(@RequestParam(required = false) String id, Model model, RedirectAttributes attributes){
+    public String findById(@RequestParam(required = false) String id, Model model, RedirectAttributes attributes){
         Standing standing = new Standing();
         if(StringUtils.isNotBlank(id))  standing = standingService.findById(id).orElse(null);
         if(standing == null){

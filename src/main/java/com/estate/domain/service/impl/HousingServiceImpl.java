@@ -39,11 +39,6 @@ public class HousingServiceImpl implements HousingService {
     }
 
     @Override
-    public List<Housing> findAllByStandingIdAndAvailableAndActiveTrue(String standingId, boolean available) {
-        return housingRepository.findAllByStandingIdAndAvailableAndActiveTrueOrderByNameAsc(standingId, available);
-    }
-
-    @Override
     public List<Housing> findAllByAvailableAndActiveTrue(boolean available) {
         return housingRepository.findAllByAvailableAndActiveTrueOrderByNameAsc(available);
     }

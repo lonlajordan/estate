@@ -59,6 +59,7 @@ public class UserServiceImpl implements UserService {
         Notification notification;
         User user = userRepository.findById(id).orElse(null);
         if(user == null) return Notification.error("Utilisateur introuvable");
+        if(Profil.STUDENT.equals(user.getProfil())) return Notification.warn("Cet utilisateur n'est pas membre du personnel administratif");
         try {
             if(force) paymentRepository.setValidatorToNullByUserId(id);
             userRepository.deleteById(id);

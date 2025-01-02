@@ -13,8 +13,6 @@ public interface HousingService {
 
     List<Housing> findAll();
 
-    List<Housing> findAllByStandingIdAndAvailableAndActiveTrue(String standingId, boolean available);
-
     List<Housing> findAllByStandingIdAndActiveTrue(String standingId);
 
     List<Housing> findAllByAvailableAndActiveTrue(boolean available);

@@ -3,6 +3,7 @@ package com.estate.controller;
 import com.estate.domain.entity.Notification;
 import com.estate.domain.entity.User;
 import com.estate.domain.enumaration.Profil;
+import com.estate.domain.exception.NotFoundException;
 import com.estate.domain.form.PasswordForm;
 import com.estate.domain.form.ProfilForm;
 import com.estate.domain.form.UserForm;
@@ -49,7 +50,7 @@ public class UserController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping(value = "save")
-    private String findById(@RequestParam(required = false) String id, Model model, RedirectAttributes attributes){
+    public String findById(@RequestParam(required = false) String id, Model model, RedirectAttributes attributes){
         User user = new User();
         if(StringUtils.isNotBlank(id))  user = userService.findById(id).orElse(null);
         if(user == null){
@@ -94,7 +95,7 @@ public class UserController {
     @GetMapping(value="profile")
     public String profile(Model model, HttpSession session){
         User user = (User) session.getAttribute("user");
-        if(user == null) return "redirect:/error/404";
+        if(user == null) throw new NotFoundException();
         model.addAttribute("user", user.toProfilForm());
         model.addAttribute("countryCodes", SmsHelper.countryCodes);
         return "admin/user/profile";
