@@ -12,13 +12,17 @@ import java.util.List;
 @Data
 public class HousingSearch {
     private String standingId;
+    private String building;
     private Boolean available;
 
     public Specification<Housing> toSpecification() {
         return (root, query, cb) -> {
             List<Predicate> predicates = new ArrayList<>();
-            if (StringUtils.isNotBlank(standingId)) {
+            if(StringUtils.isNotBlank(standingId)) {
                 predicates.add(cb.equal(root.get("standing").get("id"), standingId));
+            }
+            if(StringUtils.isNotBlank(building)) {
+                predicates.add(cb.like(cb.lower(root.get("name")), cb.lower(cb.literal("%" + building + "%"))));
             }
             if (available != null) {
                 predicates.add(cb.equal(root.get("available"), available));

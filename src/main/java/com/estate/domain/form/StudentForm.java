@@ -33,7 +33,7 @@ public class StudentForm {
     private MultipartFile birthCertificateFile;
     @FileSize(extensions = {"pdf", "png", "jpg", "jpeg"}, max = 2 * 1024 * 1024)
     private MultipartFile cniRectoFile;
-    @NotNull
+    //@NotNull
     @FileSize(extensions = {"pdf", "png", "jpg", "jpeg"}, max = 2 * 1024 * 1024)
     private MultipartFile cniVersoFile;
 

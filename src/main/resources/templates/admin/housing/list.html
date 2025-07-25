@@ -29,24 +29,24 @@
                             <div class="panel-body">
                                 <form th:object="${searchForm}" onsubmit="submitForm(event)" th:action="@{/housing/search}" autocomplete="off" method="post">
                                     <div class="row">
-                                        <div class="col-lg-6">
-                                            <div class="form-group">
-                                                <label class="control-label" for="standing">Standing</label>
-                                                <select id="standing" th:field="*{standingId}" class="form-control">
-                                                    <option value="">Tous les standings...</option>
-                                                    <option th:each="standing: ${standings}" th:value="${standing.id}" th:text="${standing.name}" th:selected="${standing.id == searchForm?.standingId}"></option>
-                                                </select>
-                                            </div>
+                                        <div class="form-group col-lg-4">
+                                            <label class="control-label" for="standing">Standing</label>
+                                            <select id="standing" th:field="*{standingId}" class="form-control">
+                                                <option value="">Tous les standings...</option>
+                                                <option th:each="standing: ${standings}" th:value="${standing.id}" th:text="${standing.name}" th:selected="${standing.id == searchForm?.standingId}"></option>
+                                            </select>
                                         </div>
-                                        <div class="col-lg-6">
-                                            <div class="form-group">
-                                                <label class="control-label" for="available">Statut</label>
-                                                <select id="available" th:field="*{available}" class="form-control">
-                                                    <option value="">Tous les statuts...</option>
-                                                    <option value="true">Disponible</option>
-                                                    <option value="false">Occupé</option>
-                                                </select>
-                                            </div>
+                                        <div class="form-group col-lg-6">
+                                            <label for="building" class="control-label">Bâtiment</label>
+                                            <input id="building" th:field="*{building}" maxlength="1" class="form-control">
+                                        </div>
+                                        <div class="form-group col-lg-4">
+                                            <label class="control-label" for="available">Statut</label>
+                                            <select id="available" th:field="*{available}" class="form-control">
+                                                <option value="">Tous les statuts...</option>
+                                                <option value="true">Disponible</option>
+                                                <option value="false">Occupé</option>
+                                            </select>
                                         </div>
                                     </div>
                                     <button type="submit" class="btn btn-success mr-2">
