@@ -36,7 +36,7 @@
                                                 <option th:each="standing: ${standings}" th:value="${standing.id}" th:text="${standing.name}" th:selected="${standing.id == searchForm?.standingId}"></option>
                                             </select>
                                         </div>
-                                        <div class="form-group col-lg-6">
+                                        <div class="form-group col-lg-4">
                                             <label for="building" class="control-label">Bâtiment</label>
                                             <input id="building" th:field="*{building}" maxlength="1" class="form-control">
                                         </div>
