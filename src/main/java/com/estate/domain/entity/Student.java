@@ -32,7 +32,7 @@ public class Student extends Auditable {
     @JoinColumn(foreignKey = @ForeignKey(name = "FK_USER_ID"))
     private User user;
     @Column(nullable = false)
-    private String placeOfBirth = "";
+    private String placeOfBirth = "CAMEROUN";
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate dateOfBirth;
     private String cniNumber = ""; // Numéro de la CNI
@@ -42,12 +42,12 @@ public class Student extends Auditable {
     private String birthCertificate = ""; // Acte de naissance
     private String studentCard = ""; // Carte d'étudiant
     @Column(nullable = false)
-    private String school = "";
+    private String school = "UY1";
     @Convert(converter = Grade.Converter.class)
     private Grade grade = Grade.L1;
     private String matricule = "";
     @Column(nullable = false)
-    private String specialities = "";
+    private String specialities = "INFORMATIQUE";
 
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "FK_HOUSING_ID"))
@@ -57,27 +57,27 @@ public class Student extends Auditable {
     @Convert(converter = Relationship.Converter.class)
     private Relationship firstParentRelation = Relationship.FATHER;
     @Column(nullable = false)
-    private String firstParentName = "";
+    private String firstParentName = "PAPA";
     @Column(nullable = false)
-    private String firstParentAddress = "";
+    private String firstParentAddress = "YAOUNDE";
     @Column(nullable = false)
     private String firstParentPhone = "";
     private String firstParentMobile;
     @Column(nullable = false)
-    private String firstParentEmail = "";
+    private String firstParentEmail = "admin@gmail.com";
 
     @Column(nullable = false)
     @Convert(converter = Relationship.Converter.class)
     private Relationship secondParentRelation = Relationship.MOTHER;
     @Column(nullable = false)
-    private String secondParentName = "";
+    private String secondParentName = "MAMA";
     @Column(nullable = false)
-    private String secondParentAddress = "";
+    private String secondParentAddress = "YAOUNDE";
     @Column(nullable = false)
     private String secondParentPhone = "";
     private String secondParentMobile;
     @Column(nullable = false)
-    private String secondParentEmail = "";
+    private String secondParentEmail = "admin@gmail.com";
 
 
     @Column(nullable = false)
