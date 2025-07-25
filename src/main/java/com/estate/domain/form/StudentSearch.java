@@ -22,16 +22,16 @@ public class StudentSearch {
         return (root, query, cb) -> {
             List<Predicate> predicates = new ArrayList<>();
             if (StringUtils.isNotBlank(firstName)) {
-                predicates.add(cb.like(cb.lower(root.get("firstName")), cb.lower(cb.literal("%" + firstName + "%"))));
+                predicates.add(cb.like(cb.lower(root.get("user").get("firstName")), cb.lower(cb.literal("%" + firstName + "%"))));
             }
             if (StringUtils.isNotBlank(lastName)) {
-                predicates.add(cb.like(cb.lower(root.get("lastName")), cb.lower(cb.literal("%" + lastName + "%"))));
+                predicates.add(cb.like(cb.lower(root.get("user").get("lastName")), cb.lower(cb.literal("%" + lastName + "%"))));
             }
             if (StringUtils.isNotBlank(housingId)) {
                 predicates.add(cb.equal(root.get("housing").get("id"), housingId));
             }
             if (gender != null) {
-                predicates.add(cb.equal(root.get("gender"), gender));
+                predicates.add(cb.equal(root.get("user").get("gender"), gender));
             }
             return cb.and(predicates.toArray(new Predicate[0]));
         };
