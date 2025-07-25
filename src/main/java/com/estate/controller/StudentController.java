@@ -1,5 +1,6 @@
 package com.estate.controller;
 
+import com.estate.domain.entity.Housing;
 import com.estate.domain.entity.Notification;
 import com.estate.domain.entity.Student;
 import com.estate.domain.form.StudentForm;
@@ -20,6 +21,8 @@ import org.springframework.web.servlet.support.RequestContextUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -43,7 +46,9 @@ public class StudentController {
         } else {
             students = studentService.findAll(page);
         }
-        model.addAttribute("housings", housingService.findAll());
+        List<Housing> housings = housingService.findAll();
+        housings.sort(Comparator.comparing(Housing::getBuilding).thenComparing(Housing::getNumber));
+        model.addAttribute("housings", housings);
         model.addAttribute("students", students.toList());
         model.addAttribute("totalPages", students.getTotalPages());
         model.addAttribute("currentPage", students.getNumber() + 1);
