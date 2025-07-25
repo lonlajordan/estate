@@ -38,7 +38,7 @@ public class PaymentSearch {
             }
 
             if (endDate != null) {
-                predicates.add(cb.lessThanOrEqualTo(root.get("creationDate"), startDate.atTime(LocalTime.MAX)));
+                predicates.add(cb.lessThanOrEqualTo(root.get("creationDate"), endDate.atTime(LocalTime.MAX)));
             }
             return cb.and(predicates.toArray(new Predicate[0]));
         };

@@ -18,6 +18,7 @@ import org.springframework.web.servlet.support.RequestContextUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -42,6 +43,7 @@ public class HousingController {
         } else {
             housings = housingService.findAll();
         }
+        housings.sort(Comparator.comparing(Housing::getBuilding).thenComparing(Housing::getNumber));
         model.addAttribute("standings", standingService.findAllByActiveTrue());
         model.addAttribute("housings", housings);
         model.addAttribute("searchForm", form);

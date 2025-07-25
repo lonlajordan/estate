@@ -4,6 +4,7 @@ import com.estate.domain.enumaration.Category;
 import com.estate.domain.form.HousingForm;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -43,6 +44,20 @@ public class Housing extends Auditable {
         form.setCategory(category);
         form.setAvailable(available);
         return form;
+    }
+
+    public String getBuilding() {
+        return StringUtils.substring(StringUtils.trim(name), 0, 1);
+    }
+
+    public Integer getNumber() {
+
+        try {
+            String number = StringUtils.defaultString(name).replaceAll("\\D", "");
+            return Integer.parseInt(number);
+        } catch(Exception e) {
+            return 1;
+        }
     }
 
     @PrePersist
