@@ -16,6 +16,7 @@ import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,7 +31,7 @@ import java.util.stream.Stream;
 @AllArgsConstructor
 @Entity
 @Table(name = "users", uniqueConstraints = { @UniqueConstraint(name = "UK_EMAIL", columnNames = { "email"})})
-public class User extends Auditable {
+public class User extends Auditable implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

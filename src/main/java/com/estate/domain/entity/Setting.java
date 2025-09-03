@@ -7,11 +7,12 @@ import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Setter
 @Getter
 @Entity
-public class Setting extends Auditable {
+public class Setting extends Auditable implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

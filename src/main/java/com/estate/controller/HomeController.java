@@ -62,9 +62,4 @@ public class HomeController {
         attributes.addFlashAttribute("notification", notification);
         return "redirect:/";
     }
-
-    @GetMapping("contract")
-    public String contract(){
-        return "admin/contract/contract";
-    }
 }

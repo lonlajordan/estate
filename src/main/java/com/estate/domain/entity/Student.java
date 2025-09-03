@@ -13,6 +13,7 @@ import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
@@ -22,7 +23,7 @@ import java.util.*;
 @Setter
 @AllArgsConstructor
 @Entity
-public class Student extends Auditable {
+public class Student extends Auditable implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

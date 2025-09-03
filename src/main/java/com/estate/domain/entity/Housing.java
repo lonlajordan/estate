@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Optional;
 
 
@@ -14,7 +15,7 @@ import java.util.Optional;
 @Getter
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(name = "UK_NAME", columnNames = {"name"}))
-public class Housing extends Auditable {
+public class Housing extends Auditable implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
