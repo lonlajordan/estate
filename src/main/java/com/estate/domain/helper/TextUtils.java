@@ -1,4 +1,4 @@
-package com.estate.utils;
+package com.estate.domain.helper;
 
 import org.apache.commons.lang3.RandomStringUtils;
 
@@ -13,17 +13,13 @@ public class TextUtils {
         String upperCaseLetters = RandomStringUtils.random(2, 65, 90, true, true);
         String lowerCaseLetters = RandomStringUtils.random(2, 97, 122, true, true);
         String numbers = RandomStringUtils.randomNumeric(2);
-        String specialChar = RandomStringUtils.random(2, 33, 47, false, false);
         String totalChars = RandomStringUtils.randomAlphanumeric(2);
-        String combinedChars = upperCaseLetters.concat(lowerCaseLetters)
-                .concat(numbers)
-                .concat(specialChar)
-                .concat(totalChars);
-        List<Character> pwdChars = combinedChars.chars()
+        String combinedChars = upperCaseLetters.concat(lowerCaseLetters).concat(numbers).concat(totalChars);
+        List<Character> passwordChars = combinedChars.chars()
                 .mapToObj(c -> (char) c)
                 .collect(Collectors.toList());
-        Collections.shuffle(pwdChars);
-        return pwdChars.stream()
+        Collections.shuffle(passwordChars);
+        return passwordChars.stream()
                 .collect(StringBuilder::new, StringBuilder::append, StringBuilder::append)
                 .toString();
     }
@@ -48,17 +44,5 @@ public class TextUtils {
         long most64SigBits = get64MostSignificantBitsForVersion1();
         long least64SigBits = get64LeastSignificantBitsForVersion1();
         return new UUID(most64SigBits, least64SigBits);
-    }
-
-    public static String generatePass(Integer length){
-        String SALTCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
-        StringBuilder salt = new StringBuilder();
-        Random rnd = new Random();
-        while (salt.length() < length) { // length of the random string.
-            int index = (int) (rnd.nextFloat() * SALTCHARS.length());
-            salt.append(SALTCHARS.charAt(index));
-        }
-        String saltStr = salt.toString();
-        return saltStr;
     }
 }

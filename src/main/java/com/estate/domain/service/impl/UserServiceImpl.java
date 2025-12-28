@@ -5,19 +5,18 @@ import com.estate.domain.entity.Log;
 import com.estate.domain.entity.User;
 import com.estate.domain.enumaration.Level;
 import com.estate.domain.enumaration.Profil;
+import com.estate.domain.enumaration.Role;
 import com.estate.domain.form.PasswordForm;
 import com.estate.domain.form.ProfilForm;
 import com.estate.domain.form.UserForm;
-import com.estate.domain.mail.EmailHelper;
+import com.estate.domain.helper.EmailHelper;
 import com.estate.domain.service.face.UserService;
 import com.estate.repository.LogRepository;
 import com.estate.repository.PaymentRepository;
 import com.estate.repository.UserRepository;
-import com.estate.utils.TextUtils;
+import com.estate.domain.helper.TextUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -26,12 +25,10 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.io.File;
-import java.io.IOException;
 import java.security.Principal;
 import java.util.Locale;
 import java.util.*;
@@ -48,8 +45,8 @@ public class UserServiceImpl implements UserService {
     private final EmailHelper emailHelper;
 
     @Override
-    public long count(){
-        return userRepository.count();
+    public long countByProfil(Profil profil) {
+        return userRepository.countByProfil(profil);
     }
 
     @Override
@@ -58,38 +55,31 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Notification deleteById(long id, boolean force, HttpServletRequest request){
+    public Notification deleteById(String id, boolean force, HttpServletRequest request){
         Notification notification;
         User user = userRepository.findById(id).orElse(null);
         if(user == null) return Notification.error("Utilisateur introuvable");
+        if(Profil.STUDENT.equals(user.getProfil())) return Notification.warn("Cet utilisateur n'est pas membre du personnel administratif");
         try {
             if(force) paymentRepository.setValidatorToNullByUserId(id);
             userRepository.deleteById(id);
-            if(StringUtils.isNotBlank(user.getPicture())){
-                File picture = new File(user.getPicture());
-                try {
-                    if(picture.exists()) FileUtils.deleteQuietly(picture);
-                } catch (Exception ignored) {}
-            }
             notification = Notification.info("L'utilisateur <b>" + user.getName() + "</b> a été supprimé");
             logRepository.save(Log.info(notification.getMessage()));
         }catch (Throwable e){
             notification = Notification.error("Erreur lors de la suppression de l'utilisateur <b>" + user.getName() + "</b>.");
+            logRepository.save(Log.error(notification.getMessage(), ExceptionUtils.getStackTrace(e)));
             if(!force){
                 String actions = "";
                 if(user.isActive()) actions = "<a class='lazy-link' href='" + request.getContextPath() + "/user/toggle/" + id + "'><b>Désactiver</b></a> ou ";
                 actions += "<a class='lazy-link text-danger' href='" + request.getRequestURI() + "?id=" + id + "&force=true" + "'><b>Forcer la suppression</b></a>.";
                 notification = Notification.warn("Cet utilisateur est impliqué dans certains enregistrements. " + actions);
-                logRepository.save(Log.warn(notification.getMessage()));
-            } else {
-                logRepository.save(Log.error(notification.getMessage(), ExceptionUtils.getStackTrace(e)));
             }
         }
         return notification;
     }
 
     @Override
-    public Notification toggleById(long id) {
+    public Notification toggleById(String id) {
         Notification notification = new Notification();
         User user = userRepository.findById(id).orElse(null);
         if(user == null) return Notification.error("Utilisateur introuvable");
@@ -107,8 +97,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Notification save(UserForm form, HttpSession session) {
-        boolean creation = form.getId() == null;
-        Notification notification;
+        boolean creation = StringUtils.isBlank(form.getId());
+        Notification notification = Notification.info();
         User user = creation ? new User() : userRepository.findById(form.getId()).orElse(null);
         if(user == null) return Notification.error("Utilisateur introuvable");
         user.setFirstName(form.getFirstName());
@@ -119,8 +109,6 @@ public class UserServiceImpl implements UserService {
         user.setGender(form.getGender());
         user.setModes(form.getModes());
         user.setRoles(form.getRoles());
-        notification = setPicture(user, form.getPicture());
-        if(notification.hasError()) return notification;
         try {
             if(creation){
                 HashMap<String, Object> context = new HashMap<>();
@@ -128,7 +116,15 @@ public class UserServiceImpl implements UserService {
                 user.setPassword(passwordEncoder.encode(password));
                 context.put("name", user.getName());
                 context.put("password", password);
-                emailHelper.sendMail(user.getEmail(),"", "Nouveau compte TRAFFIC", "new_account.ftl", Locale.FRENCH, context, Collections.emptyList());
+                if(user.getRoles().contains(Role.ROLE_ADMIN)){
+                    context.put("role", Role.ROLE_ADMIN.getName());
+                }else if(user.getRoles().contains(Role.ROLE_JANITOR)) {
+                    context.put("role", Role.ROLE_JANITOR.getName());
+                } else {
+                    context.put("role", Role.ROLE_MANAGER.getName());
+                }
+                context.put("link", ServletUriComponentsBuilder.fromCurrentContextPath().path("/237in").build());
+                emailHelper.sendMail(user.getEmail(),"", "NOUVEAU COMPTE", "new_account.ftl", Locale.FRENCH, context, Collections.emptyList());
             }
             user = userRepository.save(user);
             notification.setMessage("L'utilisateur <b>" + user.getName() +"</b> a été " + (creation ? "ajouté." : "modifié."));
@@ -145,15 +141,20 @@ public class UserServiceImpl implements UserService {
             }
         } catch (Throwable e){
             notification.setType(Level.ERROR);
-            notification.setMessage("Erreur lors de la " + (creation ? "création" : "modification") + " de l'utilisateur <b>" + user.getName() + "</b>.");
-            logRepository.save(Log.error(notification.getMessage(), ExceptionUtils.getStackTrace(e)));
+            String message = ExceptionUtils.getRootCauseMessage(e);
+            if(StringUtils.containsIgnoreCase(message, "UK_EMAIL")){
+                notification.setMessage("Adresse e-mail existante");
+            } else {
+                notification.setMessage("Erreur lors de la " + (creation ? "création" : "modification") + " de l'utilisateur <b>" + user.getName() + "</b>.");
+                logRepository.save(Log.error(notification.getMessage(), ExceptionUtils.getStackTrace(e)));
+            }
         }
         return notification;
     }
 
     @Override
     public Notification updateProfile(ProfilForm form, HttpSession session) {
-        Notification notification;
+        Notification notification = Notification.info();
         User user = userRepository.findById(form.getId()).orElse(null);
         if(user == null) return Notification.error("Utilisateur introuvable");
         user.setFirstName(form.getFirstName());
@@ -162,8 +163,6 @@ public class UserServiceImpl implements UserService {
         user.setMobile(form.getMobile().format());
         user.setEmail(form.getEmail());
         user.setGender(form.getGender());
-        notification = setPicture(user, form.getPicture());
-        if(notification.hasError()) return notification;
         try {
             user = userRepository.save(user);
             notification.setMessage("L'utilisateur <b>" + user.getName() +"</b> a été modifié.");
@@ -175,14 +174,19 @@ public class UserServiceImpl implements UserService {
             session.setAttribute("user", user);
         } catch (Throwable e){
             notification.setType(Level.ERROR);
-            notification.setMessage("Erreur lors de la modification de l'utilisateur <b>" + user.getName() + "</b>.");
-            logRepository.save(Log.error(notification.getMessage(), ExceptionUtils.getStackTrace(e)));
+            String message = ExceptionUtils.getRootCauseMessage(e);
+            if(StringUtils.containsIgnoreCase(message, "UK_EMAIL")){
+                notification.setMessage("Adresse e-mail existante");
+            } else {
+                notification.setMessage("Erreur lors de la modification de l'utilisateur <b>" + user.getName() + "</b>.");
+                logRepository.save(Log.error(notification.getMessage(), ExceptionUtils.getStackTrace(e)));
+            }
         }
         return notification;
     }
 
     @Override
-    public Optional<User> findById(long id) {
+    public Optional<User> findById(String id) {
         return userRepository.findById(id);
     }
 
@@ -199,31 +203,5 @@ public class UserServiceImpl implements UserService {
             logRepository.save(Log.info("L'utilisateur <b>" + user.getName() + "</b> a modifié son mot de passe."));
         }
         return notification;
-    }
-
-    Notification setPicture(User user, MultipartFile photo){
-        if(photo != null && !photo.isEmpty()){
-            long date = System.currentTimeMillis();
-            String extension;
-            File root = new File("documents");
-            if (!root.exists() && !root.mkdirs()) return Notification.error("Impossible de créer le dossier de sauvegarde des documents.");
-            File picture;
-            if(StringUtils.isNotBlank(user.getPicture())){
-                picture = new File(user.getPicture());
-                try {
-                    if(picture.exists()) FileUtils.deleteQuietly(picture);
-                }catch (Exception ignored) {}
-            }
-            try {
-                extension = FilenameUtils.getExtension(photo.getOriginalFilename());
-                picture = new File(root.getAbsolutePath() + File.separator + "user-" + date + "." + extension);
-                photo.transferTo(picture);
-                user.setPicture(root.getName() + File.separator + picture.getName());
-            } catch (IOException e) {
-                log.error("unable to write user picture file", e);
-                return Notification.error("Impossible d'enregistrer la photo de profil de l'utilisateur.");
-            }
-        }
-        return Notification.info();
     }
 }

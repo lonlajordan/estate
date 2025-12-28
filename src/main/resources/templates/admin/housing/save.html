@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
-<head th:insert="base.html :: head(${housing.id == null ? 'Nouveau logement' : 'Modification du logement'})"></head>
+<head th:insert="base.html :: head(${#strings.isEmpty(housing.id) ? 'Nouveau logement' : 'Modification du logement'})"></head>
 
 <body>
 <div id="wrapper">
@@ -10,7 +10,7 @@
             <ol class="breadcrumb">
                 <li><i class="fa fa-home"></i> <a class="lazy-link" th:href="@{/dashboard}">Accueil</a></li>
                 <li><a class="lazy-link" th:href="@{/housing/list}">Liste des logements</a></li>
-                <li th:text="${housing.id == null ? 'Nouveau logement' : 'Modification du logement'}"></li>
+                <li th:text="${#strings.isEmpty(housing.id) ? 'Nouveau logement' : 'Modification du logement'}"></li>
             </ol>
         </div>
         <div class="row">
@@ -20,7 +20,7 @@
                     <div class="panel-heading">
                         <b>Formulaire : </b> <span style="font-size: 13px">Les champs avec l'astérisque ( <span class="required-field">*</span> ) sont obligatoires</span>
                     </div>
-                    <form th:object="${housing}" onsubmit="submitMultipartForm(e)" th:action="@{/housing/save}" autocomplete="off" enctype="multipart/form-data" method="post">
+                    <form th:object="${housing}" onsubmit="submitMultipartForm(event)" th:action="@{/housing/save}" autocomplete="off" enctype="multipart/form-data" method="post">
                         <div class="panel-body">
                             <input name="id" th:value="${housing?.id}" type="hidden">
                             <div class="row">
@@ -43,15 +43,11 @@
                                             <option th:each="category: ${T(com.estate.domain.enumaration.Category).values()}" th:value="${category}" th:text="${category.name}"></option>
                                         </select>
                                     </div>
-                                    <div class="form-group" th:classappend="${#fields.hasErrors('picture') ? 'has-error' : ''}">
-                                        <label for="picture" class="control-label">Photo de profil <span class="required-field" th:if="${housing.id == null}">*</span></label>
-                                        <input id="picture" th:field="*{picture}" type="file" autocomplete="off" class="form-control" th:required="${housing.id == null}">
-                                        <p th:if="${#fields.hasErrors('picture')}" th:errors="*{picture}" class="help-block"></p>
-                                    </div>
                                     <div class="form-group">
-                                        <label for="status" class="control-label">Statut <span class="required-field">*</span></label>
-                                        <select id="status" th:field="*{status}" class="form-control" required>
-                                            <option th:each="status: ${T(com.estate.domain.enumaration.Availability).values()}" th:value="${status}" th:text="${status.name}"></option>
+                                        <label for="available" class="control-label">Statut <span class="required-field">*</span></label>
+                                        <select id="available" th:field="*{available}" class="form-control" required>
+                                            <option value="true">Disponible</option>
+                                            <option value="false">Occupé</option>
                                         </select>
                                     </div>
                                 </div>

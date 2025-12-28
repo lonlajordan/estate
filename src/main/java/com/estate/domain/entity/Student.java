@@ -8,6 +8,7 @@ import com.estate.domain.form.StudentForm;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -16,7 +17,6 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.Month;
 import java.util.*;
 
 @Getter
@@ -25,60 +25,60 @@ import java.util.*;
 @Entity
 public class Student extends Auditable implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(generator = "uuid2", strategy = GenerationType.IDENTITY)
+    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    private String id;
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(foreignKey = @ForeignKey(name = "FK_USER_ID"))
     private User user;
     @Column(nullable = false)
-    private String placeOfBirth = "BABADJOU";
+    private String placeOfBirth = "CAMEROUN";
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    private LocalDate dateOfBirth = LocalDate.of(1998, Month.AUGUST, 1);
+    private LocalDate dateOfBirth;
+    private String cniNumber = ""; // Numéro de la CNI
     @Column(nullable = false)
     private String cniRecto = ""; // CNI face recto
     private String cniVerso = ""; // CNI face verso
     private String birthCertificate = ""; // Acte de naissance
     private String studentCard = ""; // Carte d'étudiant
     @Column(nullable = false)
-    private String school = "ENSP";
+    private String school = "UY1";
     @Convert(converter = Grade.Converter.class)
-    @Enumerated(EnumType.STRING)
     private Grade grade = Grade.L1;
+    private String matricule = "";
     @Column(nullable = false)
-    private String specialities = "Informatique";
+    private String specialities = "INFORMATIQUE";
 
     @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "FK_HOUSING_ID"))
     private Housing housing;
 
     @Column(nullable = false)
     @Convert(converter = Relationship.Converter.class)
-    @Enumerated(EnumType.STRING)
     private Relationship firstParentRelation = Relationship.FATHER;
     @Column(nullable = false)
-    private String firstParentName = "LONLA EMMANUEL";
+    private String firstParentName = "PAPA";
     @Column(nullable = false)
-    private String firstParentAddress = "MESSASSI";
+    private String firstParentAddress = "YAOUNDE";
     @Column(nullable = false)
-    private String firstParentPhone = "677432413";
+    private String firstParentPhone = "";
     private String firstParentMobile;
     @Column(nullable = false)
     private String firstParentEmail = "admin@gmail.com";
 
     @Column(nullable = false)
     @Convert(converter = Relationship.Converter.class)
-    @Enumerated(EnumType.STRING)
     private Relationship secondParentRelation = Relationship.MOTHER;
     @Column(nullable = false)
-    private String secondParentName = "LONLA ANGELINE";
+    private String secondParentName = "MAMA";
     @Column(nullable = false)
-    private String secondParentAddress = "MESSASSI";
+    private String secondParentAddress = "YAOUNDE";
     @Column(nullable = false)
-    private String secondParentPhone = "677078633";
+    private String secondParentPhone = "";
     private String secondParentMobile;
     @Column(nullable = false)
     private String secondParentEmail = "admin@gmail.com";
-    private String registrationNumber;
-    private String cni;
 
 
     @Column(nullable = false)
@@ -94,6 +94,7 @@ public class Student extends Auditable implements Serializable {
     }
 
     @OneToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "FK_LEASE_ID"))
     private Lease currentLease;
 
     public StudentForm toForm(){
@@ -104,10 +105,12 @@ public class Student extends Auditable implements Serializable {
         form.setDateOfBirth(dateOfBirth);
         form.setPlaceOfBirth(placeOfBirth);
         form.setGender(Optional.ofNullable(user).map(User::getGender).orElse(Gender.MALE));
+        form.setCniNumber(cniNumber);
 
         form.setSchool(school);
         form.setSpecialities(specialities);
         form.setGrade(grade);
+        form.setMatricule(matricule);
         form.setPhone(Phone.parse(Optional.ofNullable(user).map(User::getPhone).orElse("")));
         form.setMobile(Phone.parse(Optional.ofNullable(user).map(User::getMobile).orElse("")));
         form.setEmail(Optional.ofNullable(user).map(User::getEmail).orElse(""));
@@ -125,15 +128,24 @@ public class Student extends Auditable implements Serializable {
         form.setSecondParentPhone(Phone.parse(secondParentPhone));
         form.setSecondParentMobile(Phone.parse(secondParentMobile));
         form.setSecondParentEmail(secondParentEmail);
-        form.setCni(cni);
-        form.setRegistrationNumber(registrationNumber);
+
         return form;
     }
 
     @PrePersist
     @PreUpdate
     public void beforeSave(){
-
+        if(this.placeOfBirth != null) this.placeOfBirth = this.placeOfBirth.trim().replaceAll("\\s+", " ");
+        if(this.school != null) this.school = this.school.toUpperCase().trim().replaceAll("\\s+", " ");
+        if(this.specialities != null) this.specialities = this.specialities.trim().replaceAll("\\s+", " ");
+        if(this.firstParentName != null) this.firstParentName = this.firstParentName.toUpperCase().trim().replaceAll("\\s+", " ");
+        if(this.firstParentAddress != null) this.firstParentAddress = this.firstParentAddress.trim().replaceAll("\\s+", " ");
+        if(this.firstParentEmail != null) this.firstParentEmail = this.firstParentEmail.trim();
+        if(this.secondParentName != null) this.secondParentName = this.secondParentName.toUpperCase().trim().replaceAll("\\s+", " ");
+        if(this.secondParentAddress != null) this.secondParentAddress = this.secondParentAddress.trim().replaceAll("\\s+", " ");
+        if(this.secondParentEmail != null) this.secondParentEmail = this.secondParentEmail.trim();
+        if(this.cniNumber != null) this.cniNumber = this.cniNumber.toUpperCase().replaceAll(" ", "");
+        if(this.matricule != null) this.matricule = this.matricule.toUpperCase().replaceAll(" ", "");
     }
 
 }

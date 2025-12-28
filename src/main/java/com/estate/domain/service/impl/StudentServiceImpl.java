@@ -8,10 +8,9 @@ import com.estate.domain.enumaration.Profil;
 import com.estate.domain.enumaration.Role;
 import com.estate.domain.form.StudentForm;
 import com.estate.domain.form.StudentSearch;
-import com.estate.domain.mail.EmailHelper;
+import com.estate.domain.helper.EmailHelper;
 import com.estate.domain.service.face.StudentService;
-import com.estate.repository.LogRepository;
-import com.estate.repository.StudentRepository;
+import com.estate.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
@@ -24,8 +23,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
-import com.estate.utils.TextUtils;
+import com.estate.domain.helper.TextUtils;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
@@ -38,7 +39,10 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class StudentServiceImpl implements StudentService {
     private final StudentRepository studentRepository;
+    private final PaymentRepository paymentRepository;
     private final LogRepository logRepository;
+    private final LeaseRepository leaseRepository;
+    private final HousingRepository housingRepository;
     private final PasswordEncoder passwordEncoder;
     private final EmailHelper emailHelper;
 
@@ -58,14 +62,19 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public Optional<Student> findById(Long id) {
+    public Optional<Student> findById(String id) {
         return studentRepository.findById(id);
+    }
+
+    @Override
+    public Optional<Student> findByUserId(String userId) {
+        return studentRepository.findByUserId(userId);
     }
 
     @Override
     @Transactional
     public Notification save(StudentForm form) {
-        boolean creation = form.getId() == null;
+        boolean creation = StringUtils.isBlank(form.getId());
         Notification notification = Notification.info();
         Student student = creation ? new Student() : studentRepository.findById(form.getId()).orElse(null);
         if(student == null) return Notification.error("Étudiant introuvable");
@@ -74,11 +83,13 @@ public class StudentServiceImpl implements StudentService {
         student.getUser().setProfil(Profil.STUDENT);
         student.setDateOfBirth(form.getDateOfBirth());
         student.setPlaceOfBirth(form.getPlaceOfBirth());
+        student.setCniNumber(form.getCniNumber());
         student.getUser().setGender(form.getGender());
 
         student.setSchool(form.getSchool());
         student.setSpecialities(form.getSpecialities());
         student.setGrade(form.getGrade());
+        student.setMatricule(form.getMatricule());
         student.getUser().setPhone(form.getPhone().format());
         student.getUser().setMobile(form.getMobile().format());
         student.getUser().setEmail(form.getEmail());
@@ -175,21 +186,21 @@ public class StudentServiceImpl implements StudentService {
 
         try {
             if(creation){
-                String password = TextUtils.generatePass(8);
+                String password = TextUtils.generatePassword();
                 student.getUser().setStudent(student);
                 student.getUser().setPassword(passwordEncoder.encode(password));
                 student.getUser().setRoles(Collections.singletonList(Role.ROLE_STUDENT));
-                // Send mail
+                studentRepository.saveAndFlush(student);
                 String name = student.getUser().getOneName();
                 HashMap<String, Object> context = new HashMap<>();
                 context.put("name", name);
-                context.put("login",student.getUser().getEmail());
-                context.put("password",password);
+                context.put("password", password);
+                context.put("link", ServletUriComponentsBuilder.fromCurrentContextPath().path("/237in").build());
                 String cc = student.getFirstParentEmail() +";" + student.getSecondParentEmail();
-                emailHelper.sendMail(student.getUser().getEmail(), cc, "BIENVENU", "welcome.ftl", Locale.FRENCH, context, Collections.emptyList());
-
+                emailHelper.sendMail(student.getUser().getEmail(), cc, "BIENVENUE DANS LA MINI CITÉ CONCORDE", "welcome.ftl", Locale.FRENCH, context, Collections.emptyList());
+            } else {
+                studentRepository.saveAndFlush(student);
             }
-            studentRepository.saveAndFlush(student);
             notification.setMessage("Un étudiant a été " + (creation ? "ajouté." : "modifié."));
             log.info(notification.getMessage());
         } catch (Throwable e){
@@ -208,7 +219,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public Notification toggleById(long id) {
+    public Notification toggleById(String id) {
         Notification notification = new Notification();
         Student student = studentRepository.findById(id).orElse(null);
         if(student == null) return Notification.error("Étudiant introuvable");
@@ -220,6 +231,58 @@ public class StudentServiceImpl implements StudentService {
         } catch (Throwable e){
             notification = Notification.error("Erreur lors de la modification de l'étudiant <b>" + student.getUser().getName() + "</b>.");
             logRepository.save(Log.error(notification.getMessage(), ExceptionUtils.getStackTrace(e)));
+        }
+        return notification;
+    }
+
+    @Override
+    public Notification deleteById(String id, boolean force, HttpServletRequest request) {
+        Notification notification;
+        Student student = studentRepository.findById(id).orElse(null);
+        if(student == null) return Notification.error("Étudiant introuvable");
+        try {
+            if(force){
+                housingRepository.setResidentToNullByStudentId(id);
+                studentRepository.setCurrentLeaseToNullByStudentId(id);
+                leaseRepository.deleteAllByPaymentStudentId(id);
+                paymentRepository.deleteAllByStudentId(id);
+            }
+            studentRepository.deleteById(id);
+            if(StringUtils.isNotBlank(student.getBirthCertificate())){
+                File birthCertificate = new File(student.getBirthCertificate());
+                try {
+                    if(birthCertificate.exists()) FileUtils.deleteQuietly(birthCertificate);
+                } catch (Exception ignored) {}
+            }
+            if(StringUtils.isNotBlank(student.getCniRecto())){
+                File cniRecto = new File(student.getCniRecto());
+                try {
+                    if(cniRecto.exists()) FileUtils.deleteQuietly(cniRecto);
+                } catch (Exception ignored) {}
+            }
+            if(StringUtils.isNotBlank(student.getCniVerso())){
+                File cniVerso = new File(student.getCniVerso());
+                try {
+                    if(cniVerso.exists()) FileUtils.deleteQuietly(cniVerso);
+                } catch (Exception ignored) {}
+            }
+            if(StringUtils.isNotBlank(student.getStudentCard())){
+                File studentCard = new File(student.getStudentCard());
+                try {
+                    if(studentCard.exists()) FileUtils.deleteQuietly(studentCard);
+                } catch (Exception ignored) {}
+            }
+            notification = Notification.info("L'étudiant <b>" + student.getUser().getName() + "</b> a été supprimé");
+            logRepository.save(Log.info(notification.getMessage()));
+        } catch (Throwable e){
+            notification = Notification.error("Erreur lors de la suppression de l'étudiant <b>" + student.getUser().getName() + "</b>.");
+            logRepository.save(Log.error(notification.getMessage(), ExceptionUtils.getStackTrace(e)));
+            if(!force){
+                String actions = "";
+                if(student.getUser().isActive()) actions = "<a class='lazy-link' href='" + request.getContextPath() + "/student/toggle/" + id + "'><b>Désactiver</b></a> ou ";
+                actions += "<a class='lazy-link text-danger' href='" + request.getRequestURI() + "?id=" + id + "&force=true" + "'><b>Forcer la suppression</b></a> (cette action supprimera tout paiement et contrat de bail associé).";
+                notification = Notification.warn("Cet étudiant est utilisé dans certains enregistrements. " + actions);
+            }
         }
         return notification;
     }

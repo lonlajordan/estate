@@ -5,6 +5,7 @@ import com.estate.domain.form.SettingForm;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -14,11 +15,11 @@ import java.io.Serializable;
 @Entity
 public class Setting extends Auditable implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(generator = "uuid2", strategy = GenerationType.IDENTITY)
+    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    private String id;
     @Column(nullable = false)
     @Convert(converter = SettingCode.Converter.class)
-    @Enumerated(EnumType.STRING)
     private SettingCode code;
     private String value;
 

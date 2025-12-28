@@ -6,7 +6,6 @@ import com.estate.domain.form.LeaseSearch;
 import com.estate.domain.form.MutationForm;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 
 import java.security.Principal;
 import java.util.Optional;
@@ -16,15 +15,15 @@ public interface LeaseService {
 
     Page<Lease> findAll(LeaseSearch form);
 
-    Page<Lease> findAllByUserId(long userId, int page);
+    Page<Lease> findAllByUserId(String userId, int page);
 
-    Optional<Lease> findById(long id);
+    Optional<Lease> findById(String id);
 
-    ResponseEntity<?> download(long id);
+    ResponseEntity<?> download(String id);
 
     long count();
 
-    Notification activate(long id, Long housingId, Model model);
+    Notification disable(String id);
 
     Notification mutate(MutationForm mutation, Principal principal);
 }

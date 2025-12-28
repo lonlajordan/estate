@@ -29,23 +29,24 @@
                             <div class="panel-body">
                                 <form th:object="${searchForm}" onsubmit="submitForm(event)" th:action="@{/housing/search}" autocomplete="off" method="post">
                                     <div class="row">
-                                        <div class="col-lg-6">
-                                            <div class="form-group">
-                                                <label class="control-label" for="standing">Standing</label>
-                                                <select id="standing" th:field="*{standingId}" class="form-control">
-                                                    <option value="">Tous les standings...</option>
-                                                    <option th:each="standing: ${standings}" th:value="${standing.id}" th:text="${standing.name}" th:selected="${standing.id == searchForm?.standingId}"></option>
-                                                </select>
-                                            </div>
+                                        <div class="form-group col-lg-4">
+                                            <label class="control-label" for="standing">Standing</label>
+                                            <select id="standing" th:field="*{standingId}" class="form-control">
+                                                <option value="">Tous les standings...</option>
+                                                <option th:each="standing: ${standings}" th:value="${standing.id}" th:text="${standing.name}" th:selected="${standing.id == searchForm?.standingId}"></option>
+                                            </select>
                                         </div>
-                                        <div class="col-lg-6">
-                                            <div class="form-group">
-                                                <label class="control-label" for="status">Statut</label>
-                                                <select id="status" th:field="*{status}" class="form-control">
-                                                    <option value="">Tous les statuts...</option>
-                                                    <option th:each="status: ${T(com.estate.domain.enumaration.Availability).values()}" th:value="${status}" th:text="${status.name}"></option>
-                                                </select>
-                                            </div>
+                                        <div class="form-group col-lg-4">
+                                            <label for="building" class="control-label">Bâtiment</label>
+                                            <input id="building" th:field="*{building}" maxlength="1" class="form-control">
+                                        </div>
+                                        <div class="form-group col-lg-4">
+                                            <label class="control-label" for="available">Statut</label>
+                                            <select id="available" th:field="*{available}" class="form-control">
+                                                <option value="">Tous les statuts...</option>
+                                                <option value="true">Disponible</option>
+                                                <option value="false">Occupé</option>
+                                            </select>
                                         </div>
                                     </div>
                                     <button type="submit" class="btn btn-success mr-2">
@@ -69,7 +70,8 @@
                 <table id="data-list" data-pdf-title="LISTE DES LOGEMENTS" data-pdf-name="Liste des logements" data-columns-left="2" data-columns-right="2" class="table table-bordered paging searching dataTable can-add">
                     <thead>
                         <tr>
-                            <th class="action fit-cell-content">ID</th>
+                            <th class="action fit-cell-content">N°</th>
+                            <th class="fit-cell-content">Bâtiment</th>
                             <th class="fit-cell-content">Nom</th>
                             <th class="fit-cell-content">Standing</th>
                             <th class="fit-cell-content">Statut</th>
@@ -83,10 +85,11 @@
                     </thead>
                     <tbody>
                         <tr th:each="housing,iter: ${housings}" th:data-id="${housing.id}">
-                            <td th:text="${housing.id}"></td>
+                            <td th:text="${iter.count}"></td>
+                            <td th:text="${housing.building}"></td>
                             <td th:text="${housing.name}"></td>
                             <td th:text="${housing.standing?.name}"></td>
-                            <td th:text="${housing.status?.name}"></td>
+                            <td th:text="${#bools.isTrue(housing.available) ? 'Disponible' : 'Occupé'}"></td>
                             <td th:text="${housing.resident?.user?.name}"></td>
                             <td th:classappend="${housing.resident?.currentLease?.background}">
                                 <span th:text="${#temporals.format(housing.resident?.currentLease?.startDate, 'dd/MM/yyyy')}"></span> - <span style="font-weight: bold" th:text="${#temporals.format(housing.resident?.currentLease?.realEndDate, 'dd/MM/yyyy')}"></span>
@@ -105,7 +108,7 @@
                                     <a class="list-group-item text-decoration-none text-left" th:href="@{'/housing/view/' + ${housing.id}}">
                                         <i class="fa fa-eye fa-fw"></i> Détails
                                     </a>
-                                    <a class="list-group-item text-decoration-none text-left" th:href="@{'/housing/liberate/' + ${housing.id}}">
+                                    <a th:unless="${housing.available}" class="list-group-item text-decoration-none text-left" th:href="@{'/housing/liberate/' + ${housing.id}}">
                                         <i class="fa fa-truck fa-fw"></i> Libérer
                                     </a>
                                     <a class="list-group-item text-decoration-none text-left" th:href="@{'/housing/save?id=' + ${housing.id}}">

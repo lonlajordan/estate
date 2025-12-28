@@ -2,18 +2,18 @@ package com.estate.controller;
 
 import com.estate.domain.entity.*;
 import com.estate.domain.enumaration.Profil;
+import com.estate.domain.enumaration.SettingCode;
 import com.estate.domain.enumaration.Status;
 import com.estate.domain.form.HousingSearch;
 import com.estate.domain.form.PaymentForm;
 import com.estate.domain.form.PaymentReject;
 import com.estate.domain.form.PaymentSearch;
-import com.estate.domain.service.face.HousingService;
-import com.estate.domain.service.face.PaymentService;
-import com.estate.domain.service.face.StandingService;
-import com.estate.domain.service.face.StudentService;
+import com.estate.domain.service.face.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -36,6 +36,7 @@ import java.util.stream.IntStream;
 public class PaymentController {
     private final StudentService studentService;
     private final StandingService standingService;
+    private final SettingService settingService;
     private final HousingService housingService;
     private final PaymentService paymentService;
 
@@ -53,6 +54,14 @@ public class PaymentController {
             User user = (User) session.getAttribute("user");
             if(user != null && Profil.STUDENT.equals(user.getProfil())){
                 payments = paymentService.findAllByUserId(user.getId(), page);
+                model.addAttribute("orangeMerchantCode", settingService.findByCode(SettingCode.ORANGE_MONEY_MERCHANT_CODE).map(Setting::getValue).orElse(""));
+                model.addAttribute("orangeMerchantName", settingService.findByCode(SettingCode.ORANGE_MONEY_MERCHANT_NAME).map(Setting::getValue).orElse(""));
+                model.addAttribute("mtnMerchantCode", settingService.findByCode(SettingCode.MTN_MOBILE_MONEY_MERCHANT_CODE).map(Setting::getValue).orElse(""));
+                model.addAttribute("mtnMerchantName", settingService.findByCode(SettingCode.MTN_MOBILE_MONEY_MERCHANT_NAME).map(Setting::getValue).orElse(""));
+                model.addAttribute("bankName", settingService.findByCode(SettingCode.BANK_NAME).map(Setting::getValue).orElse(""));
+                model.addAttribute("bankAccountName", settingService.findByCode(SettingCode.BANK_ACCOUNT_NAME).map(Setting::getValue).orElse(""));
+                model.addAttribute("bankAccountNumber", settingService.findByCode(SettingCode.BANK_ACCOUNT_NUMBER).map(Setting::getValue).orElse(""));
+                model.addAttribute("payPal", settingService.findByCode(SettingCode.PAYPAL_LINK).map(Setting::getValue).orElse(""));
             } else {
                 payments = paymentService.findAll(page);
             }
@@ -60,12 +69,14 @@ public class PaymentController {
         }
         model.addAttribute("payments", payments.toList());
         model.addAttribute("totalPages", payments.getTotalPages());
-        model.addAttribute("currentPage", payments.getPageable().getPageNumber());
+        model.addAttribute("currentPage", payments.getNumber() + 1);
+        model.addAttribute("startIndex", payments.getPageable().getOffset());
         model.addAttribute("searchForm", form);
         model.addAttribute("search", search);
         return "admin/payment/list";
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping(value="accounting")
     public String accounting(@RequestParam(required = false) Integer year, Model model){
         int currentYear = LocalDate.now().getYear();
@@ -80,15 +91,15 @@ public class PaymentController {
     }
 
     @GetMapping("save")
-    public String findById(@RequestParam(required = false) Long id, @RequestParam(required = false) Long standingId, @RequestParam(required = false) Long studentId, Model model, RedirectAttributes attributes){
+    public String findById(@RequestParam(required = false) String id, @RequestParam(required = false) String standingId, @RequestParam(required = false) String studentId, Model model, RedirectAttributes attributes){
         Payment payment = null;
         Standing standing = null;
         Student student = null;
         List<Housing> housings = new ArrayList<>();
         List<Standing> standings = standingService.findAll();
-        if(id != null){
+        if(StringUtils.isNotBlank(id)){
             payment = paymentService.findById(id).orElse(null);
-        } else if(studentId != null){
+        } else if(StringUtils.isNotBlank(studentId)){
             student = studentService.findById(studentId).orElse(null);
             if(student == null){
                 attributes.addFlashAttribute("notification", Notification.error("Étudiant introuvable"));
@@ -142,14 +153,14 @@ public class PaymentController {
     }
 
     @PostMapping("save")
-    public String save(@Valid @ModelAttribute("payment") PaymentForm payment, BindingResult result, Model model, RedirectAttributes attributes){
-        if(payment.getId() == null) {
+    public String save(@Valid @ModelAttribute("payment") PaymentForm payment, BindingResult result, Model model, RedirectAttributes attributes, HttpServletRequest request){
+        if(StringUtils.isBlank(payment.getId())) {
             String notNullMessage = "javax.validation.constraints.NotNull.message";
             String defaultMessage = "ne doit pas être nul";
             if(payment.getProofFile() == null || payment.getProofFile().isEmpty()) result.rejectValue("proofFile", notNullMessage, defaultMessage);
         }
         Notification notification = null;
-        if(!result.hasErrors()) notification =  paymentService.save(payment);
+        if(!result.hasErrors()) notification =  paymentService.save(payment, request);
         if(result.hasErrors() || (notification != null && notification.hasError())){
             List<Standing> standings = standingService.findAll();
             model.addAttribute("notification", notification);
@@ -164,7 +175,7 @@ public class PaymentController {
     }
 
     @GetMapping(value="view/{id}")
-    public String findById(@PathVariable long id, Model model, RedirectAttributes attributes){
+    public String findById(@PathVariable String id, Model model, RedirectAttributes attributes){
         Payment payment = paymentService.findById(id).orElse(null);
         if(payment == null){
             attributes.addFlashAttribute("notification", Notification.error("Paiement introuvable"));
@@ -179,17 +190,19 @@ public class PaymentController {
     }
 
     @GetMapping(value="submit/{id}")
-    public String submitById(@PathVariable long id, RedirectAttributes attributes){
+    public String submitById(@PathVariable String id, RedirectAttributes attributes){
         attributes.addFlashAttribute("notification", paymentService.submit(id));
         return "redirect:/payment/list";
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'JANITOR')")
     @GetMapping(value="validate/{id}")
-    public String validateById(@PathVariable long id, RedirectAttributes attributes, HttpSession session){
+    public String validateById(@PathVariable String id, RedirectAttributes attributes, HttpSession session){
         attributes.addFlashAttribute("notification", paymentService.validate(id, session));
         return "redirect:/payment/list";
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'JANITOR')")
     @PostMapping(value="cancel")
     public String cancelById(@Valid @ModelAttribute("reject") PaymentReject reject, BindingResult result, Model model, RedirectAttributes attributes, HttpSession session){
         if(result.hasErrors()){
@@ -205,9 +218,18 @@ public class PaymentController {
         return "redirect:/payment/list";
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'JANITOR')")
     @PostMapping("search")
     public String search(HousingSearch form, RedirectAttributes attributes){
         attributes.addFlashAttribute("searchForm", form);
+        return "redirect:/payment/list";
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @RequestMapping(value="delete")
+    public String deleteById(@RequestParam String id, RedirectAttributes attributes, HttpServletRequest request){
+        Notification notification =  paymentService.deleteById(id, request);
+        attributes.addFlashAttribute("notification", notification);
         return "redirect:/payment/list";
     }
 }

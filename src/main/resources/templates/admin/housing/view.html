@@ -23,6 +23,10 @@
                     </div>
                     <div class="list-group">
                         <a href="#" class="list-group-item">
+                            <b>Bâtiment</b>
+                            <span class="pull-right"><em th:text="*{building}"></em></span>
+                        </a>
+                        <a href="#" class="list-group-item">
                             <b>Nom</b>
                             <span class="pull-right"><em th:text="*{name}"></em></span>
                         </a>
@@ -36,7 +40,7 @@
                         </a>
                         <a href="#" class="list-group-item">
                             <b>Statut</b>
-                            <span class="pull-right"><em th:text="*{status?.name}"></em></span>
+                            <span class="pull-right"><em th:text="${#bools.isTrue(housing.available) ? 'Disponible' : 'Occupé'}"></em></span>
                         </a>
                         <a href="#" class="list-group-item">
                             <b>Actif</b>

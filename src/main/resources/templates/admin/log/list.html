@@ -97,7 +97,7 @@
                                     <a class="list-group-item text-decoration-none text-left" th:href="@{'/log/view/' + ${log.id}}">
                                         <i class="fa fa-eye fa-fw"></i> Détails
                                     </a>
-                                    <a sec:authorize="hasRole('ADMIN')" class="list-group-item text-decoration-none text-danger text-left" th:data-log-id="${log.id}" onclick="deleteItem(this.getAttribute('data-log-id'), 'log/delete')" href="#">
+                                    <a sec:authorize="hasRole('ADMIN')" class="list-group-item text-decoration-none text-danger text-left" th:data-log-id="${log.id}" onclick="deleteItem(this.getAttribute('data-log-id'), 'log/remove')" href="#">
                                         <i class="fa fa-trash-o fa-fw"></i> Supprimer
                                     </a>
                                 </div>

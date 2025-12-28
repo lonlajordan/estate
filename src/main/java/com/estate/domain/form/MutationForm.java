@@ -1,15 +1,19 @@
 package com.estate.domain.form;
 
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
 
 @Data
 public class MutationForm {
+    @NotBlank
+    private String leaseId;
+    @NotBlank
+    private String housingId;
     @NotNull
-    private Long leaseId;
-    @NotNull
-    private Long housingId;
-    @NotNull
-    private Integer amount = 0;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    private LocalDate startDate;
 }

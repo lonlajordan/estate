@@ -8,8 +8,8 @@ import javax.validation.constraints.NotNull;
 
 @Data
 public class SettingForm {
-    @NotNull
-    private Long id;
+    @NotBlank
+    private String id;
     @NotNull
     private SettingCode code;
     @NotBlank

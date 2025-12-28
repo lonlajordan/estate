@@ -4,6 +4,7 @@ import com.estate.domain.form.StandingForm;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -15,12 +16,14 @@ import java.io.Serializable;
 @Table(uniqueConstraints = { @UniqueConstraint(name = "UK_NAME", columnNames = { "name"})})
 public class Standing extends Auditable implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(generator = "uuid2", strategy = GenerationType.IDENTITY)
+    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    private String id;
     @Column(nullable = false)
     private String name = "";
     @Column(nullable = false, columnDefinition = "TEXT")
     private String description = "";
+    private String picture;
     @Column(nullable = false)
     private int rent;
     @Column(nullable = false)
@@ -43,6 +46,6 @@ public class Standing extends Auditable implements Serializable {
     @PrePersist
     @PreUpdate
     public void beforeSave(){
-        if(this.name != null) this.name = this.name.replaceAll(" ", "").toUpperCase();
+        if(this.name != null) this.name = this.name.trim().replaceAll("\\s+", " ").toUpperCase();
     }
 }

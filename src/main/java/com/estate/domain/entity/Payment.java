@@ -6,6 +6,7 @@ import com.estate.domain.form.PaymentForm;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -17,28 +18,31 @@ import java.util.Optional;
 @Entity
 public class Payment extends Auditable implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(generator = "uuid2", strategy = GenerationType.IDENTITY)
+    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    private String id;
     private int rent;
     private int months = 12;
     private int caution;
     private int repair;
     @ManyToOne(optional = false)
+    @JoinColumn(foreignKey = @ForeignKey(name = "FK_STANDING_ID"), nullable = false)
     private Standing standing;
     @Convert(converter = Mode.Converter.class)
-    @Enumerated(EnumType.STRING)
     private Mode mode = Mode.CASH;
     @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "FK_USER_ID"))
     private User validator;
     @ManyToOne(optional = false)
+    @JoinColumn(foreignKey = @ForeignKey(name = "FK_STUDENT_ID"), nullable = false)
     private Student student;
     @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "FK_HOUSING_ID"))
     private Housing desiderata;
     private String proof;
     private String comment;
 
     @Convert(converter = Status.Converter.class)
-    @Enumerated(EnumType.STRING)
     private Status status = Status.INITIATED;
 
     @Transient

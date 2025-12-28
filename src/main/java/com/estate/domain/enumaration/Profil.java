@@ -9,8 +9,8 @@ public enum Profil {
     STUDENT;
 
     public static class Converter extends EnumConverter<Profil> {
-        public Converter(Class<Profil> clazz) {
-            super(clazz);
+        public Converter() {
+            super(Profil.class);
         }
     }
 }

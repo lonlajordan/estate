@@ -14,6 +14,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -33,26 +34,24 @@ import java.util.stream.Stream;
 @Table(name = "users", uniqueConstraints = { @UniqueConstraint(name = "UK_EMAIL", columnNames = { "email"})})
 public class User extends Auditable implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(generator = "uuid2", strategy = GenerationType.IDENTITY)
+    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    private String id;
     @Column(nullable = false)
-    private String firstName = "LONLA";
-    private String lastName = "Gatien Jordan";
-    @Column(nullable = false, unique = true)
-    private String email = "jordan@gmail.com";
+    private String firstName = "";
+    private String lastName = "";
+    @Column(nullable = false)
+    private String email = "";
     @Column(nullable = false)
     private String password = "";
     @Column(nullable = false)
     private String phone = "";
     private String mobile;
     private String token;
-    private String picture;
     private LocalDateTime tokenExpirationDate = LocalDateTime.now();
     @Convert(converter = Profil.Converter.class)
-    @Enumerated(EnumType.STRING)
     private Profil profil = Profil.STAFF;
     @Convert(converter = Gender.Converter.class)
-    @Enumerated(EnumType.STRING)
     private Gender gender = Gender.MALE;
     private boolean active = true;
     private LocalDateTime lastLogin;
@@ -66,6 +65,7 @@ public class User extends Auditable implements Serializable {
     private List<Payment> payments = new ArrayList<>();
 
     @OneToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "FK_STUDENT_ID"))
     private Student student;
 
     public String getName(){

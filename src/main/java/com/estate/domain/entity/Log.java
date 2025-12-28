@@ -4,6 +4,7 @@ import com.estate.domain.enumaration.Level;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -14,11 +15,10 @@ import java.io.Serializable;
 @Entity
 public class Log extends Auditable implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false)
-    private Long id;
+    @GeneratedValue(generator = "uuid2", strategy = GenerationType.IDENTITY)
+    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    private String id;
     @Convert(converter = Level.Converter.class)
-    @Enumerated(EnumType.STRING)
     private Level level = Level.INFO;
     @Column(columnDefinition = "TEXT")
     private String message = "";

@@ -23,6 +23,7 @@ function toggleStanding(id, studentId, standingId, url){
     if(standingId !== null){
         query += (query.length === 0 ? '' : '&') + 'standingId=' + standingId;
     }
+    console.log(ctx + '/' + url + '?' + query);
     fetch(ctx + '/' + url + '?' + query, false);
 }
 
@@ -168,6 +169,7 @@ function initDataList() {
         {
             text: '<i class="fa fa-file-excel-o"></i> Excel',
             extend: 'excel',
+            footer: true,
             title: function () { return list.attr('data-pdf-title'); },
             filename: function () { return list.attr('data-pdf-name'); },
             exportOptions: {
@@ -178,6 +180,7 @@ function initDataList() {
         {
             text: '<i class="fa fa-file-pdf-o"></i> PDF',
             extend: 'pdfHtml5',
+            footer: true,
             title: function () { return list.attr('data-pdf-title'); },
             filename: function () { return list.attr('data-pdf-name'); },
             orientation: list.hasClass("landscape") ? 'landscape' : 'portrait',

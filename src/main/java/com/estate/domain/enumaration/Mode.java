@@ -18,8 +18,8 @@ public enum Mode {
     }
 
     public static class Converter extends EnumConverter<Mode> {
-        public Converter(Class<Mode> clazz) {
-            super(clazz);
+        public Converter() {
+            super(Mode.class);
         }
     }
 }

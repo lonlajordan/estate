@@ -12,7 +12,7 @@ import java.util.Optional;
 public interface SettingService {
     List<Setting> findAll();
 
-    Optional<Setting> findById(long id);
+    Optional<Setting> findById(String id);
 
     Optional<Setting> findByCode(SettingCode code);
 

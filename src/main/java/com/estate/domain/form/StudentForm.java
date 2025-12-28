@@ -16,7 +16,7 @@ import java.time.LocalDate;
 
 @Data
 public class StudentForm {
-    private Long id;
+    private String id;
     @NotBlank
     private String firstName;
     private String lastName;
@@ -27,10 +27,13 @@ public class StudentForm {
     private String placeOfBirth;
     @NotNull
     private Gender gender;
+    @NotBlank
+    private String cniNumber;
     @FileSize(extensions = {"pdf", "png", "jpg", "jpeg"}, max = 2 * 1024 * 1024)
     private MultipartFile birthCertificateFile;
     @FileSize(extensions = {"pdf", "png", "jpg", "jpeg"}, max = 2 * 1024 * 1024)
     private MultipartFile cniRectoFile;
+    //@NotNull
     @FileSize(extensions = {"pdf", "png", "jpg", "jpeg"}, max = 2 * 1024 * 1024)
     private MultipartFile cniVersoFile;
 
@@ -41,6 +44,8 @@ public class StudentForm {
     private String specialities;
     @NotNull
     private Grade grade;
+    @NotBlank
+    private String matricule;
     @FileSize(extensions = {"pdf", "png", "jpg", "jpeg"}, max = 2 * 1024 * 1024)
     private MultipartFile studentCardFile;
 
@@ -49,10 +54,10 @@ public class StudentForm {
     private String email;
     @NotNull
     @Valid
-    private Phone phone;
+    private Phone phone = new Phone();
     @NotNull
     @Valid
-    private Phone mobile;
+    private Phone mobile = new Phone();
 
     @NotNull
     private Relationship firstParentRelation;
@@ -62,10 +67,10 @@ public class StudentForm {
     private String firstParentAddress;
     @NotNull
     @Valid
-    private Phone firstParentPhone;
+    private Phone firstParentPhone = new Phone();
     @NotNull
     @Valid
-    private Phone firstParentMobile;
+    private Phone firstParentMobile = new Phone();
     @NotBlank
     @Email
     private String firstParentEmail;
@@ -78,16 +83,12 @@ public class StudentForm {
     private String secondParentAddress;
     @NotNull
     @Valid
-    private Phone secondParentPhone;
+    private Phone secondParentPhone = new Phone();
     @NotNull
     @Valid
-    private Phone secondParentMobile;
+    private Phone secondParentMobile = new Phone();
     @NotBlank
     @Email
     private String secondParentEmail;
-    @NotBlank
-    private String registrationNumber;
-    @NotBlank
-    private String cni;
 
 }

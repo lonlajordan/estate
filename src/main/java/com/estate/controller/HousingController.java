@@ -7,6 +7,8 @@ import com.estate.domain.form.HousingSearch;
 import com.estate.domain.service.face.HousingService;
 import com.estate.domain.service.face.StandingService;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -16,6 +18,7 @@ import org.springframework.web.servlet.support.RequestContextUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -26,6 +29,7 @@ public class HousingController {
     private final HousingService housingService;
     private final StandingService standingService;
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'JANITOR')")
     @GetMapping("list")
     public String findAll(Model model, HttpServletRequest request){
         HousingSearch form = new HousingSearch();
@@ -39,16 +43,18 @@ public class HousingController {
         } else {
             housings = housingService.findAll();
         }
+        housings.sort(Comparator.comparing(Housing::getBuilding).thenComparing(Housing::getNumber));
         model.addAttribute("standings", standingService.findAllByActiveTrue());
         model.addAttribute("housings", housings);
         model.addAttribute("searchForm", form);
         return "admin/housing/list";
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'JANITOR')")
     @GetMapping("save")
-    public String findById(@RequestParam(required = false) Long id, Model model, RedirectAttributes attributes){
+    public String findById(@RequestParam(required = false) String id, Model model, RedirectAttributes attributes){
         Housing housing = new Housing();
-        if(id != null)  housing = housingService.findById(id).orElse(null);
+        if(StringUtils.isNotBlank(id))  housing = housingService.findById(id).orElse(null);
         if(housing == null){
             attributes.addFlashAttribute("notification", Notification.error("Logement introuvable"));
             return "redirect:/logement/list";
@@ -58,6 +64,7 @@ public class HousingController {
         return "admin/housing/save";
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'JANITOR')")
     @PostMapping("save")
     public String save(@Valid @ModelAttribute("housing") HousingForm housing, BindingResult result, @RequestParam(required = false, defaultValue = "false") boolean multiple, Model model, RedirectAttributes attributes){
         if(result.hasErrors()){
@@ -75,8 +82,9 @@ public class HousingController {
         return "redirect:/housing/list";
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'JANITOR')")
     @GetMapping("view/{id}")
-    public String findById(@PathVariable long id, Model model, RedirectAttributes attributes){
+    public String viewById(@PathVariable String id, Model model, RedirectAttributes attributes){
         Housing housing = housingService.findById(id).orElse(null);
         if(housing == null){
             attributes.addFlashAttribute("notification", Notification.error("Logement introuvable"));
@@ -86,26 +94,30 @@ public class HousingController {
         return "admin/housing/view";
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'JANITOR')")
     @PostMapping("search")
     public String search(HousingSearch form, RedirectAttributes attributes){
         attributes.addFlashAttribute("searchForm", form);
         return "redirect:/housing/list";
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'JANITOR')")
     @RequestMapping(value="toggle/{id}")
-    public String toggle(@PathVariable long id, RedirectAttributes attributes){
+    public String toggle(@PathVariable String id, RedirectAttributes attributes){
         attributes.addFlashAttribute("notification", housingService.toggleById(id));
         return "redirect:/housing/list";
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'JANITOR')")
     @RequestMapping(value="liberate/{id}")
-    public String liberate(@PathVariable long id, RedirectAttributes attributes){
-        attributes.addFlashAttribute("notification", housingService.liberate(id));
+    public String liberate(@PathVariable String id, RedirectAttributes attributes, HttpServletRequest request){
+        attributes.addFlashAttribute("notification", housingService.liberate(id, request));
         return "redirect:/housing/list";
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @RequestMapping(value="delete")
-    public String deleteById(@RequestParam long id, @RequestParam(required = false, defaultValue = "false") boolean force, RedirectAttributes attributes, HttpServletRequest request){
+    public String deleteById(@RequestParam String id, @RequestParam(required = false, defaultValue = "false") boolean force, RedirectAttributes attributes, HttpServletRequest request){
         Notification notification =  housingService.deleteById(id, force, request);
         attributes.addFlashAttribute("notification", notification);
         return "redirect:/housing/list";

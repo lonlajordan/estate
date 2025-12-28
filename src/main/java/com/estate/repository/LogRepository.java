@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
-public interface LogRepository extends JpaRepository<Log, Long>, JpaSpecificationExecutor<Log> {
+public interface LogRepository extends JpaRepository<Log, String>, JpaSpecificationExecutor<Log> {
     Page<Log> findAllByOrderByCreationDateDesc(Pageable pageable);
 
     @Transactional

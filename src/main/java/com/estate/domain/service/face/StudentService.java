@@ -6,14 +6,17 @@ import com.estate.domain.form.StudentForm;
 import com.estate.domain.form.StudentSearch;
 import org.springframework.data.domain.Page;
 
-import java.security.Principal;
+import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
 public interface StudentService {
     long count();
     Page<Student> findAll(int page);
     Page<Student> findAll(StudentSearch form);
-    Optional<Student> findById(Long id);
+    Optional<Student> findById(String id);
+    Optional<Student> findByUserId(String userId);
     Notification save(StudentForm form);
-    Notification toggleById(long id);
+    Notification toggleById(String id);
+
+    Notification deleteById(String id, boolean force, HttpServletRequest request);
 }

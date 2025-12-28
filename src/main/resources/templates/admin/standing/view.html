@@ -42,6 +42,12 @@
                             <b>Statut</b>
                             <span class="pull-right"><em th:text="${#bools.isTrue(standing.active) ? 'ACTIF' : 'DÉSACTIVÉ'}"></em></span>
                         </div>
+                        <div th:unless="${#strings.isEmpty(standing.picture)}" class="list-group-item">
+                            <b>Aperçu photo</b>
+                            <span class="pull-right">
+                                <em><a target="_blank" th:href="@{'/explorer/' + ${standing.picture}}">Voir</a></em>
+                            </span>
+                        </div>
                         <div class="list-group-item">
                             <b>Créé par</b>
                             <span class="pull-right"><em th:text="*{createdBy}"></em></span>

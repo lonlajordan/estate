@@ -9,11 +9,16 @@ import com.estate.domain.service.face.StandingService;
 import com.estate.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -43,12 +48,12 @@ public class StandingServiceImpl implements StandingService {
     }
 
     @Override
-    public Optional<Standing> findById(long id) {
+    public Optional<Standing> findById(String id) {
         return standingRepository.findById(id);
     }
 
     @Override
-    public Notification deleteById(long id, boolean force, HttpServletRequest request){
+    public Notification deleteById(String id, boolean force, HttpServletRequest request){
         Notification notification;
         Standing standing = standingRepository.findById(id).orElse(null);
         if(standing == null) return Notification.error("Standing introuvable");
@@ -59,18 +64,23 @@ public class StandingServiceImpl implements StandingService {
                 housingRepository.deleteAllByStandingId(id);
             }
             standingRepository.deleteById(id);
+            if(StringUtils.isNotBlank(standing.getPicture())){
+                File picture = new File(standing.getPicture());
+                try {
+                    if(picture.exists()) FileUtils.deleteQuietly(picture);
+                } catch (Exception ignored) {}
+            }
             notification = Notification.info("Le <b>" + standing.getName() + "</b> standing a été supprimé");
             logRepository.save(Log.info(notification.getMessage()));
         }catch (Throwable e){
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             notification = Notification.error("Erreur lors de la suppression du <b>" + standing.getName() + "</b> standing.");
+            logRepository.save(Log.error(notification.getMessage(), ExceptionUtils.getStackTrace(e)));
             if(!force){
                 String actions = "";
                 if(standing.isActive()) actions = "<a class='lazy-link' href='" + request.getContextPath() + "/standing/toggle/" + id + "'><b>Désactiver</b></a> ou ";
                 actions += "<a class='lazy-link text-danger' href='" + request.getRequestURI() + "?id=" + id + "&force=true" + "'><b>Forcer la suppression</b></a> (cette action supprimera tout logement, paiement ou contrat de bail associé).";
                 notification = Notification.warn("Ce standing est utilisé dans certains enregistrements. " + actions);
-                logRepository.save(Log.warn(notification.getMessage()));
-            } else {
-                logRepository.save(Log.error(notification.getMessage(), ExceptionUtils.getStackTrace(e)));
             }
         }
         return notification;
@@ -78,7 +88,7 @@ public class StandingServiceImpl implements StandingService {
 
     @Override
     public Notification save(StandingForm form) {
-        boolean creation = form.getId() == null;
+        boolean creation = StringUtils.isBlank(form.getId());
         Notification notification = Notification.info();
         Standing standing = creation ? new Standing() : standingRepository.findById(form.getId()).orElse(null);
         if(standing == null) return Notification.error("Standing introuvable");
@@ -87,7 +97,28 @@ public class StandingServiceImpl implements StandingService {
         standing.setRent(form.getRent());
         standing.setCaution(form.getCaution());
         standing.setRepair(form.getRepair());
-
+        long date = System.currentTimeMillis();
+        String extension;
+        File root = new File("documents");
+        if (!root.exists() && !root.mkdirs()) return Notification.error("Impossible de créer le dossier de sauvegarde des documents.");
+        if(form.getPicture() != null && !form.getPicture().isEmpty()){
+            File picture;
+            if(StringUtils.isNotBlank(standing.getPicture())){
+                picture = new File(standing.getPicture());
+                try {
+                    if(picture.exists()) FileUtils.deleteQuietly(picture);
+                } catch (Exception ignored) {}
+            }
+            try {
+                extension = FilenameUtils.getExtension(form.getPicture().getOriginalFilename());
+                picture = new File(root.getAbsolutePath() + File.separator + "standing-" + date + "." + extension);
+                form.getPicture().transferTo(picture);
+                standing.setPicture(root.getName() + File.separator + picture.getName());
+            } catch (IOException e) {
+                log.error("unable to write standing picture file", e);
+                return Notification.error("Impossible d'enregistrer une image du standing.");
+            }
+        }
         try {
             standingRepository.saveAndFlush(standing);
             notification.setMessage("Un standing a été " + (creation ? "ajouté." : "modifié."));
@@ -109,7 +140,7 @@ public class StandingServiceImpl implements StandingService {
     }
 
     @Override
-    public Notification toggleById(long id) {
+    public Notification toggleById(String id) {
         Notification notification = new Notification();
         Standing standing = standingRepository.findById(id).orElse(null);
         if(standing == null) return Notification.error("Standing introuvable");

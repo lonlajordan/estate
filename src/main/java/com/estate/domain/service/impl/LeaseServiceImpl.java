@@ -1,7 +1,7 @@
 package com.estate.domain.service.impl;
 
 import com.estate.domain.entity.*;
-import com.estate.domain.enumaration.Availability;
+import com.estate.domain.enumaration.SettingCode;
 import com.estate.domain.form.LeaseSearch;
 import com.estate.domain.form.MutationForm;
 import com.estate.domain.service.face.LeaseService;
@@ -18,16 +18,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.Model;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import java.io.ByteArrayOutputStream;
 import java.security.Principal;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Objects;
 import java.util.Optional;
 
 @Slf4j
@@ -37,9 +33,9 @@ public class LeaseServiceImpl implements LeaseService {
     private final TemplateEngine templateEngine;
     private final HousingRepository housingRepository;
     private final StudentRepository studentRepository;
+    private final SettingRepository settRepository;
     private final LeaseRepository leaseRepository;
     private final LogRepository logRepository;
-    private final UserRepository userRepository;
 
     @Override
     public Page<Lease> findAll(int page) {
@@ -52,20 +48,30 @@ public class LeaseServiceImpl implements LeaseService {
     }
 
     @Override
-    public Page<Lease> findAllByUserId(long userId, int page) {
+    public Page<Lease> findAllByUserId(String userId, int page) {
         return leaseRepository.findAllByPaymentStudentUserIdOrderByCreationDateDesc(userId, PageRequest.of(page - 1, 100));
     }
 
     @Override
-    public Optional<Lease> findById(long id) {
+    public Optional<Lease> findById(String id) {
         return leaseRepository.findById(id);
     }
 
     @Override
-    public ResponseEntity<?> download(long id) {
+    public ResponseEntity<?> download(String id) {
         Lease lease = findById(id).orElse(null);
         Context context = new Context();
         context.setVariable("lease", lease);
+        String contractId = "..........";
+        if(lease != null && lease.getStartDate() != null && lease.getHousing() != null) {
+            contractId = lease.getStartDate().getYear() + "/" + lease.getHousing().getName();
+        }
+        context.setVariable("contractId", contractId);
+        context.setVariable("landlordName", settRepository.findByCode(SettingCode.LANDLORD_NAME).map(Setting::getValue).orElse(""));
+        context.setVariable("landlordCardId", settRepository.findByCode(SettingCode.LANDLORD_CARD_ID).map(Setting::getValue).orElse(""));
+        context.setVariable("landlordAddress", settRepository.findByCode(SettingCode.LANDLORD_ADDRESS).map(Setting::getValue).orElse(""));
+        context.setVariable("landlordPhone", settRepository.findByCode(SettingCode.LANDLORD_PHONE).map(Setting::getValue).orElse(""));
+        context.setVariable("cityCategory", settRepository.findByCode(SettingCode.CITY_CATEGORY).map(Setting::getValue).orElse(""));
         String html = templateEngine.process("contract", context);
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         ITextRenderer renderer = new ITextRenderer();
@@ -86,48 +92,18 @@ public class LeaseServiceImpl implements LeaseService {
     }
 
     @Override
-    public Notification activate(long id, Long housingId, Model model) {
+    public Notification disable(String id) {
         Notification notification = new Notification();
         Lease lease = leaseRepository.findById(id).orElse(null);
         if(lease == null) return Notification.error("Contrat de bail introuvable");
-        if(lease.getStartDate() != null) return Notification.warn("Ce contrat de bail a déjà été activé");
+        if(lease.getStartDate() == null) return Notification.warn("Ce contrat de bail n'est pas encore actif");
         try {
-            LocalDate now = LocalDate.now();
-            lease.setStartDate(now);
-            lease.setEndDate(now.plusMonths(lease.getPayment().getMonths()));
-            Housing housing;
-            if(housingId != null) {
-                housing = housingRepository.findById(housingId).orElse(null);
-            } else {
-                housing = lease.getPayment().getDesiderata();
-            }
-            if(housing == null || !housing.isActive() || !Availability.FREE.equals(housing.getStatus())){
-                model.addAttribute("lease", lease);
-                return Notification.error("Le logement sollicité n'est pas disponible");
-            }
-            if(!Objects.equals(housing.getStanding().getId(), lease.getPayment().getStanding().getId())){
-                model.addAttribute("lease", lease);
-                return Notification.error("Choisir un logement correspondant au <b>" + lease.getPayment().getStanding().getName() + "<b> standing.");
-            }
-            lease.setHousing(housing);
-            lease = leaseRepository.save(lease);
-            Student student = lease.getPayment().getStudent();
-            student.setCurrentLease(lease);
-            student.setHousing(housing);
-            if(housing.getResident() != null) {
-                Student resident = housing.getResident();
-                resident.setHousing(null);
-                studentRepository.save(resident);
-            }
-            housing.setStatus(Availability.OCCUPIED);
-            housing.setResident(student);
-            housing.setReservedBy(null);
-            studentRepository.save(student);
-            housingRepository.save(housing);
-            notification.setMessage("Le contract de bail de l'étudiant <b>" + lease.getPayment().getStudent().getUser().getName() + "</b> a été activé avec succès.");
+            lease.setActive(false);
+            notification.setMessage("Le contract de bail de l'étudiant <b>" + lease.getPayment().getStudent().getUser().getName() + "</b> a été résilié avec succès.");
+            leaseRepository.save(lease);
             logRepository.save(Log.info(notification.getMessage()));
         } catch (Throwable e){
-            notification = Notification.error("Erreur lors de l'activation du contrat de bail.");
+            notification = Notification.error("Erreur lors de la résiliation du contrat de bail.");
             logRepository.save(Log.error(notification.getMessage(), ExceptionUtils.getStackTrace(e)));
         }
         return notification;
@@ -142,25 +118,28 @@ public class LeaseServiceImpl implements LeaseService {
         try {
             Housing housing = housingRepository.findById(mutation.getHousingId()).orElse(null);
             if(housing == null) return Notification.error("Logement sollicité introuvable");
-            if(!housing.isActive() || !Availability.FREE.equals(housing.getStatus())) return Notification.error("Logement sollicité n'est pas disponible");
-            if(Objects.equals(lease.getHousing().getId(), housing.getId())) return Notification.error("Logement sollicité correspond au logement actuel");
-            if(Objects.equals(lease.getHousing().getStanding().getId(), housing.getStanding().getId()) && mutation.getAmount() != 0) return Notification.error("Le logement sollicité est du même standing que le logement actuel, donc le montant doit être zéro");
-            lease.setMutationHousing(housing);
-            lease.setMutationAmount(mutation.getAmount());
-            lease.setMutationDate(LocalDateTime.now());
-            lease.setMutedBy(userRepository.findByEmail(Optional.ofNullable(principal).map(Principal::getName).orElse("")).orElse(null));
+            boolean transfer = false;
+            if(lease.getHousing() != null && !housing.getId().equals(lease.getHousing().getId())){
+                if(!housing.isActive() || !housing.isAvailable()) return Notification.error("Logement sollicité n'est pas disponible");
+                lease.getHousing().setResident(null);
+                lease.getHousing().setAvailable(true);
+                housingRepository.save(lease.getHousing());
+                transfer = true;
+            }
+            lease.setHousing(housing);
+            lease.setStartDate(mutation.getStartDate());
+            lease.setEndDate(lease.getStartDate().plusMonths(lease.getPayment().getMonths()));
             Student student = lease.getPayment().getStudent();
             housing.setResident(student);
-            housing.setReservedBy(null);
-            housing.setStatus(Availability.OCCUPIED);
+            housing.setAvailable(false);
             housingRepository.save(housing);
             student.setHousing(housing);
             studentRepository.save(student);
-            notification.setMessage("L'étudiant <b>" + student.getUser().getName() + "</b> a été transféré dans le logement <b>" + housing.getName() + "</b> avec succès.");
-            housing = lease.getHousing();
-            housing.setResident(null);
-            housing.setStatus(Availability.FREE);
-            housingRepository.save(housing);
+            if(transfer) {
+                notification.setMessage("L'étudiant <b>" + student.getUser().getName() + "</b> a été transféré dans le logement <b>" + housing.getName() + "</b> avec succès.");
+            } else {
+                notification.setMessage("Le contrat de bail de l'étudiant <b>" + student.getUser().getName() + "</b> a été modifié avec succès.");
+            }
             leaseRepository.save(lease);
             logRepository.save(Log.info(notification.getMessage()));
         } catch (Throwable e){

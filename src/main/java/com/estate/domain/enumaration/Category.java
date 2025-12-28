@@ -16,8 +16,8 @@ public enum Category {
     }
 
     public static class Converter extends EnumConverter<Category> {
-        public Converter(Class<Category> clazz) {
-            super(clazz);
+        public Converter() {
+            super(Category.class);
         }
     }
 }

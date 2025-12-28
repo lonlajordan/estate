@@ -1,8 +1,8 @@
 package com.estate.domain.form;
 
 import com.estate.domain.entity.Housing;
-import com.estate.domain.enumaration.Availability;
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.Predicate;
@@ -11,17 +11,21 @@ import java.util.List;
 
 @Data
 public class HousingSearch {
-    private Long standingId;
-    private Availability status;
+    private String standingId;
+    private String building;
+    private Boolean available;
 
     public Specification<Housing> toSpecification() {
         return (root, query, cb) -> {
             List<Predicate> predicates = new ArrayList<>();
-            if (standingId != null) {
+            if(StringUtils.isNotBlank(standingId)) {
                 predicates.add(cb.equal(root.get("standing").get("id"), standingId));
             }
-            if (status != null) {
-                predicates.add(cb.equal(root.get("status"), status));
+            if(StringUtils.isNotBlank(building)) {
+                predicates.add(cb.like(cb.lower(root.get("name")), cb.lower(cb.literal("%" + building + "%"))));
+            }
+            if (available != null) {
+                predicates.add(cb.equal(root.get("available"), available));
             }
             return cb.and(predicates.toArray(new Predicate[0]));
         };

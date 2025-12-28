@@ -3,6 +3,7 @@ package com.estate.domain.entity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -12,11 +13,14 @@ import java.io.Serializable;
 @Setter
 @AllArgsConstructor
 @Entity
+@Table(uniqueConstraints = { @UniqueConstraint(name = "UK_EMAIL", columnNames = { "email"})})
+public class Visitor extends Auditable {
 public class Visitor extends Auditable implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @Column(nullable = false, unique = true)
+    @GeneratedValue(generator = "uuid2", strategy = GenerationType.IDENTITY)
+    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    private String id;
+    @Column(nullable = false)
     private String email;
     @Column(nullable = false)
     private String name;

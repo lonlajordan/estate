@@ -1,14 +1,12 @@
-package com.estate.domain.mail;
+package com.estate.domain.helper;
 
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -30,27 +28,27 @@ import java.util.stream.Collectors;
 public class EmailHelper {
     private final JavaMailSender mailSender;
     private final FreeMarkerConfigurer freeMarkerConfigurer;
-    @Value("${app.base.url}")
-    private String baseUrl;
-    @Value("classpath:/static/images/logo.png")
-    Resource resourceFile;
 
     @Async
     public void sendMail(String to, String cc, String subject, String templateName, Locale locale, Map<String, Object> model, List<String> attachments) {
         try {
             Template freemarkerTemplate = freeMarkerConfigurer.getConfiguration().getTemplate(templateName, locale);
-            model.put("logo", baseUrl + "/images/logo.png");
+            String sender = Objects.requireNonNull(((JavaMailSenderImpl) mailSender).getUsername());
             String body = FreeMarkerTemplateUtils.processTemplateIntoString(freemarkerTemplate, model);
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true,"UTF-8");
-            helper.setFrom(Objects.requireNonNull(((JavaMailSenderImpl) mailSender).getUsername()));
-            helper.setTo(InternetAddress.parse(purge(to)));
+            helper.setFrom(sender);
+            helper.setTo(InternetAddress.parse(purge(StringUtils.defaultIfBlank(to, sender))));
             if(StringUtils.isNotEmpty(cc)) helper.setCc(InternetAddress.parse(purge(cc)));
             helper.setSubject(subject);
             helper.setText(body, true);
             for(int i = 0; i < attachments.size(); i++){
-                FileSystemResource file = new FileSystemResource(new File(attachments.get(i)));
-                helper.addAttachment(StringUtils.defaultString(file.getFilename() , "Fichier " + (i + 1)), file);
+                try {
+                    FileSystemResource file = new FileSystemResource(new File(attachments.get(i)));
+                    helper.addAttachment(StringUtils.defaultString(file.getFilename() , "Fichier " + (i + 1)), file);
+                } catch (Exception e) {
+                    log.error("Unable to add attachment", e);
+                }
             }
             mailSender.send(message);
         } catch (MessagingException | IOException | TemplateException e) {

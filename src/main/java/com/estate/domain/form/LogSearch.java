@@ -36,7 +36,7 @@ public class LogSearch {
                 predicates.add(cb.greaterThanOrEqualTo(root.get("creationDate"), startDate.atStartOfDay()));
             }
             if (endDate != null) {
-                predicates.add(cb.lessThanOrEqualTo(root.get("creationDate"), startDate.atTime(LocalTime.MAX)));
+                predicates.add(cb.lessThanOrEqualTo(root.get("creationDate"), endDate.atTime(LocalTime.MAX)));
             }
             return cb.and(predicates.toArray(new Predicate[0]));
         };

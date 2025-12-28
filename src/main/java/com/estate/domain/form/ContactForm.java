@@ -3,21 +3,20 @@ package com.estate.domain.form;
 
 import lombok.Data;
 
-import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
 @Data
 public class ContactForm {
-    @NotBlank
+    @NotBlank(message = "nom requis")
     private String name;
-    @NotBlank
-    @Email
+    @NotBlank(message = "adresse e-mail requise")
+    @Email(message = "adresse e-mail invalide")
     private String email;
-    @NotBlank
+    @NotBlank(message = "numéro de téléphone requis")
     private String phone;
-    @NotBlank
+    @NotBlank(message = "object requis")
     private String subject;
-    @NotBlank
+    @NotBlank(message = "message requis")
     private String message;
 }

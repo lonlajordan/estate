@@ -16,7 +16,7 @@
                 <span th:if="${session?.user}" th:text="${session.user.name}"></span> &nbsp; <i class="fa fa-user fa-fw"></i> &nbsp; <i class="fa fa-caret-down"></i>
             </a>
             <ul class="dropdown-menu dropdown-user p-0">
-                <li><a th:href="@{/user/profile}" style="padding: 10px"><i class="fa fa-cogs fa-fw"></i> <span th:text="${#authentication.name}"></span></a></li>
+                <li><a th:href="@{/user/profile}" style="padding: 10px"><i class="fa fa-cogs fa-fw"></i> Modifier mon profil</a></li>
                 <li class="divider m-0"></li>
                 <li><a th:href="@{/user/change/password}" style="padding: 10px"><i class="fa fa-lock fa-fw"></i> Changer de mot de passe</a></li>
                 <li class="divider m-0"></li>

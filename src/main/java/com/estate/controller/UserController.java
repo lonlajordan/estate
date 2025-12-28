@@ -3,12 +3,15 @@ package com.estate.controller;
 import com.estate.domain.entity.Notification;
 import com.estate.domain.entity.User;
 import com.estate.domain.enumaration.Profil;
+import com.estate.domain.exception.NotFoundException;
 import com.estate.domain.form.PasswordForm;
 import com.estate.domain.form.ProfilForm;
 import com.estate.domain.form.UserForm;
-import com.estate.domain.mail.SmsHelper;
+import com.estate.domain.helper.SmsHelper;
 import com.estate.domain.service.face.UserService;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -26,14 +29,16 @@ import java.security.Principal;
 public class UserController {
     private final UserService userService;
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'JANITOR')")
     @GetMapping(value="list")
     public String findAll(Model model){
         model.addAttribute("users", userService.findAllByProfil(Profil.STAFF));
         return "admin/user/list";
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'JANITOR')")
     @GetMapping(value="view/{id}")
-    public String findById(@PathVariable long id, Model model, RedirectAttributes attributes){
+    public String viewById(@PathVariable String id, Model model, RedirectAttributes attributes){
         User user = userService.findById(id).orElse(null);
         if(user == null){
             attributes.addFlashAttribute("notification", Notification.error("Utilisateur introuvable."));
@@ -43,10 +48,11 @@ public class UserController {
         return "admin/user/view";
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping(value = "save")
-    private String findById(@RequestParam(required = false) Long id, Model model, RedirectAttributes attributes){
+    public String findById(@RequestParam(required = false) String id, Model model, RedirectAttributes attributes){
         User user = new User();
-        if(id != null)  user = userService.findById(id).orElse(null);
+        if(StringUtils.isNotBlank(id))  user = userService.findById(id).orElse(null);
         if(user == null){
             attributes.addFlashAttribute("notification", Notification.error("Utilisateur introuvable"));
             return "redirect:/user/list";
@@ -56,6 +62,7 @@ public class UserController {
         return "admin/user/save";
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping(value="save")
     public String save(@Valid @ModelAttribute("user") UserForm user, BindingResult result, @RequestParam(required = false, defaultValue = "false") boolean multiple, Model model, RedirectAttributes attributes, HttpSession session){
         if(result.hasErrors()){
@@ -75,8 +82,8 @@ public class UserController {
 
     @PostMapping(value="profile")
     public String saveProfile(@Valid @ModelAttribute("user") ProfilForm user, BindingResult result, Model model, HttpSession session){
+        model.addAttribute("countryCodes", SmsHelper.countryCodes);
         if(result.hasErrors()){
-            model.addAttribute("countryCodes", SmsHelper.countryCodes);
             return "admin/user/profile";
         }
         Notification notification =  userService.updateProfile(user, session);
@@ -88,7 +95,7 @@ public class UserController {
     @GetMapping(value="profile")
     public String profile(Model model, HttpSession session){
         User user = (User) session.getAttribute("user");
-        if(user == null) return "redirect:/error/404";
+        if(user == null) throw new NotFoundException();
         model.addAttribute("user", user.toProfilForm());
         model.addAttribute("countryCodes", SmsHelper.countryCodes);
         return "admin/user/profile";
@@ -110,14 +117,16 @@ public class UserController {
         return "admin/user/password";
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @RequestMapping(value="toggle/{id}")
-    public String toggle(@PathVariable int id, RedirectAttributes attributes){
+    public String toggle(@PathVariable String id, RedirectAttributes attributes){
         attributes.addFlashAttribute("notification", userService.toggleById(id));
         return "redirect:/user/list";
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @RequestMapping(value="delete")
-    public String deleteById(@RequestParam long id, @RequestParam(required = false, defaultValue = "false") boolean force, RedirectAttributes attributes, HttpServletRequest request){
+    public String deleteById(@RequestParam String id, @RequestParam(required = false, defaultValue = "false") boolean force, RedirectAttributes attributes, HttpServletRequest request){
         Notification notification =  userService.deleteById(id, force, request);
         attributes.addFlashAttribute("notification", notification);
         return "redirect:/user/list";

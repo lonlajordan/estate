@@ -1,10 +1,11 @@
 package com.estate.domain.entity;
 
-import com.estate.domain.enumaration.Availability;
 import com.estate.domain.enumaration.Category;
 import com.estate.domain.form.HousingForm;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -17,23 +18,20 @@ import java.util.Optional;
 @Table(uniqueConstraints = @UniqueConstraint(name = "UK_NAME", columnNames = {"name"}))
 public class Housing extends Auditable implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(generator = "uuid2", strategy = GenerationType.IDENTITY)
+    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    private String id;
     @Column(nullable = false)
     private String name;
-    private String picture;
     @ManyToOne(optional = false)
+    @JoinColumn(foreignKey = @ForeignKey(name = "FK_STANDING_ID"), nullable = false)
     private Standing standing;
     @OneToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "FK_STUDENT_ID"))
     private Student resident;
-    @OneToOne
-    private Student reservedBy;
     @Convert(converter = Category.Converter.class)
-    @Enumerated(EnumType.STRING)
     private Category category = Category.ROOM;
-    @Convert(converter = Availability.Converter.class)
-    @Enumerated(EnumType.STRING)
-    private Availability status = Availability.FREE;
+    private boolean available = true;
     private boolean active = true;
 
     public Housing() {
@@ -45,13 +43,27 @@ public class Housing extends Auditable implements Serializable {
         form.setName(name);
         form.setStandingId(Optional.ofNullable(standing).map(Standing::getId).orElse(null));
         form.setCategory(category);
-        form.setStatus(status);
+        form.setAvailable(available);
         return form;
+    }
+
+    public String getBuilding() {
+        return StringUtils.substring(StringUtils.trim(name), 0, 1);
+    }
+
+    public Integer getNumber() {
+
+        try {
+            String number = StringUtils.defaultString(name).replaceAll("\\D", "");
+            return Integer.parseInt(number);
+        } catch(Exception e) {
+            return 1;
+        }
     }
 
     @PrePersist
     @PreUpdate
     public void beforeSave(){
-        if(this.name != null) this.name = this.name.replaceAll(" ", "").toUpperCase();
+        if(this.name != null) this.name = this.name.trim().replaceAll("\\s+", " ").toUpperCase();
     }
 }

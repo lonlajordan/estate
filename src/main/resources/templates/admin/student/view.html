@@ -11,7 +11,7 @@
             <ol class="breadcrumb">
                 <li><i class="fa fa-home"></i> <a class="lazy-link" th:href="@{/dashboard}">Accueil</a></li>
                 <li><a class="lazy-link" th:href="@{/student/list}">Étudiants</a></li>
-                <li th:utext="*{'Détails de l''étudiant <b>[ ' + id + ' ]</b>'}"></li>
+                <li>Informations de l'étudiant</li>
             </ol>
         </div>
         <div class="row">
@@ -43,12 +43,16 @@
                             <span class="pull-right"><em th:text="*{user.gender.name}"></em></span>
                         </a>
                         <a class="list-group-item" href="#">
+                            <b>Numéro de la CNI</b>
+                            <span class="pull-right"><em th:text="*{cniNumber}"></em></span>
+                        </a>
+                        <a class="list-group-item" href="#">
                             <b>Logement</b>
                             <span class="pull-right"><em th:text="*{housing?.name}"></em></span>
                         </a>
                         <a class="list-group-item" href="#">
                             <b>Statut</b>
-                            <span class="pull-right"><em th:text="${student.active ? 'ACTIF' : 'DÉSACTIVÉ'}"></em></span>
+                            <span class="pull-right"><em th:text="${student.user?.active ? 'ACTIF' : 'DÉSACTIVÉ'}"></em></span>
                         </a>
                         <a class="list-group-item" href="#">
                             <b>Nom de l'établissement fréquenté</b>
@@ -61,6 +65,10 @@
                         <a class="list-group-item" href="#">
                             <b>Niveau</b>
                             <span class="pull-right"><em th:text="*{grade?.name}"></em></span>
+                        </a>
+                        <a class="list-group-item" href="#">
+                            <b>Matricule</b>
+                            <span class="pull-right"><em th:text="*{matricule}"></em></span>
                         </a>
                         <a class="list-group-item" href="#">
                             <b>Téléphone(s)</b>
@@ -119,10 +127,10 @@
                 </tr>
                 <tr>
                     <th>Téléphone(s)</th>
-                    <td th:colspan="${student.firstParentMobile == null ? 2 : 1}" th:text="*{firstParentPhone}"></td>
-                    <td th:if="${student.firstParentMobile != null}" th:text="*{firstParentMobile}"></td>
-                    <td th:colspan="${student.secondParentMobile == null ? 2 : 1}" th:text="*{secondParentPhone}"></td>
-                    <td th:if="${student.secondParentMobile != null}" th:text="*{secondParentMobile}"></td>
+                    <td th:colspan="${#strings.isEmpty(student.firstParentMobile) ? 2 : 1}" th:text="*{firstParentPhone}"></td>
+                    <td th:unless="${#strings.isEmpty(student.firstParentMobile)}" th:text="*{firstParentMobile}"></td>
+                    <td th:colspan="${#strings.isEmpty(student.secondParentMobile) ? 2 : 1}" th:text="*{secondParentPhone}"></td>
+                    <td th:unless="${#strings.isEmpty(student.secondParentMobile)}" th:text="*{secondParentMobile}"></td>
                 </tr>
                 <tr>
                     <th>Adresse e-mail</th>

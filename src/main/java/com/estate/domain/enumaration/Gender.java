@@ -15,8 +15,8 @@ public enum Gender {
     }
 
     public static class Converter extends EnumConverter<Gender> {
-        public Converter(Class<Gender> clazz) {
-            super(clazz);
+        public Converter() {
+            super(Gender.class);
         }
     }
 }

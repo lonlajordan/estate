@@ -2,7 +2,6 @@ package com.estate.domain.service.face;
 
 import com.estate.domain.entity.Housing;
 import com.estate.domain.entity.Notification;
-import com.estate.domain.enumaration.Availability;
 import com.estate.domain.form.HousingForm;
 import com.estate.domain.form.HousingSearch;
 
@@ -14,23 +13,21 @@ public interface HousingService {
 
     List<Housing> findAll();
 
-    List<Housing> findAllByStandingIdAndStatusAndActiveTrue(long standingId, Availability status);
+    List<Housing> findAllByStandingIdAndActiveTrue(String standingId);
 
-    List<Housing> findAllByStandingIdAndActiveTrue(long standingId);
-
-    List<Housing> findAllByStatusAndActiveTrue(Availability status);
+    List<Housing> findAllByAvailableAndActiveTrue(boolean available);
 
     List<Housing> findAll(HousingSearch form);
 
-    Optional<Housing> findById(long id);
+    Optional<Housing> findById(String id);
 
-    Notification deleteById(long id, boolean force, HttpServletRequest request);
+    Notification deleteById(String id, boolean force, HttpServletRequest request);
 
     long count();
 
     Notification save(HousingForm form);
 
-    Notification toggleById(long id);
+    Notification toggleById(String id);
 
-    Notification liberate(long id);
+    Notification liberate(String id, HttpServletRequest request);
 }

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
-<head th:insert="base.html :: head(${standing.id == null ? 'Nouveau standing' : 'Modification du standing'})"></head>
+<head th:insert="base.html :: head(${#strings.isEmpty(standing.id) ? 'Nouveau standing' : 'Modification du standing'})"></head>
 
 <body>
 <div id="wrapper">
@@ -10,7 +10,7 @@
             <ol class="breadcrumb">
                 <li><i class="fa fa-home"></i> <a class="lazy-link" th:href="@{/dashboard}">Accueil</a></li>
                 <li><a class="lazy-link" th:href="@{/standing/list}">Standings</a></li>
-                <li th:text="${standing.id == null ? 'Nouveau standing' : 'Modification du standing'}"></li>
+                <li th:text="${#strings.isEmpty(standing.id) ? 'Nouveau standing' : 'Modification du standing'}"></li>
             </ol>
         </div>
         <div class="row">
@@ -20,7 +20,7 @@
                     <div class="panel-heading">
                         <b>Formulaire : </b> <span style="font-size: 13px">Les champs avec l'astérisque ( <span class="required-field">*</span> ) sont obligatoires</span>
                     </div>
-                    <form th:object="${standing}" onsubmit="return submitForm(e)" th:action="@{/standing/save}" autocomplete="off" method="post">
+                    <form th:object="${standing}" onsubmit="submitMultipartForm(event)" th:action="@{/standing/save}" autocomplete="off" method="post">
                         <div class="panel-body">
                             <input th:field="*{id}" type="hidden">
                             <div class="row">
@@ -28,6 +28,13 @@
                                     <label class="control-label" for="name">Nom <span class="required-field">*</span></label>
                                     <input id="name" th:field="*{name}" class="form-control" autocomplete="off" required>
                                     <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="help-block"></p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-lg-12" th:classappend="${#fields.hasErrors('picture') ? 'has-error' : ''}">
+                                    <label for="picture" class="control-label">Aperçu photo</label>
+                                    <input id="picture" th:field="*{picture}" type="file" autocomplete="off" class="form-control">
+                                    <p th:if="${#fields.hasErrors('picture')}" th:errors="*{picture}" class="help-block"></p>
                                 </div>
                             </div>
                             <div class="row">

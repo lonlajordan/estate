@@ -27,7 +27,7 @@ public class SettingServiceImpl implements SettingService {
     private final LogRepository logRepository;
 
     @Override
-    public Optional<Setting> findById(long id) {
+    public Optional<Setting> findById(String id) {
         return settingRepository.findById(id);
     }
 
