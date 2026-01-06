@@ -7,30 +7,36 @@ import com.estate.domain.enumaration.Gender;
 import com.estate.domain.helper.EmailHelper;
 import com.estate.domain.service.face.NotificationService;
 import com.estate.repository.*;
+import com.google.auth.oauth2.GoogleCredentials;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.Message;
+import com.google.firebase.messaging.Notification;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.lang3.Strings;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 
+import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@Slf4j
 @Configuration
 @EnableScheduling
 @RequiredArgsConstructor
 public class Scheduler {
-    private static final Logger log = LoggerFactory.getLogger(Scheduler.class);
     private final EmailHelper emailHelper;
     private final NotificationService notificationService;
     private final LogRepository logRepository;
@@ -38,6 +44,7 @@ public class Scheduler {
     private final HousingRepository housingRepository;
     private final LeaseRepository leaseRepository;
     private final VisitorRepository visitorRepository;
+    private final ResourceLoader resourceLoader;
 
     @Value("${sms.sender}")
     private String sender;
@@ -72,8 +79,8 @@ public class Scheduler {
                 context.put("name", name);
                 emailHelper.sendMail(to, cc, "JOYEUX ANNIVERSAIRE", "birthday.ftl", Locale.FRENCH, context, Collections.emptyList());
                 messageStudent = String.format("%1$s %2$s, la MINI CITÉ CONCORDE vous souhaite un joyeux anniversaire ! Que le bonheur et la réussite vous accompagne.", Gender.MALE.equals(student.getUser().getGender()) ? "Cher" : "Chère", name);
-                if(StringUtils.startsWith(student.getUser().getPhone(), countryCode)) notificationService.sendSMS(sender, student.getUser().getPhone(), messageStudent);
-                if(StringUtils.startsWith(student.getUser().getMobile(), countryCode)) notificationService.sendSMS(sender, student.getUser().getMobile(), messageStudent);
+                if(Strings.CI.startsWith(student.getUser().getPhone(), countryCode)) notificationService.sendSMS(sender, student.getUser().getPhone(), messageStudent);
+                if(Strings.CI.startsWith(student.getUser().getMobile(), countryCode)) notificationService.sendSMS(sender, student.getUser().getMobile(), messageStudent);
             } catch (Exception e) {
                 log.error("Unable to send happy birthday message", e);
             }
@@ -100,12 +107,12 @@ public class Scheduler {
                 messageFirstParent = String.format("Cher parent, le contrat de bail de votre %1$s %2$s arrive à échéance le %3$s. Nous vous proposons de le renouveler. Merci.", Gender.MALE.equals(student.getUser().getGender()) ? student.getFirstParentRelation().getBoy() : student.getFirstParentRelation().getGirl() ,  name, date);
                 messageSecondParent = String.format("Cher parent, le contrat de bail de votre %1$s %2$s arrive à échéance le %3$s. Nous vous proposons de le renouveler. Merci.", Gender.MALE.equals(student.getUser().getGender()) ? student.getSecondParentRelation().getBoy() : student.getSecondParentRelation().getGirl() ,  name, date);
                 leaseRepository.save(lease);
-                if(StringUtils.startsWith(student.getUser().getPhone(), countryCode)) notificationService.sendSMS(sender, student.getUser().getPhone(), messageStudent);
-                if(StringUtils.startsWith(student.getFirstParentPhone(), countryCode)) notificationService.sendSMS(sender, student.getFirstParentPhone(), messageFirstParent);
-                if(StringUtils.startsWith(student.getSecondParentPhone(), countryCode)) notificationService.sendSMS(sender, student.getSecondParentPhone(), messageSecondParent);
-                if(StringUtils.startsWith(student.getUser().getMobile(), countryCode)) notificationService.sendSMS(sender, student.getUser().getMobile(), messageStudent);
-                if(StringUtils.startsWith(student.getFirstParentMobile(), countryCode)) notificationService.sendSMS(sender, student.getFirstParentMobile(), messageFirstParent);
-                if(StringUtils.startsWith(student.getSecondParentMobile(), countryCode)) notificationService.sendSMS(sender, student.getSecondParentMobile(), messageSecondParent);
+                if(Strings.CI.startsWith(student.getUser().getPhone(), countryCode)) notificationService.sendSMS(sender, student.getUser().getPhone(), messageStudent);
+                if(Strings.CI.startsWith(student.getFirstParentPhone(), countryCode)) notificationService.sendSMS(sender, student.getFirstParentPhone(), messageFirstParent);
+                if(Strings.CI.startsWith(student.getSecondParentPhone(), countryCode)) notificationService.sendSMS(sender, student.getSecondParentPhone(), messageSecondParent);
+                if(Strings.CI.startsWith(student.getUser().getMobile(), countryCode)) notificationService.sendSMS(sender, student.getUser().getMobile(), messageStudent);
+                if(Strings.CI.startsWith(student.getFirstParentMobile(), countryCode)) notificationService.sendSMS(sender, student.getFirstParentMobile(), messageFirstParent);
+                if(Strings.CI.startsWith(student.getSecondParentMobile(), countryCode)) notificationService.sendSMS(sender, student.getSecondParentMobile(), messageSecondParent);
             } catch (Exception e) {
                 log.error("Unable to send contract expiration remember message", e);
             }
@@ -130,5 +137,65 @@ public class Scheduler {
                 }
             }
         }
+    }
+
+    //@Scheduled(cron = "0 0 10 ? * MON", zone = "GMT+1")
+    @Scheduled(cron = "0 */15 * * * *", zone = "GMT+1")
+    public void sendReminder(){
+        String message = new Random().nextBoolean() ? "Paye tes factuers ENEO facilement" : "Pay your ENEO bills easily";
+        boolean success = sendNotification("ONE BILLS", message);
+        if(!success){
+            sendNotification("ONE BILLS", message);
+        }
+    }
+
+
+    @Scheduled(cron = "0 0 15 ? * SAT", zone = "GMT+1")
+    public void sendReminder2(){
+        String message = new Random().nextBoolean() ? "Collecte tes points bonus, et enjoy avec tes proches" : "Collect your bonus points, and enjoy with your loved ones";
+        boolean success = sendNotification("ONE BILLS", message);
+        if(!success){
+            sendNotification("ONE BILLS", message);
+        }
+    }
+
+
+
+    public boolean sendNotification(String title, String body) {
+        try {
+            Resource resource = resourceLoader.getResource("file:./one-bills-firebase.json");
+            InputStream serviceAccount = resource.getInputStream();
+            FirebaseOptions options = FirebaseOptions.builder()
+                    .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+                    .build();
+
+            if (FirebaseApp.getApps().isEmpty()) {
+                FirebaseApp.initializeApp(options);
+            }
+        } catch (Exception e) {
+            log.error("Error loading Firebase configurations", e);
+            return false;
+        }
+        // Create the notification message
+        Notification notification = Notification.builder()
+                .setTitle(title)
+                .setBody(body)
+                .build();
+
+        // Create the full FCM message with the target token
+        Message message = Message.builder()
+                .setTopic("all")
+                .setNotification(notification)
+                .build();
+
+        // Send the message
+        try {
+            String response = FirebaseMessaging.getInstance().send(message);
+            log.info("Successfully sent message: {}", response);
+            return true;
+        } catch (Exception e) {
+            log.error("Failed to send message", e);
+        }
+        return false;
     }
 }
