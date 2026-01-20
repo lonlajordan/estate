@@ -4,9 +4,9 @@ import com.estate.domain.form.StandingForm;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.GenericGenerator;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.UuidGenerator;
 
 @Getter
 @Setter
@@ -15,8 +15,7 @@ import jakarta.persistence.*;
 @Table(uniqueConstraints = { @UniqueConstraint(name = "UK_NAME", columnNames = { "name"})})
 public class Standing extends Auditable {
     @Id
-    @GeneratedValue(generator = "uuid2", strategy = GenerationType.IDENTITY)
-    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    @UuidGenerator(style = UuidGenerator.Style.TIME)
     private String id;
     @Column(nullable = false)
     private String name = "";

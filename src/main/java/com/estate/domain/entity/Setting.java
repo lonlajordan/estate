@@ -5,17 +5,16 @@ import com.estate.domain.form.SettingForm;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
-import org.hibernate.annotations.GenericGenerator;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.UuidGenerator;
 
 @Setter
 @Getter
 @Entity
 public class Setting extends Auditable {
     @Id
-    @GeneratedValue(generator = "uuid2", strategy = GenerationType.IDENTITY)
-    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    @UuidGenerator(style = UuidGenerator.Style.TIME)
     private String id;
     @Column(nullable = false)
     @Convert(converter = SettingCode.Converter.class)

@@ -3,9 +3,10 @@ package com.estate.domain.entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.GenericGenerator;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.UuidGenerator;
+
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
@@ -16,8 +17,7 @@ import java.time.temporal.ChronoUnit;
 @Table(uniqueConstraints = { @UniqueConstraint(name = "UK_PAYMENT_ID", columnNames = { "payment_id"})})
 public class Lease extends Auditable {
     @Id
-    @GeneratedValue(generator = "uuid2", strategy = GenerationType.IDENTITY)
-    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    @UuidGenerator(style = UuidGenerator.Style.TIME)
     private String id;
     private LocalDate startDate;
     private LocalDate endDate;
