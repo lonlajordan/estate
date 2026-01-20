@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -25,11 +26,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -47,36 +48,26 @@ public class SecurityConfiguration {
 
     @Bean
     protected WebSecurityCustomizer ignoringCustomizer(){
-        return (web) -> web.ignoring().antMatchers("/css/**", "/js/**", "/images/**", "/fonts/**", "/assets/**");
+        return (web) -> web.ignoring().requestMatchers("/css/**", "/js/**", "/images/**", "/fonts/**", "/assets/**");
     }
 
     @Bean
     protected SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf()
-            .and()
-                .sessionManagement()
-                .maximumSessions(1).expiredUrl("/237in").and()
-            .and()
-                .exceptionHandling()
-                .accessDeniedPage("/error/403")
-            .and()
-                .formLogin()
-                    .usernameParameter("email")
+        http.csrf(Customizer.withDefaults())
+            .sessionManagement(session -> session.maximumSessions(1).expiredUrl("/237in"))
+            .exceptionHandling(handler -> handler.accessDeniedPage("/error/403"))
+            .formLogin(form -> form.usernameParameter("email")
                     .loginPage("/237in")
                     .loginProcessingUrl("/237in")
                     .defaultSuccessUrl("/dashboard", true)
-                    .failureHandler(new AuthenticationFailureHandler())
-            .and()
-                .logout()
-                    .deleteCookies("JSESSIONID")
+                    .failureHandler(new AuthenticationFailureHandler()))
+            .logout(logout -> logout.deleteCookies("JSESSIONID")
                     .logoutUrl("/logout")
                     .logoutSuccessHandler(new AuthenticationLogoutSuccessHandler())
                     .logoutSuccessUrl("/237in")
-                    .invalidateHttpSession(true)
-            .and()
-                .authorizeRequests()
-                    .antMatchers("/dashboard", "/housing/**", "/lease/**", "/log/**", "/payment/**", "/setting/**", "/standing/**", "/student/**", "/user/**", "/policy").authenticated()
-                    .anyRequest().permitAll();
+                    .invalidateHttpSession(true))
+            .authorizeHttpRequests(authorize -> authorize.requestMatchers("/dashboard", "/housing/**", "/lease/**", "/log/**", "/payment/**", "/setting/**", "/standing/**", "/student/**", "/user/**", "/policy").authenticated()
+                    .anyRequest().permitAll());
         return http.build();
     }
 

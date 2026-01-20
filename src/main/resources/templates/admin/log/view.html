@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 
-<head th:insert="base.html :: head(${'Détails sur l''évènement'})"></head>
+<head th:insert="~{base.html :: head(${'Détails sur l''évènement'})}"></head>
 
 <body>
 <div id="wrapper">
@@ -59,7 +59,7 @@
         </div>
     </div>
 </div>
-<th:block th:insert="base.html :: scripts"></th:block>
+<th:block th:insert="~{base.html :: scripts}"></th:block>
 
 </body>
 

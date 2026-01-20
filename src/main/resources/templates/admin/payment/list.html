@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 
-<head th:replace="base.html :: head('Paiements')"></head>
+<head th:replace="~{base.html :: head('Paiements')}"></head>
 
 <body>
 <div id="wrapper">
@@ -168,7 +168,7 @@
         </div>
     </div>
 </div>
-<<th:block th:insert="base.html :: scripts"></th:block>
+<<th:block th:insert="~{base.html :: scripts}"></th:block>
 
 </body>
 

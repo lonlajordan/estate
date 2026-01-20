@@ -26,7 +26,7 @@ import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import com.estate.domain.helper.TextUtils;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collections;

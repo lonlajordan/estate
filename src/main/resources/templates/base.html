@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta th:if="${#arrays.contains(@environment.getActiveProfiles(), 'production')}" http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="ctx" th:content="${#httpServletRequest.getContextPath()}"/>
+        <meta name="ctx" th:content="@{/}"/>
         <title th:text="${title}"></title>
         <link rel="icon" type="image/x-ico" th:href="@{/images/favicon.png}">
         <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">

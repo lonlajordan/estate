@@ -4,8 +4,8 @@ import com.estate.domain.entity.Housing;
 import com.estate.domain.entity.Notification;
 import com.estate.domain.form.HousingForm;
 import com.estate.domain.form.HousingSearch;
+import jakarta.servlet.http.HttpServletRequest;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
 

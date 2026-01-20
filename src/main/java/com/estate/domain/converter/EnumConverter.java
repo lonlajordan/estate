@@ -1,7 +1,7 @@
 package com.estate.domain.converter;
 
-import javax.persistence.AttributeConverter;
-import javax.persistence.Converter;
+import jakarta.persistence.AttributeConverter;
+import jakarta.persistence.Converter;
 
 @Converter(autoApply = true)
 public abstract class EnumConverter<T extends Enum<T>> implements AttributeConverter<T, String> {

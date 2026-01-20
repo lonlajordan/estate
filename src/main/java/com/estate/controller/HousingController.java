@@ -6,6 +6,7 @@ import com.estate.domain.form.HousingForm;
 import com.estate.domain.form.HousingSearch;
 import com.estate.domain.service.face.HousingService;
 import com.estate.domain.service.face.StandingService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -16,8 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
