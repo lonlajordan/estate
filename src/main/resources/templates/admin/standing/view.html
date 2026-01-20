@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5" lang="en">
 
-<head th:insert="base.html :: head(${'Détails du standing'})"></head>
+<head th:insert="~{base.html :: head(${'Détails du standing'})}"></head>
 
 <body>
 <div id="wrapper">
-    <div th:replace="header.html"></div>
+    <div th:replace="~{header.html}"></div>
     <div id="page-wrapper" th:object="${standing}">
         <div class="row mt-6">
             <ol class="breadcrumb">

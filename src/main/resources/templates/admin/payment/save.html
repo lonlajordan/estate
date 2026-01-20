@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
-<head th:insert="base.html :: head(${#strings.isEmpty(payment.id) ? 'Nouveau paiement' : 'Modification du paiement'})"></head>
+<head th:insert="~{base.html :: head(${#strings.isEmpty(payment.id) ? 'Nouveau paiement' : 'Modification du paiement'})}"></head>
 
 <body>
 <div id="wrapper">
-    <div th:replace="header.html"></div>
+    <div th:replace="~{header.html}"></div>
     <div id="page-wrapper">
         <div class="row mt-6">
             <ol class="breadcrumb">
@@ -15,7 +15,7 @@
         </div>
         <div class="row">
             <div class="col">
-                <div th:replace="base.html :: alert(${notification})"></div>
+                <div th:replace="~{base.html :: alert(${notification})}"></div>
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <b>Formulaire</b>

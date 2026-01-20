@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 
-<head th:insert="base.html :: head(${'Détails du contrat'})"></head>
+<head th:insert="~{base.html :: head(${'Détails du contrat'})}"></head>
 
 <body>
 <div id="wrapper">
-    <div th:replace="header.html"></div>
+    <div th:replace="~{header.html}"></div>
     <div id="page-wrapper" th:object="${lease}">
         <div class="row mt-6">
             <ol class="breadcrumb">

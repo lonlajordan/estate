@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 
-<head th:replace="base.html :: head('Contrats de bail')"></head>
+<head th:replace="~{base.html :: head('Contrats de bail')}"></head>
 
 <body>
 <div id="wrapper">
-    <div th:replace="header.html"></div>
+    <div th:replace="~{header.html}"></div>
     <div id="page-wrapper">
         <div class="row mt-6">
             <ol class="breadcrumb">
@@ -84,7 +84,7 @@
                         </div>
                     </div>
                 </div>
-                <div th:replace="base.html :: alert(${notification})"></div>
+                <div th:replace="~{base.html :: alert(${notification})}"></div>
                 <table id="data-list" data-pdf-title="LISTE DES CONTRATS DE BAIL" data-pdf-name="Liste des contrats de bail" data-columns-left="2" data-columns-right="2" class="table table-bordered paging searching dataTable">
                     <thead>
                         <tr>
