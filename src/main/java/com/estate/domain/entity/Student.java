@@ -24,7 +24,7 @@ import java.util.*;
 @Entity
 public class Student extends Auditable {
     @Id
-    @UuidGenerator(style = UuidGenerator.Style.TIME)
+    @UuidGenerator
     private String id;
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @OnDelete(action = OnDeleteAction.CASCADE)

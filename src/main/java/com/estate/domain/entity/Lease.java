@@ -17,7 +17,7 @@ import java.time.temporal.ChronoUnit;
 @Table(uniqueConstraints = { @UniqueConstraint(name = "UK_PAYMENT_ID", columnNames = { "payment_id"})})
 public class Lease extends Auditable {
     @Id
-    @UuidGenerator(style = UuidGenerator.Style.TIME)
+    @UuidGenerator
     private String id;
     private LocalDate startDate;
     private LocalDate endDate;

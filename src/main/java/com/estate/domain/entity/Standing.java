@@ -15,7 +15,7 @@ import org.hibernate.annotations.UuidGenerator;
 @Table(uniqueConstraints = { @UniqueConstraint(name = "UK_NAME", columnNames = { "name"})})
 public class Standing extends Auditable {
     @Id
-    @UuidGenerator(style = UuidGenerator.Style.TIME)
+    @UuidGenerator
     private String id;
     @Column(nullable = false)
     private String name = "";

@@ -14,7 +14,7 @@ import org.hibernate.annotations.UuidGenerator;
 @Entity
 public class Log extends Auditable {
     @Id
-    @UuidGenerator(style = UuidGenerator.Style.TIME)
+    @UuidGenerator
     private String id;
     @Convert(converter = Level.Converter.class)
     private Level level = Level.INFO;

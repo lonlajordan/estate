@@ -15,7 +15,7 @@ import org.hibernate.annotations.UuidGenerator;
 @Table(uniqueConstraints = { @UniqueConstraint(name = "UK_EMAIL", columnNames = { "email"})})
 public class Visitor extends Auditable {
     @Id
-    @UuidGenerator(style = UuidGenerator.Style.TIME)
+    @UuidGenerator
     private String id;
     @Column(nullable = false)
     private String email;

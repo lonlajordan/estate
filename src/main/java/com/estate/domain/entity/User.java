@@ -34,7 +34,7 @@ import java.util.stream.Stream;
 @Table(name = "users", uniqueConstraints = { @UniqueConstraint(name = "UK_EMAIL", columnNames = { "email"})})
 public class User extends Auditable {
     @Id
-    @UuidGenerator(style = UuidGenerator.Style.TIME)
+    @UuidGenerator
     private String id;
     @Column(nullable = false)
     private String firstName = "";

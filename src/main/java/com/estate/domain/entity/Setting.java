@@ -14,7 +14,7 @@ import org.hibernate.annotations.UuidGenerator;
 @Entity
 public class Setting extends Auditable {
     @Id
-    @UuidGenerator(style = UuidGenerator.Style.TIME)
+    @UuidGenerator
     private String id;
     @Column(nullable = false)
     @Convert(converter = SettingCode.Converter.class)

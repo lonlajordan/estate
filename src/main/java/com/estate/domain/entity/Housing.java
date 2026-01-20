@@ -18,7 +18,7 @@ import java.util.Optional;
 @Table(uniqueConstraints = @UniqueConstraint(name = "UK_NAME", columnNames = {"name"}))
 public class Housing extends Auditable {
     @Id
-    @UuidGenerator(style = UuidGenerator.Style.TIME)
+    @UuidGenerator
     private String id;
     @Column(nullable = false)
     private String name;

@@ -18,7 +18,7 @@ import java.util.Optional;
 @Entity
 public class Payment extends Auditable {
     @Id
-    @UuidGenerator(style = UuidGenerator.Style.TIME)
+    @UuidGenerator
     private String id;
     private int rent;
     private int months = 12;
