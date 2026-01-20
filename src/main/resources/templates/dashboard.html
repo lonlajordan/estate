@@ -3,7 +3,7 @@
     <head th:replace="~{base.html :: head('Tableau de bord')}"></head>
     <body>
         <div id="wrapper">
-            <div th:replace="header.html"></div>
+            <div th:replace="~{header.html}"></div>
             <div id="page-wrapper">
                 <div class="row" th:if="${T(com.estate.domain.enumaration.Profil).STAFF.equals(session?.user?.profil)}" style="margin-top: 16px">
                     <div class="row">

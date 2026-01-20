@@ -15,7 +15,7 @@
         </div>
         <div class="row">
             <div class="col">
-                <div th:replace="base.html :: alert(${notification})"></div>
+                <div th:replace="~{base.html :: alert(${notification})}"></div>
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <b>Formulaire : </b> <span style="font-size: 13px">Les champs avec l'astérisque ( <span class="required-field">*</span> ) sont obligatoires</span>

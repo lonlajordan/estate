@@ -28,7 +28,7 @@
                 </div>
                 <form method="post" autocomplete="off" th:action="@{/237in}">
                     <div class="panel-body">
-                        <div th:replace="base.html :: alert(${notification})"></div>
+                        <div th:replace="~{base.html :: alert(${notification})}"></div>
                         <div class="form-group my-4">
                             <label class="form-control-label" for="username">Adresse e-mail <span class="required-field">*</span></label>
                             <input name="email" th:value="${email}" type="email" id="username" class="form-control form-control-lg" required>
