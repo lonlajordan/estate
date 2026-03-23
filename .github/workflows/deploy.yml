@@ -1,0 +1,79 @@
+name: Build & Deploy to VPS
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # ── 1. Checkout code ──────────────────────────────────────────────────
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # ── 2. Set up Java & build the JAR ────────────────────────────────────
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: "17"
+          distribution: "temurin"
+          cache: maven
+
+      - name: Build with Maven
+        run: mvn -B package -DskipTests
+
+      # ── 3. Build Docker image ─────────────────────────────────────────────
+      - name: Build Docker image
+        run: docker build -t petroleum:latest .
+
+      # ── 4. Export image to a tar archive ──────────────────────────────────
+      - name: Save Docker image as tar
+        run: docker save estate:latest | gzip > estate.tar.gz
+
+      # ── 5. SCP tar to VPS ─────────────────────────────────────────────────
+      - name: Copy image to VPS
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: ${{ secrets.VPS_PORT }}          # default 22
+          source: "petroleum.tar.gz"
+          target: "~/petroleum"
+
+      # ── 6. Copy docker-compose.yml to VPS ────────────────────────────────
+      - name: Copy docker-compose to VPS
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: ${{ secrets.VPS_PORT }}
+          source: "docker-compose.yml"
+          target: "~/estate"
+
+      # ── 7. Load image & restart container on VPS ─────────────────────────
+      - name: Deploy on VPS via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: ${{ secrets.VPS_PORT }}
+          script: |
+            cd ~/estate
+
+            echo "→ Loading Docker image..."
+            docker load < estate.tar.gz
+
+            echo "→ Restarting services..."
+            docker compose down --remove-orphans
+            docker compose up -d
+
+            echo "→ Cleaning up old images..."
+            docker image prune -f
+
+            echo "✅ Deployment complete!"
