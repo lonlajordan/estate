@@ -27,7 +27,7 @@ jobs:
 
       # ── 3. Build Docker image ─────────────────────────────────────────────
       - name: Build Docker image
-        run: docker build -t petroleum:latest .
+        run: docker build -t estate:latest .
 
       # ── 4. Export image to a tar archive ──────────────────────────────────
       - name: Save Docker image as tar
