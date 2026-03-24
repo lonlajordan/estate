@@ -1,6 +1,5 @@
 package com.estate.domain.entity;
 
-import com.estate.domain.form.PartnerForm;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,12 +20,4 @@ public class Partner extends Auditable implements Serializable {
     @Column(nullable = false)
     private String name;
     private String logo;
-
-
-    public PartnerForm toForm(){
-        PartnerForm form = new PartnerForm();
-        form.setId(id);
-        form.setName(name);
-        return form;
-    }
 }

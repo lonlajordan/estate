@@ -3,7 +3,7 @@ name: Build & Deploy to VPS
 on:
   push:
     branches:
-      - main
+      - master
 
 jobs:
   deploy:
@@ -41,8 +41,8 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
           port: ${{ secrets.VPS_PORT }}          # default 22
-          source: "petroleum.tar.gz"
-          target: "~/petroleum"
+          source: "estate.tar.gz"
+          target: "~/estate"
 
       # ── 6. Copy docker-compose.yml to VPS ────────────────────────────────
       - name: Copy docker-compose to VPS

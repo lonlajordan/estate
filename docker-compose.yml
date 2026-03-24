@@ -1,10 +1,8 @@
 services:
-  petroleum:
+  estate:
     image: estate:latest
     container_name: estate
     network_mode: host
-    volumes:
-      - './application.properties:/app/application.properties'
     restart: unless-stopped
     environment:
       - SPRING_PROFILES_ACTIVE=prod

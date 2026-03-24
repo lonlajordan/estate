@@ -1,2 +1,0 @@
-# MINI CITY
-MINI CITY

@@ -7,24 +7,15 @@ import com.estate.domain.enumaration.Gender;
 import com.estate.domain.helper.EmailHelper;
 import com.estate.domain.service.face.NotificationService;
 import com.estate.repository.*;
-import com.google.auth.oauth2.GoogleCredentials;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.FirebaseOptions;
-import com.google.firebase.messaging.FirebaseMessaging;
-import com.google.firebase.messaging.Message;
-import com.google.firebase.messaging.Notification;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Strings;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 
-import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -44,7 +35,6 @@ public class Scheduler {
     private final HousingRepository housingRepository;
     private final LeaseRepository leaseRepository;
     private final VisitorRepository visitorRepository;
-    private final ResourceLoader resourceLoader;
 
     @Value("${sms.sender}")
     private String sender;
@@ -139,62 +129,4 @@ public class Scheduler {
         }
     }
 
-    @Scheduled(cron = "0 0 10 ? * MON", zone = "GMT+1")
-    public void sendReminder(){
-        String message = new Random().nextBoolean() ? "Paye tes factuers ENEO facilement" : "Pay your ENEO bills easily";
-        boolean success = sendNotification("ONE BILLS", message);
-        if(!success){
-            sendNotification("ONE BILLS", message);
-        }
-    }
-
-
-    @Scheduled(cron = "0 0 15 ? * SAT", zone = "GMT+1")
-    public void sendReminder2(){
-        String message = new Random().nextBoolean() ? "Collecte tes points bonus, et enjoy avec tes proches" : "Collect your bonus points, and enjoy with your loved ones";
-        boolean success = sendNotification("ONE BILLS", message);
-        if(!success){
-            sendNotification("ONE BILLS", message);
-        }
-    }
-
-
-
-    public boolean sendNotification(String title, String body) {
-        try {
-            Resource resource = resourceLoader.getResource("file:./one-bills-firebase.json");
-            InputStream serviceAccount = resource.getInputStream();
-            FirebaseOptions options = FirebaseOptions.builder()
-                    .setCredentials(GoogleCredentials.fromStream(serviceAccount))
-                    .build();
-
-            if (FirebaseApp.getApps().isEmpty()) {
-                FirebaseApp.initializeApp(options);
-            }
-        } catch (Exception e) {
-            log.error("Error loading Firebase configurations", e);
-            return false;
-        }
-        // Create the notification message
-        Notification notification = Notification.builder()
-                .setTitle(title)
-                .setBody(body)
-                .build();
-
-        // Create the full FCM message with the target token
-        Message message = Message.builder()
-                .setTopic("all")
-                .setNotification(notification)
-                .build();
-
-        // Send the message
-        try {
-            String response = FirebaseMessaging.getInstance().send(message);
-            log.info("Successfully sent message: {}", response);
-            return true;
-        } catch (Exception e) {
-            log.error("Failed to send message", e);
-        }
-        return false;
-    }
 }
