@@ -65,15 +65,11 @@ jobs:
           port: ${{ secrets.VPS_PORT }}
           script: |
             cd ~/estate
-
             echo "→ Loading Docker image..."
             docker load < estate.tar.gz
-
             echo "→ Restarting services..."
             docker compose down --remove-orphans
             docker compose up -d
-
             echo "→ Cleaning up old images..."
             docker image prune -f
-
             echo "✅ Deployment complete!"
