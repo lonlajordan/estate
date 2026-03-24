@@ -81,7 +81,7 @@ public class InitDataService implements CommandLineRunner {
             new Setting(SettingCode.CITY_CATEGORY, "")
         ));
         settingRepository.saveAll(settings.stream().filter(setting -> !settingRepository.existsByCode(setting.getCode())).collect(Collectors.toList()));
-        List<SettingCode> codes = settings.stream().map(Setting::getCode).collect(Collectors.toList());
+        List<SettingCode> codes = settings.stream().map(Setting::getCode).toList();
         settings = settingRepository.findAll().stream().filter(setting -> !codes.contains(setting.getCode())).collect(Collectors.toList());
         settingRepository.deleteAll(settings);
     }

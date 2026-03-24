@@ -5,9 +5,11 @@ import com.estate.domain.entity.Notification;
 import com.estate.domain.entity.User;
 import com.estate.repository.UserRepository;
 import com.estate.domain.helper.TextUtils;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.context.MessageSource;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -31,18 +33,26 @@ import java.util.Locale;
 public class LoginController {
     private final UserRepository userRepository;
     private final EmailHelper emailHelper;
+    private final MessageSource messageSource;
     private final PasswordEncoder passwordEncoder;
 
     @GetMapping("/237in")
-    public String login() {
+    public String login(HttpSession session, Locale locale, Model model) {
         boolean authenticated;
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || AnonymousAuthenticationToken.class.isAssignableFrom(authentication.getClass())) {
             authenticated = false;
+            model.addAttribute("email", session.getAttribute("email"));
+            model.addAttribute("password", session.getAttribute("password"));
+            String message = (String) session.getAttribute("error");
+            if(StringUtils.isNotBlank(message)){
+                model.addAttribute("notification", Notification.error(messageSource.getMessage(message, null, locale)));
+                session.invalidate();
+            }
         } else {
             authenticated = authentication.isAuthenticated();
         }
-        return Boolean.TRUE.equals(authenticated) ? "redirect:dashboard" : "login" ;
+        return authenticated ? "redirect:dashboard" : "login" ;
     }
 
     @PostMapping("/password/reset")
@@ -102,28 +112,5 @@ public class LoginController {
         }
         attributes.addFlashAttribute("notification", notification);
         return "redirect:/237in";
-    }
-
-    @PostMapping("/237in")
-    public String login(
-            @RequestParam(required = false, defaultValue = "") String error,
-            @RequestParam String email,
-            @RequestParam String password,
-            Model model
-    ) {
-        model.addAttribute("email", email);
-        model.addAttribute("password", password);
-        if(StringUtils.isNotBlank(error)){
-            String message = "Une erreur s'est produite. Réessayez plus tard.";
-            if("1".equalsIgnoreCase(error)){
-                message = "utilisateur introuvable";
-            }else if("2".equalsIgnoreCase(error)){
-                message = "mot de passe incorrect";
-            }else if("3".equalsIgnoreCase(error)){
-                message = "votre compte est désactivé";
-            }
-            model.addAttribute("notification", Notification.error(message));
-        }
-        return "login";
     }
 }

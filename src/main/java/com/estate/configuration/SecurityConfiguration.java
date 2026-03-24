@@ -4,6 +4,7 @@ import com.estate.domain.constant.MessageCode;
 import com.estate.domain.entity.User;
 import com.estate.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -13,7 +14,6 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -26,8 +26,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import jakarta.servlet.RequestDispatcher;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -44,11 +42,6 @@ public class SecurityConfiguration {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    protected WebSecurityCustomizer ignoringCustomizer(){
-        return (web) -> web.ignoring().requestMatchers("/css/**", "/js/**", "/images/**", "/fonts/**", "/assets/**");
     }
 
     @Bean
@@ -81,8 +74,7 @@ public class SecurityConfiguration {
             String email = authentication.getName();
             String password = (String) authentication.getCredentials();
             User user = userRepository.findByEmail(email).orElse(null);
-            if (user == null || !user.getEmail().equals(email)) throw new BadCredentialsException(MessageCode.INCORRECT_EMAIL);
-            if(!passwordEncoder.matches(password, user.getPassword())) throw new BadCredentialsException(MessageCode.INCORRECT_PASSWORD);
+            if (user == null || !passwordEncoder.matches(password, user.getPassword())) throw new BadCredentialsException(MessageCode.INCORRECT_CREDENTIALS);
             if(!user.isActive()) throw new BadCredentialsException(MessageCode.ACCOUNT_DISABLED);
             user.setLastLogin(LocalDateTime.now());
             user = userRepository.save(user);
@@ -102,20 +94,14 @@ public class SecurityConfiguration {
 
     private static class AuthenticationFailureHandler extends SimpleUrlAuthenticationFailureHandler {
         @Override
-        public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
-            String url = "/237in";
-            if(exception != null) {
-                String message = exception.getMessage();
-                if(MessageCode.INCORRECT_EMAIL.equals(message)){
-                    url = "/237in?error=1";
-                }else if(MessageCode.INCORRECT_PASSWORD.equals(message)){
-                    url = "/237in?error=2";
-                }else if(MessageCode.ACCOUNT_DISABLED.equals(message)){
-                    url = "/237in?error=3";
-                }
+        public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException {
+            String uri = "/237in";
+            request.getSession().setAttribute("email", request.getParameter("email"));
+            request.getSession().setAttribute("password", request.getParameter("password"));
+            if(exception != null && StringUtils.isNotBlank(exception.getLocalizedMessage())) {
+                request.getSession().setAttribute("error", exception.getLocalizedMessage());
             }
-            RequestDispatcher dispatcher = request.getRequestDispatcher(url);
-            dispatcher.forward(request, response);
+            response.sendRedirect(request.getContextPath() + uri);
         }
     }
 
