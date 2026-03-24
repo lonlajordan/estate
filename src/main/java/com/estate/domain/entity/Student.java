@@ -8,13 +8,12 @@ import com.estate.domain.form.StudentForm;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.annotations.UuidGenerator;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.*;
-import java.io.Serializable;
+import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -23,10 +22,9 @@ import java.util.*;
 @Setter
 @AllArgsConstructor
 @Entity
-public class Student extends Auditable implements Serializable {
+public class Student extends Auditable {
     @Id
-    @GeneratedValue(generator = "uuid2", strategy = GenerationType.IDENTITY)
-    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    @UuidGenerator
     private String id;
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @OnDelete(action = OnDeleteAction.CASCADE)

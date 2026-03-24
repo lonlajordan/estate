@@ -3,10 +3,9 @@ package com.estate.domain.entity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.*;
-import java.io.Serializable;
+import jakarta.persistence.*;
+import org.hibernate.annotations.UuidGenerator;
 
 
 @Getter
@@ -15,10 +14,8 @@ import java.io.Serializable;
 @Entity
 @Table(uniqueConstraints = { @UniqueConstraint(name = "UK_EMAIL", columnNames = { "email"})})
 public class Visitor extends Auditable {
-public class Visitor extends Auditable implements Serializable {
     @Id
-    @GeneratedValue(generator = "uuid2", strategy = GenerationType.IDENTITY)
-    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    @UuidGenerator
     private String id;
     @Column(nullable = false)
     private String email;

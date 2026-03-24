@@ -4,19 +4,17 @@ import com.estate.domain.enumaration.Level;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.*;
-import java.io.Serializable;
+import jakarta.persistence.*;
+import org.hibernate.annotations.UuidGenerator;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @Entity
-public class Log extends Auditable implements Serializable {
+public class Log extends Auditable {
     @Id
-    @GeneratedValue(generator = "uuid2", strategy = GenerationType.IDENTITY)
-    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    @UuidGenerator
     private String id;
     @Convert(converter = Level.Converter.class)
     private Level level = Level.INFO;

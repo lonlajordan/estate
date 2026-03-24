@@ -3,10 +3,10 @@ package com.estate.domain.entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.*;
-import java.io.Serializable;
+import jakarta.persistence.*;
+import org.hibernate.annotations.UuidGenerator;
+
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
@@ -16,10 +16,8 @@ import java.time.temporal.ChronoUnit;
 @Entity
 @Table(uniqueConstraints = { @UniqueConstraint(name = "UK_PAYMENT_ID", columnNames = { "payment_id"})})
 public class Lease extends Auditable {
-public class Lease extends Auditable implements Serializable {
     @Id
-    @GeneratedValue(generator = "uuid2", strategy = GenerationType.IDENTITY)
-    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    @UuidGenerator
     private String id;
     private LocalDate startDate;
     private LocalDate endDate;
@@ -45,8 +43,9 @@ public class Lease extends Auditable implements Serializable {
                     return "bg-danger";
                 } else if(n < 60){
                     return "bg-warning";
+                } else if(startDate != null && (today.equals(startDate) || startDate.isBefore(today))){
+                    return "bg-success";
                 }
-                return "bg-success";
             } else {
                 return "bg-danger";
             }
@@ -60,10 +59,10 @@ public class Lease extends Auditable implements Serializable {
 
     public boolean isPending(){
         LocalDate today = LocalDate.now();
-        return startDate != null && !(today.isBefore(startDate) || today.isAfter(endDate));
+        return startDate != null && endDate != null && !(today.isBefore(startDate) || today.isAfter(endDate));
     }
 
     public boolean isMutable(){
-        return isPending() && mutationDate == null && nextLease == null;
+        return active && isPending() && nextLease == null;
     }
 }

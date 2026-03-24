@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 
-<head th:insert="base.html :: head(${'Détails du logement'})"></head>
+<head th:insert="~{base.html :: head(${'Détails du logement'})}"></head>
 
 <body>
 <div id="wrapper">
-    <div th:replace="header.html"></div>
+    <div th:replace="~{header.html}"></div>
     <div id="page-wrapper" th:object="${housing}">
         <div class="row mt-6">
             <ol class="breadcrumb">
@@ -78,7 +78,7 @@
         </div>
     </div>
 </div>
-<th:block th:insert="base.html :: scripts"></th:block>
+<th:block th:insert="~{base.html :: scripts}"></th:block>
 
 </body>
 

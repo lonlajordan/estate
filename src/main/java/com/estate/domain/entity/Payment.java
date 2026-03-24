@@ -6,20 +6,19 @@ import com.estate.domain.form.PaymentForm;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.*;
-import java.io.Serializable;
+import jakarta.persistence.*;
+import org.hibernate.annotations.UuidGenerator;
+
 import java.util.Optional;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @Entity
-public class Payment extends Auditable implements Serializable {
+public class Payment extends Auditable {
     @Id
-    @GeneratedValue(generator = "uuid2", strategy = GenerationType.IDENTITY)
-    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    @UuidGenerator
     private String id;
     private int rent;
     private int months = 12;

@@ -5,10 +5,10 @@ import com.estate.domain.form.HousingForm;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
-import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.*;
-import java.io.Serializable;
+import jakarta.persistence.*;
+import org.hibernate.annotations.UuidGenerator;
+
 import java.util.Optional;
 
 
@@ -16,10 +16,9 @@ import java.util.Optional;
 @Getter
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(name = "UK_NAME", columnNames = {"name"}))
-public class Housing extends Auditable implements Serializable {
+public class Housing extends Auditable {
     @Id
-    @GeneratedValue(generator = "uuid2", strategy = GenerationType.IDENTITY)
-    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    @UuidGenerator
     private String id;
     @Column(nullable = false)
     private String name;

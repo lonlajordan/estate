@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
-<head th:insert="base.html :: head('Mise à jour du profil')"></head>
+<head th:insert="~{base.html :: head('Mise à jour du profil')}"></head>
 <body>
 <div id="wrapper">
-    <div th:replace="header.html"></div>
+    <div th:replace="~{header.html}"></div>
     <div id="page-wrapper">
         <div class="row mt-6">
             <ol class="breadcrumb">
@@ -13,7 +13,7 @@
         </div>
         <div class="row">
             <div class="col">
-                <div th:replace="base.html :: alert(${notification})"></div>
+                <div th:replace="~{base.html :: alert(${notification})}"></div>
             </div>
         </div>
         <div class="row">
@@ -89,7 +89,7 @@
         </div>
     </div>
 </div>
-<th:block th:insert="base.html :: scripts"></th:block>
+<th:block th:insert="~{base.html :: scripts}"></th:block>
 </body>
 
 </html>

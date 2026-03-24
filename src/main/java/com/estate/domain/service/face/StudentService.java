@@ -6,7 +6,7 @@ import com.estate.domain.form.StudentForm;
 import com.estate.domain.form.StudentSearch;
 import org.springframework.data.domain.Page;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
 public interface StudentService {

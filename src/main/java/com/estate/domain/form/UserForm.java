@@ -5,8 +5,8 @@ import com.estate.domain.enumaration.Mode;
 import com.estate.domain.enumaration.Role;
 import lombok.Data;
 
-import javax.validation.Valid;
-import javax.validation.constraints.*;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
 import java.util.List;
 
 @Data
